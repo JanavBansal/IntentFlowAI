@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -88,6 +89,13 @@ def main() -> None:
     run_live_ingestion()
     training_result = run_training_step(exp_dir)
     top_path = run_scoring_step(training_result, exp_dir)
+
+    bt_cmd = [sys.executable, "scripts/run_backtest.py", "--experiment", exp_dir.name]
+    subprocess.run(bt_cmd, check=True)
+    summary_path = exp_dir / "bt_summary.json"
+    if summary_path.exists():
+        summary = json.loads(summary_path.read_text())
+        print("Backtest summary:", json.dumps(summary, indent=2))
 
     print(
         "Pipeline finished.\n"

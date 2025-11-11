@@ -49,6 +49,7 @@ class Settings:
     target_excess_return: float = 0.015
     valid_start: str = "2023-07-01"
     test_start: str = "2024-01-01"
+    backtest: "BacktestDefaults" = field(default_factory=lambda: BacktestDefaults())
     lgbm: LightGBMConfig = field(default_factory=LightGBMConfig)
 
     def path(self, *parts: str) -> Path:
@@ -59,3 +60,9 @@ class Settings:
 
 settings = Settings()
 """Singleton-style settings instance for convenience imports."""
+@dataclass
+class BacktestDefaults:
+    top_k: int = 10
+    hold_days: int = 10
+    slippage_bps: float = 10.0
+    fee_bps: float = 1.0

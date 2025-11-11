@@ -80,3 +80,21 @@ else:
     st.subheader("Top 10 probabilities")
     top10 = filtered.nsmallest(10, "rank")
     st.bar_chart(top10.set_index("ticker")[["proba"]])
+
+st.subheader("Backtest overview")
+summary_path = default_dir / "bt_summary.json"
+equity_path = default_dir / "bt_equity.csv"
+metric_cols = st.columns(3)
+if summary_path.exists():
+    summary = pd.read_json(summary_path, typ="series")
+    metric_cols[0].metric("CAGR", f"{summary.get('CAGR', 0.0)*100:.2f}%")
+    metric_cols[1].metric("Sharpe", f"{summary.get('Sharpe', 0.0):.2f}")
+    metric_cols[2].metric("Max DD", f"{summary.get('maxDD', 0.0)*100:.2f}%")
+else:
+    st.info(f"Backtest summary not found at {summary_path}")
+
+if equity_path.exists():
+    equity = pd.read_csv(equity_path, index_col=0, parse_dates=True)
+    st.line_chart(equity.rename(columns={"equity": "PnL"}))
+else:
+    st.info(f"Backtest equity curve not found at {equity_path}")
