@@ -1,0 +1,23 @@
+{
+  "CAGR": 65210.20283810502,
+  "Sharpe": 23.200096889097637,
+  "maxDD": -0.8233531652329651,
+  "turnover": 9.951100244498777,
+  "win_rate": 0.8501719901719902,
+  "avg_hold_days": 10.0,
+  "cost_model": {
+    "name": "from_yaml",
+    "components": {
+      "brokerage_bps": 5.0,
+      "stt_bps": 10.0,
+      "stamp_duty_bps": 5.0,
+      "exchange_charges_bps": 2.0,
+      "sebi_turnover_bps": 0.5,
+      "gst_bps": 3.6
+    },
+    "total_bps": 26.1,
+    "slippage_bps": 12.0,
+    "description": "Approximates Indian equities round-trip costs (brokerage, statutory taxes, exchange fees, and GST). Numbers are expressed in basis points per trade leg and tuned for liquid NIFTY 200 names.\n",
+    "source": "/Users/janavbansal/Desktop/IntentFlowAI/config/costs_india.yaml"
+  }
+}

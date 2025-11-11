@@ -17,6 +17,12 @@ def load_universe(path: Path) -> pd.DataFrame:
     if not path.exists():
         raise FileNotFoundError(f"Universe file not found: {path}")
     df = pd.read_csv(path)
+    # Allow simplified schema by injecting required columns.
+    if {"ticker", "sector"}.issubset(df.columns) and not {"ticker_nse", "ticker_yf"}.issubset(df.columns):
+        df = df.copy()
+        ticker_norm = df["ticker"].astype(str).str.strip().str.upper()
+        df["ticker_nse"] = ticker_norm
+        df["ticker_yf"] = ticker_norm
     validate_universe(df)
     logger.info("Loaded universe", extra={"tickers": len(df)})
     return df

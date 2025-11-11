@@ -33,18 +33,13 @@ def verify_forward_alignment(
 
     prices = frame[[date_col, ticker_col, price_col]].drop_duplicates().sort_values([ticker_col, date_col])
 
-    def _compute(group: pd.DataFrame) -> pd.Series:
-        shifted = group[price_col].shift(-horizon_days)
-        return shifted / group[price_col] - 1.0
+    prices = prices.sort_values([ticker_col, date_col])
+    shifted = prices.groupby(ticker_col)[price_col].shift(-horizon_days)
+    prices["expected_fwd"] = shifted / prices[price_col] - 1.0
 
-    expected = (
-        prices.groupby(ticker_col, group_keys=False)
-        .apply(_compute)
-        .rename("expected_fwd")
-    )
     aligned = frame[[date_col, ticker_col, fwd_ret_col]].copy()
     aligned = aligned.merge(
-        expected.reset_index(name="expected_fwd"),
+        prices[[date_col, ticker_col, "expected_fwd"]],
         on=[date_col, ticker_col],
         how="left",
     )
@@ -118,6 +113,7 @@ def run_null_label_test(
     preds_path = output_dir / "null_label_preds.csv"
     preds.to_csv(preds_path, index=False)
 
+    preds = preds[preds["ticker"].isin(price_panel["ticker"].unique())]
     result = backtest_signals(preds, price_panel, backtest_cfg)
     summary = result["summary"]
     sharpe = summary.get("Sharpe", 0.0)

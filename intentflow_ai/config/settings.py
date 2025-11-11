@@ -28,6 +28,7 @@ class LightGBMConfig:
     max_depth: int = -1
     n_estimators: int = 800
     random_state: int = 42
+    n_jobs: int = 1
 
 
 @dataclass

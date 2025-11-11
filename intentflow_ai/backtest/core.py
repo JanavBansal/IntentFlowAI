@@ -51,8 +51,8 @@ def backtest_signals(preds: pd.DataFrame, prices: pd.DataFrame, cfg: BacktestCon
         if d not in px.index:
             continue
         day_preds = preds.loc[preds[cfg.date_col] == d].sort_values(cfg.proba_col, ascending=False)
-        picks = day_preds[cfg.ticker_col].head(k).tolist()
-        if not picks:
+        picks = [t for t in day_preds[cfg.ticker_col].head(k).tolist() if t in px.columns]
+        if not picks or d not in px.index:
             continue
         entry_px = px.loc[d, picks].dropna()
         if entry_px.empty:

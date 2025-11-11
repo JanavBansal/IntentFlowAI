@@ -51,12 +51,16 @@ def load_price_parquet(path: Path | None = None, *, allow_fallback: bool = False
         try:
             frame = pq.read_table(target, use_legacy_dataset=True).to_pandas()
         except Exception as arrow_exc:
-            if not allow_fallback:
-                raise RuntimeError(
-                    "Unable to read price parquet and fallback disabled. Ensure full NIFTY200 dataset is present."
-                ) from arrow_exc
-            logger.error("PyArrow legacy reader failed; attempting CSV fallback.", exc_info=arrow_exc)
-            frame = _load_price_from_csv()
+            logger.warning("Legacy pyarrow reader failed; retrying pandas legacy mode.", exc_info=arrow_exc)
+            try:
+                frame = pd.read_parquet(target, use_legacy_dataset=True)
+            except Exception as final_exc:
+                if not allow_fallback:
+                    raise RuntimeError(
+                        "Unable to read price parquet and fallback disabled. Ensure full NIFTY200 dataset is present."
+                    ) from final_exc
+                logger.error("All parquet readers failed; attempting CSV fallback.", exc_info=final_exc)
+                frame = _load_price_from_csv()
 
     frame.columns = [col.strip().lower() for col in frame.columns]
     required = {"date", "ticker", "close", "volume", "sector"}

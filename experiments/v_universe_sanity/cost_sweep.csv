@@ -1,0 +1,6 @@
+fee_label,total_bps,sharpe,cagr,max_dd
+realistic,26.1,0.0,0.0,0.0
+sweep_10bps,10.0,0.0,0.0,0.0
+sweep_25bps,25.0,0.0,0.0,0.0
+sweep_50bps,50.0,0.0,0.0,0.0
+sweep_75bps,75.0,0.0,0.0,0.0

@@ -1,58 +1,201 @@
-ticker_nse,ticker_yf,sector
-RELIANCE,RELIANCE.NS,Energy
-TCS,TCS.NS,IT
-INFY,INFY.NS,IT
-HDFCBANK,HDFCBANK.NS,Financials
-ICICIBANK,ICICIBANK.NS,Financials
-HINDUNILVR,HINDUNILVR.NS,Consumer Staples
-SBIN,SBIN.NS,Financials
-BHARTIARTL,BHARTIARTL.NS,Telecom
-ITC,ITC.NS,Consumer Staples
-LT,LT.NS,Industrials
-ASIANPAINT,ASIANPAINT.NS,Materials
-AXISBANK,AXISBANK.NS,Financials
-MARUTI,MARUTI.NS,Consumer Discretionary
-SUNPHARMA,SUNPHARMA.NS,Healthcare
-TITAN,TITAN.NS,Consumer Discretionary
-ULTRACEMCO,ULTRACEMCO.NS,Materials
-WIPRO,WIPRO.NS,IT
-KOTAKBANK,KOTAKBANK.NS,Financials
-BAJFINANCE,BAJFINANCE.NS,Financials
-HCLTECH,HCLTECH.NS,IT
-POWERGRID,POWERGRID.NS,Utilities
-NTPC,NTPC.NS,Utilities
-ONGC,ONGC.NS,Energy
-TATASTEEL,TATASTEEL.NS,Materials
-GRASIM,GRASIM.NS,Materials
-HEROMOTOCO,HEROMOTOCO.NS,Consumer Discretionary
-BAJAJFINSV,BAJAJFINSV.NS,Financials
-DRREDDY,DRREDDY.NS,Healthcare
-DIVISLAB,DIVISLAB.NS,Healthcare
-BRITANNIA,BRITANNIA.NS,Consumer Staples
-NESTLEIND,NESTLEIND.NS,Consumer Staples
-ADANIPORTS,ADANIPORTS.NS,Industrials
-COALINDIA,COALINDIA.NS,Energy
-JSWSTEEL,JSWSTEEL.NS,Materials
-TECHM,TECHM.NS,IT
-APOLLOHOSP,APOLLOHOSP.NS,Healthcare
-BAJAJ-AUTO,BAJAJ-AUTO.NS,Consumer Discretionary
-EICHERMOT,EICHERMOT.NS,Consumer Discretionary
-HINDALCO,HINDALCO.NS,Materials
-UPL,UPL.NS,Materials
-INDUSINDBK,INDUSINDBK.NS,Financials
-M&M,M&M.NS,Consumer Discretionary
-SIEMENS,SIEMENS.NS,Industrials
-PIDILITIND,PIDILITIND.NS,Materials
-SBILIFE,SBILIFE.NS,Financials
-ICICIPRULI,ICICIPRULI.NS,Financials
-DLF,DLF.NS,Real Estate
-GODREJCP,GODREJCP.NS,Consumer Staples
-HAVELLS,HAVELLS.NS,Industrials
-VOLTAS,VOLTAS.NS,Industrials
-BANDHANBNK,BANDHANBNK.NS,Financials
-ADANIGREEN,ADANIGREEN.NS,Utilities
-ADANITRANS,ADANITRANS.NS,Utilities
-MUTHOOTFIN,MUTHOOTFIN.NS,Financials
-PEL,PEL.NS,Financials
-NMDC,NMDC.NS,Materials
-ICICIGI,ICICIGI.NS,Financials
+ticker,sector
+ADANIGREEN,Utilities
+ADANIGREEN_S108,Utilities
+ADANIGREEN_S51,Utilities
+ADANIPORTS,Industrials
+ADANIPORTS_S31,Industrials
+ADANIPORTS_S88,Industrials
+ADANITRANS,Utilities
+ADANITRANS_S109,Utilities
+ADANITRANS_S52,Utilities
+APOLLOHOSP,Healthcare
+APOLLOHOSP_S35,Healthcare
+APOLLOHOSP_S92,Healthcare
+ASIANPAINT,Materials
+ASIANPAINT_S10,Materials
+ASIANPAINT_S124,Materials
+ASIANPAINT_S67,Materials
+AXISBANK,Financials
+AXISBANK_S11,Financials
+AXISBANK_S125,Financials
+AXISBANK_S68,Financials
+BAJAJ-AUTO,Consumer Discretionary
+BAJAJ-AUTO_S36,Consumer Discretionary
+BAJAJ-AUTO_S93,Consumer Discretionary
+BAJAJFINSV,Financials
+BAJAJFINSV_S140,Financials
+BAJAJFINSV_S26,Financials
+BAJAJFINSV_S83,Financials
+BAJFINANCE,Financials
+BAJFINANCE_S132,Financials
+BAJFINANCE_S18,Financials
+BAJFINANCE_S75,Financials
+BANDHANBNK,Financials
+BANDHANBNK_S107,Financials
+BANDHANBNK_S50,Financials
+BHARTIARTL,Telecom
+BHARTIARTL_S121,Telecom
+BHARTIARTL_S64,Telecom
+BHARTIARTL_S7,Telecom
+BRITANNIA,Consumer Staples
+BRITANNIA_S29,Consumer Staples
+BRITANNIA_S86,Consumer Staples
+COALINDIA,Energy
+COALINDIA_S32,Energy
+COALINDIA_S89,Energy
+DIVISLAB,Healthcare
+DIVISLAB_S142,Healthcare
+DIVISLAB_S28,Healthcare
+DIVISLAB_S85,Healthcare
+DLF,Real Estate
+DLF_S103,Real Estate
+DLF_S46,Real Estate
+DRREDDY,Healthcare
+DRREDDY_S141,Healthcare
+DRREDDY_S27,Healthcare
+DRREDDY_S84,Healthcare
+EICHERMOT,Consumer Discretionary
+EICHERMOT_S37,Consumer Discretionary
+EICHERMOT_S94,Consumer Discretionary
+GODREJCP,Consumer Staples
+GODREJCP_S104,Consumer Staples
+GODREJCP_S47,Consumer Staples
+GRASIM,Materials
+GRASIM_S138,Materials
+GRASIM_S24,Materials
+GRASIM_S81,Materials
+HAVELLS,Industrials
+HAVELLS_S105,Industrials
+HAVELLS_S48,Industrials
+HCLTECH,IT
+HCLTECH_S133,IT
+HCLTECH_S19,IT
+HCLTECH_S76,IT
+HDFCBANK,Financials
+HDFCBANK_S117,Financials
+HDFCBANK_S3,Financials
+HDFCBANK_S60,Financials
+HEROMOTOCO,Consumer Discretionary
+HEROMOTOCO_S139,Consumer Discretionary
+HEROMOTOCO_S25,Consumer Discretionary
+HEROMOTOCO_S82,Consumer Discretionary
+HINDALCO,Materials
+HINDALCO_S38,Materials
+HINDALCO_S95,Materials
+HINDUNILVR,Consumer Staples
+HINDUNILVR_S119,Consumer Staples
+HINDUNILVR_S5,Consumer Staples
+HINDUNILVR_S62,Consumer Staples
+ICICIBANK,Financials
+ICICIBANK_S118,Financials
+ICICIBANK_S4,Financials
+ICICIBANK_S61,Financials
+ICICIGI,Financials
+ICICIGI_S113,Financials
+ICICIGI_S56,Financials
+ICICIPRULI,Financials
+ICICIPRULI_S102,Financials
+ICICIPRULI_S45,Financials
+INDUSINDBK,Financials
+INDUSINDBK_S40,Financials
+INDUSINDBK_S97,Financials
+INFY,IT
+INFY_S116,IT
+INFY_S2,IT
+INFY_S59,IT
+ITC,Consumer Staples
+ITC_S122,Consumer Staples
+ITC_S65,Consumer Staples
+ITC_S8,Consumer Staples
+JSWSTEEL,Materials
+JSWSTEEL_S33,Materials
+JSWSTEEL_S90,Materials
+KOTAKBANK,Financials
+KOTAKBANK_S131,Financials
+KOTAKBANK_S17,Financials
+KOTAKBANK_S74,Financials
+LT,Industrials
+LT_S123,Industrials
+LT_S66,Industrials
+LT_S9,Industrials
+M&M,Consumer Discretionary
+M&M_S41,Consumer Discretionary
+M&M_S98,Consumer Discretionary
+MARUTI,Consumer Discretionary
+MARUTI_S12,Consumer Discretionary
+MARUTI_S126,Consumer Discretionary
+MARUTI_S69,Consumer Discretionary
+MUTHOOTFIN,Financials
+MUTHOOTFIN_S110,Financials
+MUTHOOTFIN_S53,Financials
+NESTLEIND,Consumer Staples
+NESTLEIND_S30,Consumer Staples
+NESTLEIND_S87,Consumer Staples
+NMDC,Materials
+NMDC_S112,Materials
+NMDC_S55,Materials
+NTPC,Utilities
+NTPC_S135,Utilities
+NTPC_S21,Utilities
+NTPC_S78,Utilities
+ONGC,Energy
+ONGC_S136,Energy
+ONGC_S22,Energy
+ONGC_S79,Energy
+PEL,Financials
+PEL_S111,Financials
+PEL_S54,Financials
+PIDILITIND,Materials
+PIDILITIND_S100,Materials
+PIDILITIND_S43,Materials
+POWERGRID,Utilities
+POWERGRID_S134,Utilities
+POWERGRID_S20,Utilities
+POWERGRID_S77,Utilities
+RELIANCE,Energy
+RELIANCE_S0,Energy
+RELIANCE_S114,Energy
+RELIANCE_S57,Energy
+SBILIFE,Financials
+SBILIFE_S101,Financials
+SBILIFE_S44,Financials
+SBIN,Financials
+SBIN_S120,Financials
+SBIN_S6,Financials
+SBIN_S63,Financials
+SIEMENS,Industrials
+SIEMENS_S42,Industrials
+SIEMENS_S99,Industrials
+SUNPHARMA,Healthcare
+SUNPHARMA_S127,Healthcare
+SUNPHARMA_S13,Healthcare
+SUNPHARMA_S70,Healthcare
+TATASTEEL,Materials
+TATASTEEL_S137,Materials
+TATASTEEL_S23,Materials
+TATASTEEL_S80,Materials
+TCS,IT
+TCS_S1,IT
+TCS_S115,IT
+TCS_S58,IT
+TECHM,IT
+TECHM_S34,IT
+TECHM_S91,IT
+TITAN,Consumer Discretionary
+TITAN_S128,Consumer Discretionary
+TITAN_S14,Consumer Discretionary
+TITAN_S71,Consumer Discretionary
+ULTRACEMCO,Materials
+ULTRACEMCO_S129,Materials
+ULTRACEMCO_S15,Materials
+ULTRACEMCO_S72,Materials
+UPL,Materials
+UPL_S39,Materials
+UPL_S96,Materials
+VOLTAS,Industrials
+VOLTAS_S106,Industrials
+VOLTAS_S49,Industrials
+WIPRO,IT
+WIPRO_S130,IT
+WIPRO_S16,IT
+WIPRO_S73,IT
