@@ -8,6 +8,7 @@ import sys
 from dataclasses import replace
 from pathlib import Path
 
+import numpy as np
 from joblib import dump
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +17,7 @@ if str(ROOT) not in sys.path:
 
 from intentflow_ai.config import Settings
 from intentflow_ai.pipelines import TrainingPipeline
+from intentflow_ai.utils import load_price_parquet
 from intentflow_ai.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -34,6 +36,7 @@ def parse_args() -> argparse.Namespace:
         default="v0",
         help="Experiment subdirectory name under experiments/ (default: v0).",
     )
+    parser.add_argument("--max-tickers", type=int, help="Randomly sample this many tickers before training.")
     parser.add_argument("--valid-start", help="Override validation split start date (YYYY-MM-DD).")
     parser.add_argument("--test-start", help="Override test split start date (YYYY-MM-DD).")
     return parser.parse_args()
@@ -77,7 +80,21 @@ def main() -> None:
         cfg = replace(cfg, test_start=args.test_start)
 
     pipeline = TrainingPipeline(cfg=cfg, regime_filter=not args.no_regime_filter, use_live_sources=args.live)
-    result = pipeline.run(live=args.live)
+
+    tickers_subset = None
+    if args.max_tickers:
+        prices = load_price_parquet()
+        unique = np.array(sorted(prices["ticker"].unique()))
+        if unique.size == 0:
+            raise ValueError("No tickers available in price parquet.")
+        rng = np.random.default_rng(cfg.lgbm_seed)
+        if args.max_tickers < unique.size:
+            tickers_subset = rng.choice(unique, size=args.max_tickers, replace=False)
+        else:
+            tickers_subset = unique
+        print(f"Using {len(tickers_subset)} tickers out of {unique.size}")
+
+    result = pipeline.run(live=args.live, tickers_subset=tickers_subset)
 
     exp_dir = Path("experiments") / args.experiment
     exp_dir.mkdir(parents=True, exist_ok=True)
@@ -110,6 +127,8 @@ def main() -> None:
     )
 
     print_metrics_table(result["metrics"])
+    if result.get("tickers_used"):
+        print(f"\nTickers used: {len(result['tickers_used'])}")
     print(f"\nArtifacts saved to {exp_dir} (model={model_path}, metrics={metrics_path})")
 
 

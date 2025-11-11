@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict
+from typing import Dict, Optional, Sequence
 
 import pandas as pd
 
@@ -33,12 +33,16 @@ class TrainingPipeline:
     regime_filter: bool = True
     use_live_sources: bool = False
 
-    def run(self, live: bool | None = None) -> dict:
+    def run(self, live: bool | None = None, tickers_subset: Optional[Sequence[str]] = None) -> dict:
         live_mode = self.use_live_sources if live is None else live
         if live_mode:
             DataIngestionWorkflow().run()
 
         price_panel = load_price_parquet()
+        if tickers_subset is not None:
+            price_panel = price_panel[price_panel["ticker"].isin(tickers_subset)]
+            if price_panel.empty:
+                raise ValueError("No price data left after ticker filtering.")
         feature_frame = self.feature_engineer.build(price_panel)
         dataset = price_panel.join(feature_frame)
         labeled = make_excess_label(
@@ -132,6 +136,7 @@ class TrainingPipeline:
                 "valid": valid_mask,
                 "test": test_mask,
             },
+            "tickers_used": sorted(train_df["ticker"].unique()),
         }
 
     def _compute_metrics(self, y_true: pd.Series, y_score: pd.Series) -> Dict[str, float]:

@@ -2,13 +2,41 @@
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Dict, Iterable, List, Protocol
+from typing import Callable, Dict, Iterable, List, Protocol, Sequence
 
 import pandas as pd
 
 from intentflow_ai.config.settings import settings
+from intentflow_ai.data.universe import load_universe
+from intentflow_ai.utils import cache_parquet, validate_schema
+from intentflow_ai.utils.logging import get_logger
+
+logger = get_logger(__name__)
+
+def _load_universe_df() -> pd.DataFrame:
+    path = settings.data_dir / Path(settings.universe_file)
+    try:
+        return load_universe(path)
+    except Exception as exc:  # pragma: no cover - config issues surfaced at runtime
+        logger.error("Failed to load universe file", extra={"error": str(exc), "path": str(path)})
+        return pd.DataFrame(columns=["ticker_nse", "ticker_yf", "sector"])
+
+
+UNIVERSE_DF = _load_universe_df()
+
+PRICE_SCHEMA = {
+    "date": "datetime64[ns]",
+    "open": "float",
+    "high": "float",
+    "low": "float",
+    "close": "float",
+    "volume": "float",
+    "ticker": "string",
+    "sector": "string",
+}
 
 
 class DataSource(Protocol):
@@ -100,35 +128,88 @@ class PriceCSVSource:
 class PriceAPISource:
     """Download OHLCV from Yahoo Finance for NSE tickers."""
 
-    symbols: List[str]
-    start_date: str
-    end_date: str
-    sector_map: Dict[str, str] = field(default_factory=dict)
+    universe: pd.DataFrame
+    data_dir: Path
     name: str = "price_confirmation"
 
+    def __post_init__(self) -> None:
+        self.start_date = settings.price_start
+        self.end_date = settings.price_end
+        self.min_trading_days = settings.min_trading_days
+        self.cache_path = self.data_dir / "raw" / "price_confirmation" / "yf_cache.parquet"
+
     def fetch(self) -> Iterable[dict]:
+        if self.universe.empty:
+            logger.warning("Universe is empty; no prices fetched.")
+            return []
+
+        key = f"{self.start_date}_{self.end_date}_{len(self.universe)}"
+        df = cache_parquet(self.cache_path, key, self._download_prices)
+        df = validate_schema(df, PRICE_SCHEMA)
+        df = df.sort_values(["ticker", "date"]).drop_duplicates(["ticker", "date"])
+
+        counts = df.groupby("ticker")["date"].transform("count")
+        mask = counts >= self.min_trading_days
+        dropped = df.loc[~mask, "ticker"].unique()
+        if len(dropped):
+            logger.warning(
+                "Dropping tickers below min_trading_days",
+                extra={"tickers": dropped.tolist(), "threshold": self.min_trading_days},
+            )
+        df = df.loc[mask]
+        return df.to_dict("records")
+
+    def _download_prices(self) -> pd.DataFrame:
         try:
             import yfinance as yf
         except ModuleNotFoundError as exc:  # pragma: no cover
             raise RuntimeError("yfinance is required for PriceAPISource. Install yfinance>=0.2.0") from exc
 
         frames = []
-        for symbol in self.symbols:
-            ticker = f"{symbol}.NS"
-            data = yf.download(ticker, start=self.start_date, end=self.end_date, progress=False, group_by="column")
-            if data.empty:
+        for _, row in self.universe.iterrows():
+            yf_symbol = row["ticker_yf"]
+            ticker = row["ticker_nse"]
+            sector = row["sector"]
+            data = self._fetch_symbol(yf, yf_symbol)
+            if data is None:
                 continue
-            if isinstance(data.columns, pd.MultiIndex):
-                data.columns = data.columns.droplevel(-1)
             data = data.reset_index().rename(columns=str.lower)
-            data["ticker"] = symbol
-            data["sector"] = self.sector_map.get(symbol, "unknown")
-            frames.append(data)
-        if not frames:
-            return []
-        df_all = pd.concat(frames, ignore_index=True)
-        df_all["date"] = pd.to_datetime(df_all["date"]).dt.strftime("%Y-%m-%d")
-        return df_all.to_dict(orient="records")
+            subset = data[["date", "open", "high", "low", "close", "volume"]].copy()
+            subset["ticker"] = ticker
+            subset["sector"] = sector
+            frames.append(subset)
+        if frames:
+            df = pd.concat(frames, ignore_index=True)
+            df["date"] = pd.to_datetime(df["date"])
+            return df
+        return pd.DataFrame(columns=list(PRICE_SCHEMA.keys()))
+
+    def _fetch_symbol(self, yf_module, symbol: str) -> pd.DataFrame | None:
+        end = self.end_date or None
+        for attempt in range(3):
+            try:
+                data = yf_module.download(
+                    symbol,
+                    start=self.start_date,
+                    end=end,
+                    progress=False,
+                    group_by="column",
+                    auto_adjust=False,
+                )
+                if isinstance(data.columns, pd.MultiIndex):
+                    data.columns = data.columns.droplevel(-1)
+                if data.empty:
+                    return None
+                return data
+            except Exception as exc:  # pragma: no cover - network noise
+                delay = 2 ** attempt
+                logger.warning(
+                    "Price download failed; retrying",
+                    extra={"symbol": symbol, "attempt": attempt + 1, "delay": delay, "error": str(exc)},
+                )
+                time.sleep(delay)
+        logger.error("Giving up on symbol", extra={"symbol": symbol})
+        return None
 
 
 @dataclass
@@ -240,9 +321,7 @@ DEFAULT_SOURCE_REGISTRY = SourceRegistry(
         "transactions": lambda: DeliverySource(),
         "fundamentals": lambda: FundamentalSource(),
         "narrative": lambda: NarrativeSource(),
-        "price": lambda: PriceAPISource(
-            symbols=["RELIANCE", "TCS"], start_date="2023-01-01", end_date="2024-12-31"
-        ),
+        "price": lambda: PriceAPISource(universe=UNIVERSE_DF, data_dir=settings.data_dir),
     }
 )
 """Starter registry covering the five signal layers described in the spec."""

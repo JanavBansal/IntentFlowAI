@@ -3,10 +3,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from functools import lru_cache
 from typing import Dict, List
 
 import numpy as np
 import pandas as pd
+
+from intentflow_ai.config.settings import settings
+from intentflow_ai.data.universe import load_universe
+
+
+@lru_cache(maxsize=1)
+def _sector_lookup() -> pd.Series:
+    try:
+        universe = load_universe(settings.path(settings.universe_file))
+        return universe.set_index("ticker_nse")["sector"]
+    except Exception:
+        return pd.Series(dtype="string")
 
 
 @dataclass
@@ -31,6 +44,12 @@ class FeatureEngineer:
             }
 
     def build(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        dataset = dataset.copy()
+        if "sector" not in dataset.columns or dataset["sector"].isna().any():
+            lookup = _sector_lookup()
+            if not lookup.empty and "ticker" in dataset.columns:
+                dataset["sector"] = dataset.get("sector", pd.Series(index=dataset.index, dtype="string"))
+                dataset["sector"] = dataset["sector"].fillna(dataset["ticker"].map(lookup))
         frames: List[pd.DataFrame] = []
         for name, builder in self.feature_blocks.items():
             block = builder(dataset.copy())

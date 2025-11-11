@@ -1,0 +1,64 @@
+{
+  "overall": {
+    "roc_auc": 0.8102323799044486,
+    "pr_auc": 0.6800899388797418,
+    "precision_at_10": 1.0,
+    "precision_at_20": 1.0,
+    "hit_rate_0.6": 0.033269437561363316
+  },
+  "train": {
+    "roc_auc": 0.8970351828819297,
+    "pr_auc": 0.8135398765455589,
+    "precision_at_10": 1.0,
+    "precision_at_20": 1.0,
+    "hit_rate_0.6": 0.04305459017269957
+  },
+  "valid": {
+    "roc_auc": 0.8934126663116349,
+    "pr_auc": 0.7700621734995926,
+    "precision_at_10": 1.0,
+    "precision_at_20": 1.0,
+    "hit_rate_0.6": 0.028600464576074333
+  },
+  "test": {
+    "roc_auc": 0.5062592349688729,
+    "pr_auc": 0.30111233821114186,
+    "precision_at_10": 0.5,
+    "precision_at_20": 0.3,
+    "hit_rate_0.6": 0.005545652604476134
+  },
+  "by_regime": {
+    "bear": {
+      "train": {
+        "roc_auc": 1.0,
+        "pr_auc": 1.0,
+        "precision_at_10": 1.0,
+        "precision_at_20": 1.0,
+        "hit_rate_0.6": 0.36655499720826357
+      }
+    },
+    "bull": {
+      "train": {
+        "roc_auc": 0.872278072924039,
+        "pr_auc": 0.7720798231042606,
+        "precision_at_10": 1.0,
+        "precision_at_20": 1.0,
+        "hit_rate_0.6": 0.026154710094061492
+      },
+      "valid": {
+        "roc_auc": 0.877330169063313,
+        "pr_auc": 0.749092929202807,
+        "precision_at_10": 1.0,
+        "precision_at_20": 1.0,
+        "hit_rate_0.6": 0.023809523809523808
+      },
+      "test": {
+        "roc_auc": 0.8826641429616697,
+        "pr_auc": 0.7763897299906176,
+        "precision_at_10": 1.0,
+        "precision_at_20": 1.0,
+        "hit_rate_0.6": 0.02511388393741335
+      }
+    }
+  }
+}

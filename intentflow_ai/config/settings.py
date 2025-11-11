@@ -53,10 +53,15 @@ class Settings:
         }
     )
     trading_universe: str = "nifty_200"
+    universe_file: str = "external/universe/nifty200.csv"
     signal_horizon_days: int = 10
     target_excess_return: float = 0.015
+    price_start: str = "2018-01-01"
+    price_end: str | None = None
+    min_trading_days: int = 600
     valid_start: str = "2023-07-01"
     test_start: str = "2024-01-01"
+    lgbm_seed: int = 42
     backtest: BacktestDefaults = field(default_factory=BacktestDefaults)
     lgbm: LightGBMConfig = field(default_factory=LightGBMConfig)
 
