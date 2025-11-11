@@ -1,33 +1,43 @@
-"""Label engineering helpers for swing predictions."""
+"""Label engineering helpers."""
 
 from __future__ import annotations
+
+from typing import Final
 
 import pandas as pd
 
 
 def make_excess_label(
     df: pd.DataFrame,
-    horizon_days: int = 10,
+    *,
+    price_col: str = "close",
+    date_col: str = "date",
+    ticker_col: str = "ticker",
     sector_col: str = "sector",
+    horizon_days: int = 10,
     thresh: float = 0.015,
 ) -> pd.DataFrame:
-    """Compute excess forward returns vs sector and derive binary labels."""
+    """Create leak-safe excess-return labels relative to sector peers."""
 
-    required = {"ticker", "close", "date", sector_col}
-    missing = required - set(df.columns)
-    if missing:
-        raise ValueError(f"Missing columns for label generation: {', '.join(sorted(missing))}")
+    if horizon_days <= 0:
+        raise ValueError("horizon_days must be positive.")
 
     data = df.copy()
-    data["date"] = pd.to_datetime(data["date"]).dt.tz_localize(None)
-    data = data.sort_values(["ticker", "date"]).reset_index(drop=True)
+    data[date_col] = pd.to_datetime(data[date_col], errors="coerce")
 
-    fwd_col = f"fwd_ret_{horizon_days}"
-    future_price = data.groupby("ticker")["close"].shift(-horizon_days)
-    data[fwd_col] = (future_price - data["close"]) / data["close"]
+    fwd_col: Final[str] = f"fwd_ret_{horizon_days}d"
 
-    sector_key = [ "date", sector_col ]
-    data["sector_fwd"] = data.groupby(sector_key)[fwd_col].transform("mean")
+    def _forward_return(series: pd.Series) -> pd.Series:
+        return series.shift(-horizon_days) / series - 1
+
+    data[fwd_col] = (
+        data.groupby(ticker_col, group_keys=False)[price_col]
+        .transform(_forward_return)
+    )
+
+    sector_group = data.groupby([sector_col, date_col], group_keys=False)[fwd_col]
+    data["sector_fwd"] = sector_group.transform("mean")
+
     data["excess_fwd"] = data[fwd_col] - data["sector_fwd"]
     data["label"] = (data["excess_fwd"] >= thresh).astype(int)
     return data

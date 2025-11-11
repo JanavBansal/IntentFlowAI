@@ -47,6 +47,8 @@ class Settings:
     trading_universe: str = "nifty_200"
     signal_horizon_days: int = 10
     target_excess_return: float = 0.015
+    valid_start: str = "2023-07-01"
+    test_start: str = "2024-01-01"
     lgbm: LightGBMConfig = field(default_factory=LightGBMConfig)
 
     def path(self, *parts: str) -> Path:

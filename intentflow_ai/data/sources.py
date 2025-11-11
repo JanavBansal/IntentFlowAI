@@ -241,7 +241,7 @@ DEFAULT_SOURCE_REGISTRY = SourceRegistry(
         "fundamentals": lambda: FundamentalSource(),
         "narrative": lambda: NarrativeSource(),
         "price": lambda: PriceAPISource(
-            symbols=["RELIANCE", "TCS"], start_date="2024-01-01", end_date="2024-12-31"
+            symbols=["RELIANCE", "TCS"], start_date="2023-01-01", end_date="2024-12-31"
         ),
     }
 )
