@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=66", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "intentflow-ai"
+version = "0.1.0"
+description = "Multi-layer swing trading research stack for the NIFTY 200 universe"
+authors = [{name = "IntentFlow AI", email = "dev@intentflow.ai"}]
+requires-python = ">=3.10"
+dependencies = []
+readme = "README.md"
+license = {text = "MIT"}
+
+[tool.setuptools.packages.find]
+where = ["intentflow_ai"]
