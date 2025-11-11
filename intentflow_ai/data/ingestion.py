@@ -23,9 +23,9 @@ class DataIngestionWorkflow:
     `data/` lake where downstream feature engineering jobs can read them.
     """
 
-    output_dir: Path = settings.data_dir
-    registry: SourceRegistry = DEFAULT_SOURCE_REGISTRY
-    cfg: Settings = settings
+    output_dir: Path = field(default_factory=lambda: settings.data_dir)
+    registry: SourceRegistry = field(default_factory=lambda: DEFAULT_SOURCE_REGISTRY)
+    cfg: Settings = field(default_factory=lambda: settings)
     validators: Mapping[str, callable] = field(default_factory=dict)
 
     def run(self) -> None:

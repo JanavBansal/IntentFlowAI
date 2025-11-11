@@ -1,0 +1,22 @@
+{
+  "overall": {
+    "roc_auc": 1.0,
+    "pr_auc": 1.0,
+    "hit_rate": 0.26157407407407407,
+    "horizon_days": 10.0
+  },
+  "regimes": {
+    "bear": {
+      "roc_auc": 0.5,
+      "pr_auc": 0.75,
+      "hit_rate": 0.0,
+      "horizon_days": 10.0
+    },
+    "bull": {
+      "roc_auc": 1.0,
+      "pr_auc": 0.9999999999999998,
+      "hit_rate": 0.26046511627906976,
+      "horizon_days": 10.0
+    }
+  }
+}

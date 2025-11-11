@@ -1,37 +1,80 @@
-"""CLI helper for running the training pipeline end-to-end."""
+"""Train LightGBM on parquet-backed data and persist experiment artifacts."""
 
 from __future__ import annotations
 
-import pandas as pd
+import argparse
+import json
+import sys
+from pathlib import Path
 
-from intentflow_ai.config import Settings
+from joblib import dump
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from intentflow_ai.pipelines import TrainingPipeline
 from intentflow_ai.utils.logging import get_logger
 
 logger = get_logger(__name__)
 
 
-def load_placeholder_dataset() -> tuple[pd.DataFrame, pd.Series]:
-    """Return a minimal synthetic dataset so the pipeline can run."""
-
-    idx = pd.date_range("2023-01-01", periods=250, freq="B")
-    data = pd.DataFrame(
-        {
-            "close": 100 + pd.Series(range(len(idx)), index=idx).rolling(5).mean().fillna(0),
-            "volume": 1_000_000,
-        },
-        index=idx,
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run IntentFlow AI training pipeline.")
+    parser.add_argument("--live", action="store_true", help="Trigger live ingestion before training.")
+    parser.add_argument(
+        "--no-regime-filter",
+        action="store_true",
+        help="Disable regime-specific training and metrics.",
     )
-    target = (pd.Series(range(len(idx)), index=idx) % 2).astype(int)
-    return data, target
+    parser.add_argument(
+        "--experiment",
+        default="v0",
+        help="Experiment subdirectory name under experiments/ (default: v0).",
+    )
+    return parser.parse_args()
 
 
 def main() -> None:
-    settings = Settings()
-    dataset, target = load_placeholder_dataset()
-    pipeline = TrainingPipeline(cfg=settings)
-    artifact = pipeline.run(dataset, target)
-    logger.info("Artifacts ready", extra={"keys": list(artifact.keys())})
+    args = parse_args()
+    pipeline = TrainingPipeline(regime_filter=not args.no_regime_filter, use_live_sources=args.live)
+    result = pipeline.run(live=args.live)
+
+    exp_dir = Path("experiments") / args.experiment
+    exp_dir.mkdir(parents=True, exist_ok=True)
+
+    model_bundle = {
+        "models": result["models"],
+        "regime_classifier": result.get("regime_classifier"),
+        "feature_columns": result["feature_columns"],
+    }
+    model_path = exp_dir / "lgb.pkl"
+    dump(model_bundle, model_path)
+
+    metrics_path = exp_dir / "metrics.json"
+    with metrics_path.open("w", encoding="utf-8") as f:
+        json.dump(result["metrics"], f, indent=2)
+
+    preds = result["training_frame"][["date", "ticker", "label", "excess_fwd"]].copy()
+    preds["proba"] = result["probabilities"].values
+    preds = preds[["date", "ticker", "proba", "label", "excess_fwd"]]
+    preds_path = exp_dir / "preds.csv"
+    preds.to_csv(preds_path, index=False)
+
+    logger.info(
+        "Experiment artifacts written",
+        extra={
+            "metrics": result["metrics"],
+            "model_path": str(model_path),
+            "preds_path": str(preds_path),
+        },
+    )
+    overall = result["metrics"]["overall"]
+    print(
+        f"Experiment saved to {exp_dir}. "
+        f"ROC AUC={overall['roc_auc']:.3f}, "
+        f"PR AUC={overall['pr_auc']:.3f}"
+    )
 
 
 if __name__ == "__main__":

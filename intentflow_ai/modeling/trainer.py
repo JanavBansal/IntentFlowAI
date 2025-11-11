@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Dict, Tuple
 
 import lightgbm as lgb
@@ -22,7 +22,7 @@ class LightGBMTrainer:
 
     def train(self, features: pd.DataFrame, target: pd.Series) -> lgb.LGBMClassifier:
         logger.info("Fitting LightGBM", extra={"rows": len(features), "cols": features.shape[1]})
-        model = lgb.LGBMClassifier(**self.cfg.__dict__)
+        model = lgb.LGBMClassifier(**asdict(self.cfg))
         model.fit(features, target)
         return model
 
