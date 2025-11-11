@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+import argparse
 from pathlib import Path
 
 import pandas as pd
@@ -20,8 +21,15 @@ from intentflow_ai.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run scoring pipeline for a given experiment.")
+    parser.add_argument("--experiment", default="v0", help="Experiment directory under experiments/")
+    return parser.parse_args()
+
+
 def main() -> None:
-    exp_dir = Path("experiments/v0")
+    args = parse_args()
+    exp_dir = Path("experiments") / args.experiment
     model_path = exp_dir / "lgb.pkl"
     if not model_path.exists():
         raise FileNotFoundError(f"Trained model not found at {model_path}. Run training first.")
@@ -30,7 +38,7 @@ def main() -> None:
     regime_classifier = bundle.get("regime_classifier")
     feature_columns = bundle.get("feature_columns")
 
-    panel = load_price_parquet()
+    panel = load_price_parquet(allow_fallback=False)
     latest_date = panel["date"].max()
     window_start = latest_date - pd.Timedelta(days=60)
     window = panel[panel["date"] >= window_start].reset_index(drop=True)

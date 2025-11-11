@@ -23,10 +23,11 @@ class LightGBMConfig:
     num_leaves: int = 64
     learning_rate: float = 0.05
     feature_fraction: float = 0.7
-    bagging_fraction: float = 0.8
-    bagging_freq: int = 5
+    subsample: float = 0.8
+    subsample_freq: int = 5
     max_depth: int = -1
     n_estimators: int = 800
+    random_state: int = 42
 
 
 @dataclass
@@ -54,11 +55,14 @@ class Settings:
     )
     trading_universe: str = "nifty_200"
     universe_file: str = "external/universe/nifty200.csv"
+    universe_membership_file: str = "external/universe/nifty200_history.csv"
     signal_horizon_days: int = 10
     target_excess_return: float = 0.015
     price_start: str = "2018-01-01"
     price_end: str | None = None
     min_trading_days: int = 600
+    min_train_tickers: int = 180
+    cv_splits: int = 3
     valid_start: str = "2023-07-01"
     test_start: str = "2024-01-01"
     lgbm_seed: int = 42

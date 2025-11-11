@@ -9,6 +9,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 from joblib import dump
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,8 +17,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from intentflow_ai.config import Settings
+from intentflow_ai.modeling.visuals import save_classification_plots
 from intentflow_ai.pipelines import TrainingPipeline
-from intentflow_ai.utils import load_price_parquet
+from intentflow_ai.sanity import DataScopeChecks
+from intentflow_ai.utils.io import load_price_parquet
 from intentflow_ai.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -39,6 +42,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--max-tickers", type=int, help="Randomly sample this many tickers before training.")
     parser.add_argument("--valid-start", help="Override validation split start date (YYYY-MM-DD).")
     parser.add_argument("--test-start", help="Override test split start date (YYYY-MM-DD).")
+    parser.add_argument(
+        "--leak-test",
+        action="store_true",
+        help="Shuffle labels before training to confirm metrics collapse.",
+    )
     return parser.parse_args()
 
 
@@ -79,11 +87,16 @@ def main() -> None:
     if args.test_start:
         cfg = replace(cfg, test_start=args.test_start)
 
-    pipeline = TrainingPipeline(cfg=cfg, regime_filter=not args.no_regime_filter, use_live_sources=args.live)
+    pipeline = TrainingPipeline(
+        cfg=cfg,
+        regime_filter=not args.no_regime_filter,
+        use_live_sources=args.live,
+        leak_test=args.leak_test,
+    )
 
     tickers_subset = None
     if args.max_tickers:
-        prices = load_price_parquet()
+        prices = load_price_parquet(allow_fallback=False)
         unique = np.array(sorted(prices["ticker"].unique()))
         if unique.size == 0:
             raise ValueError("No tickers available in price parquet.")
@@ -93,11 +106,22 @@ def main() -> None:
         else:
             tickers_subset = unique
         print(f"Using {len(tickers_subset)} tickers out of {unique.size}")
+    if args.leak_test:
+        print("Leak test enabled: labels will be shuffled before training.")
 
     result = pipeline.run(live=args.live, tickers_subset=tickers_subset)
 
     exp_dir = Path("experiments") / args.experiment
     exp_dir.mkdir(parents=True, exist_ok=True)
+    plot_paths = save_classification_plots(
+        result["training_frame"]["label"],
+        result["probabilities"],
+        result["metrics"]["overall"].get("hit_curve", []),
+        exp_dir / "plots",
+    )
+    if plot_paths:
+        relative = {name: str(path.relative_to(exp_dir)) for name, path in plot_paths.items()}
+        result["metrics"]["plots"] = relative
 
     model_bundle = {
         "models": result["models"],
@@ -107,15 +131,55 @@ def main() -> None:
     model_path = exp_dir / "lgb.pkl"
     dump(model_bundle, model_path)
 
-    metrics_path = exp_dir / "metrics.json"
-    with metrics_path.open("w", encoding="utf-8") as f:
-        json.dump(result["metrics"], f, indent=2)
+    train_frame = result["training_frame"]
+    train_frame_path = exp_dir / "train.parquet"
+    train_frame.to_parquet(train_frame_path, index=False)
 
-    preds = result["training_frame"][["date", "ticker", "label", "excess_fwd"]].copy()
+    preds = train_frame[["date", "ticker", "label", "excess_fwd"]].copy()
     preds["proba"] = result["probabilities"].values
     preds = preds[["date", "ticker", "proba", "label", "excess_fwd"]]
     preds_path = exp_dir / "preds.csv"
     preds.to_csv(preds_path, index=False)
+
+    train_mask = pd.Series(result["splits"]["train"], index=train_frame.index, dtype=bool)
+    data_scope = DataScopeChecks(min_train_tickers=cfg.min_train_tickers)
+    snapshot_path = exp_dir / "universe_snapshot.csv"
+    data_scope.validate_and_snapshot(train_frame, train_mask, output_path=snapshot_path)
+
+    fi = result.get("feature_importances", {})
+    if fi:
+        fi_path = exp_dir / "feature_importance.csv"
+        (
+            pd.Series(fi, name="importance")
+            .sort_values(ascending=False)
+            .to_csv(fi_path, header=True)
+        )
+
+    shap_plot_path = exp_dir / "plots" / "shap_summary.png"
+    try:  # Optional dependency
+        import shap
+        import matplotlib.pyplot as plt
+
+        sample = train_frame[result["feature_columns"]].sample(
+            n=min(500, len(train_frame)),
+            random_state=cfg.lgbm_seed,
+        )
+        explainer = shap.TreeExplainer(result["model"])
+        shap_values = explainer.shap_values(sample)
+        shap.summary_plot(shap_values, sample, show=False, plot_type="violin")
+        plt.tight_layout()
+        shap_plot_path.parent.mkdir(parents=True, exist_ok=True)
+        plt.savefig(shap_plot_path, bbox_inches="tight")
+        plt.close()
+        result["metrics"].setdefault("plots", {})["shap_summary"] = str(shap_plot_path.relative_to(exp_dir))
+    except ImportError:
+        logger.warning("SHAP not installed; skipping shap summary plot.")
+    except Exception as exc:  # pragma: no cover
+        logger.warning("Failed to compute SHAP summary", exc_info=exc)
+
+    metrics_path = exp_dir / "metrics.json"
+    with metrics_path.open("w", encoding="utf-8") as f:
+        json.dump(result["metrics"], f, indent=2)
 
     logger.info(
         "Experiment artifacts written",

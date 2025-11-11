@@ -1,31 +1,243 @@
 {
   "overall": {
-    "roc_auc": 0.8102323799044486,
-    "pr_auc": 0.6800899388797418,
+    "roc_auc": 1.0,
+    "pr_auc": 1.0,
     "precision_at_10": 1.0,
     "precision_at_20": 1.0,
-    "hit_rate_0.6": 0.033269437561363316
+    "hit_rate_0.6": 0.5,
+    "precision_by_day_at_10": 0.5,
+    "precision_by_day_at_20": 0.5,
+    "ic": 0.9989096922739386,
+    "rank_ic": 0.8660930699488412,
+    "hit_curve": [
+      {
+        "threshold": 0.5,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.55,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.6,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.65,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.7,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.75,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.8,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.85,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.9,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      }
+    ],
+    "horizon_days": 10.0,
+    "hit_rate": 0.5
   },
   "train": {
-    "roc_auc": 0.8970351828819297,
-    "pr_auc": 0.8135398765455589,
+    "roc_auc": 1.0,
+    "pr_auc": 1.0,
     "precision_at_10": 1.0,
-    "precision_at_20": 1.0,
-    "hit_rate_0.6": 0.04305459017269957
+    "precision_at_20": 0.8,
+    "hit_rate_0.6": 0.5,
+    "precision_by_day_at_10": 0.5,
+    "precision_by_day_at_20": 0.5,
+    "ic": 0.9998123459397555,
+    "rank_ic": 0.8664485777182117,
+    "hit_curve": [
+      {
+        "threshold": 0.5,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.55,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.6,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.65,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.7,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.75,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.8,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.85,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.9,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      }
+    ],
+    "horizon_days": 10.0,
+    "hit_rate": 0.5
   },
   "valid": {
-    "roc_auc": 0.8934126663116349,
-    "pr_auc": 0.7700621734995926,
-    "precision_at_10": 1.0,
-    "precision_at_20": 1.0,
-    "hit_rate_0.6": 0.028600464576074333
+    "roc_auc": 1.0,
+    "pr_auc": 1.0,
+    "precision_at_10": 0.5,
+    "precision_at_20": 0.5,
+    "hit_rate_0.6": 0.5,
+    "precision_by_day_at_10": 0.5,
+    "precision_by_day_at_20": 0.5,
+    "ic": 1.0,
+    "rank_ic": 0.9999999999999999,
+    "hit_curve": [
+      {
+        "threshold": 0.5,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.55,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.6,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.65,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.7,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.75,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.8,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.85,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.9,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      }
+    ],
+    "horizon_days": 10.0,
+    "hit_rate": 0.5
   },
   "test": {
-    "roc_auc": 0.5062592349688729,
-    "pr_auc": 0.30111233821114186,
-    "precision_at_10": 0.5,
-    "precision_at_20": 0.3,
-    "hit_rate_0.6": 0.005545652604476134
+    "roc_auc": 1.0,
+    "pr_auc": 1.0,
+    "precision_at_10": 0.8,
+    "precision_at_20": 0.5,
+    "hit_rate_0.6": 0.5,
+    "precision_by_day_at_10": 0.5,
+    "precision_by_day_at_20": 0.5,
+    "ic": 0.9999611494102222,
+    "rank_ic": 0.8677218312746248,
+    "hit_curve": [
+      {
+        "threshold": 0.5,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.55,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.6,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.65,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.7,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.75,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.8,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.85,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      },
+      {
+        "threshold": 0.9,
+        "hit_rate": 0.5,
+        "coverage": 0.5
+      }
+    ],
+    "horizon_days": 10.0,
+    "hit_rate": 0.5
   },
   "by_regime": {
     "bear": {
@@ -33,32 +245,189 @@
         "roc_auc": 1.0,
         "pr_auc": 1.0,
         "precision_at_10": 1.0,
-        "precision_at_20": 1.0,
-        "hit_rate_0.6": 0.36655499720826357
+        "precision_at_20": 0.8,
+        "hit_rate_0.6": 0.5,
+        "precision_by_day_at_10": 0.5,
+        "precision_by_day_at_20": 0.5,
+        "ic": 0.9998123459397555,
+        "rank_ic": 0.8664485777182117,
+        "hit_curve": [
+          {
+            "threshold": 0.5,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.55,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.6,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.65,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.7,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.75,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.8,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.85,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.9,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          }
+        ],
+        "horizon_days": 10.0,
+        "hit_rate": 0.5
       }
     },
     "bull": {
-      "train": {
-        "roc_auc": 0.872278072924039,
-        "pr_auc": 0.7720798231042606,
-        "precision_at_10": 1.0,
-        "precision_at_20": 1.0,
-        "hit_rate_0.6": 0.026154710094061492
-      },
       "valid": {
-        "roc_auc": 0.877330169063313,
-        "pr_auc": 0.749092929202807,
-        "precision_at_10": 1.0,
-        "precision_at_20": 1.0,
-        "hit_rate_0.6": 0.023809523809523808
+        "roc_auc": 1.0,
+        "pr_auc": 1.0,
+        "precision_at_10": 0.5,
+        "precision_at_20": 0.5,
+        "hit_rate_0.6": 0.5,
+        "precision_by_day_at_10": 0.5,
+        "precision_by_day_at_20": 0.5,
+        "ic": 1.0,
+        "rank_ic": 0.9999999999999999,
+        "hit_curve": [
+          {
+            "threshold": 0.5,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.55,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.6,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.65,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.7,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.75,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.8,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.85,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.9,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          }
+        ],
+        "horizon_days": 10.0,
+        "hit_rate": 0.5
       },
       "test": {
-        "roc_auc": 0.8826641429616697,
-        "pr_auc": 0.7763897299906176,
-        "precision_at_10": 1.0,
-        "precision_at_20": 1.0,
-        "hit_rate_0.6": 0.02511388393741335
+        "roc_auc": 1.0,
+        "pr_auc": 1.0,
+        "precision_at_10": 0.8,
+        "precision_at_20": 0.5,
+        "hit_rate_0.6": 0.5,
+        "precision_by_day_at_10": 0.5,
+        "precision_by_day_at_20": 0.5,
+        "ic": 0.9999611494102222,
+        "rank_ic": 0.8677218312746248,
+        "hit_curve": [
+          {
+            "threshold": 0.5,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.55,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.6,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.65,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.7,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.75,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.8,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.85,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          },
+          {
+            "threshold": 0.9,
+            "hit_rate": 0.5,
+            "coverage": 0.5
+          }
+        ],
+        "horizon_days": 10.0,
+        "hit_rate": 0.5
       }
     }
+  },
+  "plots": {
+    "roc_curve": "plots/roc_curve.png",
+    "precision_recall_curve": "plots/precision_recall_curve.png",
+    "hit_rate_curve": "plots/hit_rate_curve.png"
   }
 }

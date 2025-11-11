@@ -62,7 +62,7 @@ def run_training_step(exp_dir: Path) -> dict:
 
 
 def run_scoring_step(result: dict, exp_dir: Path) -> Path:
-    panel = load_price_parquet()
+    panel = load_price_parquet(allow_fallback=False)
     latest_date = panel["date"].max()
     window = panel[panel["date"] >= latest_date - pd.Timedelta(days=60)].reset_index(drop=True)
     if window.empty:

@@ -11,7 +11,8 @@ import pandas as pd
 
 from intentflow_ai.config.settings import settings
 from intentflow_ai.data.universe import load_universe
-from intentflow_ai.utils import cache_parquet, validate_schema
+from intentflow_ai.utils.cache import cache_parquet
+from intentflow_ai.utils.contracts import validate_schema
 from intentflow_ai.utils.logging import get_logger
 
 logger = get_logger(__name__)

@@ -1,0 +1,33 @@
+defaults:
+  slippage_bps: 10.0
+
+default_model: realistic
+
+models:
+  realistic: &realistic_cost
+    description: >
+      Approximates Indian equities round-trip costs (brokerage, statutory taxes,
+      exchange fees, and GST). Numbers are expressed in basis points per trade
+      leg and tuned for liquid NIFTY 200 names.
+    slippage_bps: 12.0
+    components:
+      brokerage_bps: 5.0
+      stt_bps: 10.0
+      stamp_duty_bps: 5.0
+      exchange_charges_bps: 2.0
+      sebi_turnover_bps: 0.5
+      gst_bps: 3.6
+  from_yaml:
+    <<: *realistic_cost
+  sweep_10bps:
+    description: "Stress-test: ultra-low 10 bps per side cost."
+    per_side_bps: 10.0
+  sweep_25bps:
+    description: "Stress-test: 25 bps per side."
+    per_side_bps: 25.0
+  sweep_50bps:
+    description: "Stress-test: 50 bps per side."
+    per_side_bps: 50.0
+  sweep_75bps:
+    description: "Stress-test: 75 bps per side."
+    per_side_bps: 75.0

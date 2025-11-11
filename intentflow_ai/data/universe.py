@@ -41,3 +41,44 @@ def validate_universe(df: pd.DataFrame) -> None:
 
     sector_counts = normalized["sector"].value_counts().to_dict()
     logger.info("Universe sector distribution", extra={"counts": sector_counts})
+
+
+def load_universe_membership(path: Path) -> pd.DataFrame:
+    """Load historical membership windows (start/end dates per ticker)."""
+
+    if not path.exists():
+        raise FileNotFoundError(f"Universe membership file not found: {path}")
+    df = pd.read_csv(path)
+    required = ["ticker_nse", "start_date", "end_date"]
+    missing = [col for col in required if col not in df.columns]
+    if missing:
+        raise ValueError(f"Membership file missing columns: {missing}")
+    df["ticker_nse"] = df["ticker_nse"].astype(str).str.strip()
+    df["start_date"] = pd.to_datetime(df["start_date"], errors="coerce")
+    df["end_date"] = pd.to_datetime(df["end_date"], errors="coerce")
+    if df["start_date"].isna().any():
+        raise ValueError("Membership start_date contains nulls.")
+    logger.info("Loaded membership history", extra={"rows": len(df)})
+    return df
+
+
+def apply_membership_filter(prices: pd.DataFrame, membership: pd.DataFrame) -> pd.DataFrame:
+    """Filter price rows to periods when tickers are part of the configured universe."""
+
+    if membership.empty:
+        return prices
+
+    membership = membership.copy()
+    membership["end_date"] = membership["end_date"].fillna(pd.Timestamp.max)
+    membership = membership.rename(columns={"ticker_nse": "ticker"})
+    merged = prices.merge(
+        membership[["ticker", "start_date", "end_date"]],
+        on="ticker",
+        how="left",
+    )
+    mask = merged["start_date"].isna() | (
+        (merged["date"] >= merged["start_date"]) & (merged["date"] <= merged["end_date"])
+    )
+    filtered = merged.loc[mask, prices.columns]
+    filtered = filtered.drop_duplicates(subset=["date", "ticker"])
+    return filtered

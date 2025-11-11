@@ -36,8 +36,11 @@ def make_excess_label(
     )
 
     sector_group = data.groupby([sector_col, date_col], group_keys=False)[fwd_col]
-    data["sector_fwd"] = sector_group.transform("mean")
-
+    sector_sum = sector_group.transform("sum")
+    sector_count = sector_group.transform("count")
+    leave_one_out = (sector_sum - data[fwd_col]) / (sector_count - 1)
+    sector_mean = sector_group.transform("mean")
+    data["sector_fwd"] = leave_one_out.where(sector_count > 1, sector_mean)
     data["excess_fwd"] = data[fwd_col] - data["sector_fwd"]
     data["label"] = (data["excess_fwd"] >= thresh).astype(int)
     return data
