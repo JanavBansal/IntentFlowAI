@@ -1,3 +1,5 @@
+
+
 """API-based price fetching utilities (yfinance wrapper)."""
 
 from __future__ import annotations
@@ -20,6 +22,26 @@ os.environ.setdefault("YFINANCE_CACHE_DIR", str(Path(".yfcache").resolve()))
 Path(os.environ["YFINANCE_CACHE_DIR"]).mkdir(parents=True, exist_ok=True)
 YF_KW = dict(auto_adjust=False, actions=False, progress=False, threads=True)
 _SYNTH_SUFFIX = re.compile(r"_S\d+$")
+
+# Symbol override map for known renames/quirks on Yahoo Finance
+SYMBOL_OVERRIDES = {
+    # Keep these as-is (they contain special characters)
+    "M&M": "M&M",
+    "BAJAJ-AUTO": "BAJAJ-AUTO",
+    "L&TFH": "L&TFH",
+    # Known rebrands on Yahoo side
+    "ADANITRANS": "ADANIENSOL",  # Adani Transmission → Adani Energy Solutions (renamed)
+    # "MOTHERSUMI": "MOTHERSON",    # rebrand (uncomment if needed)
+    # Add others as discovered during coverage checks
+}
+
+
+def _apply_overrides(base_codes: List[str]) -> List[str]:
+    """Apply symbol overrides for known renames/quirks."""
+    out = []
+    for code in base_codes:
+        out.append(SYMBOL_OVERRIDES.get(code, code))
+    return out
 
 
 @dataclass
@@ -87,6 +109,8 @@ def _normalize_batch(df: pd.DataFrame, batch: List[str]) -> pd.DataFrame:
 
 def fetch_and_save(cfg: PriceFetchConfig) -> None:
     universe = sorted(set(load_universe(cfg.universe_path)))
+    universe = _apply_overrides(universe)
+    universe = sorted(set(universe))  # Re-sort and dedupe after overrides
     logger.info("Universe tickers", extra={"count": len(universe)})
 
     frames = []

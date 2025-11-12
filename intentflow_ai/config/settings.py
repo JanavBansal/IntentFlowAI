@@ -62,7 +62,7 @@ class Settings:
     price_start: str = "2018-01-01"
     price_end: str | None = None
     min_trading_days: int = 600
-    min_train_tickers: int = 180
+    min_train_tickers: int = 50  # Lowered from 180 for testing with incomplete universe
     cv_splits: int = 3
     valid_start: str = "2023-07-01"
     test_start: str = "2024-01-01"

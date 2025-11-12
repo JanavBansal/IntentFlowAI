@@ -25,9 +25,9 @@ def main() -> None:
     assert p.exists(), f"Missing file: {p}"
     df = pd.read_parquet(p)
 
-required = ["date", "ticker", "open", "high", "low", "close", "volume", "sector"]
-missing = [c for c in required if c not in df.columns]
-assert not missing, f"Missing columns: {missing}"
+    required = ["date", "ticker", "open", "high", "low", "close", "volume", "sector"]
+    missing = [c for c in required if c not in df.columns]
+    assert not missing, f"Missing columns: {missing}"
 
     df["date"] = pd.to_datetime(df["date"]).dt.tz_localize(None)
     for c in ["open", "high", "low", "close"]:
