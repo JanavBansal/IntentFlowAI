@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
@@ -41,20 +41,28 @@ def backtest_signals(preds: pd.DataFrame, prices: pd.DataFrame, cfg: BacktestCon
     if px.empty:
         return _empty_backtest(cfg)
 
+    regime = _compute_regimes(px)
     dates = sorted(preds[cfg.date_col].unique())
     k = max(1, int(cfg.top_k))
     cost_mult_in = 1.0 + (cfg.slippage_bps + cfg.fee_bps) / 1e4
     cost_mult_out = 1.0 - (cfg.slippage_bps + cfg.fee_bps) / 1e4
 
     trades = []
+    prev_ranks: Optional[Dict[str, int]] = None
     for d in dates:
+        if regime.get(d, "bear") == "bear":
+            continue
         if d not in px.index:
             continue
         day_preds = preds.loc[preds[cfg.date_col] == d].sort_values(cfg.proba_col, ascending=False)
-        picks = [t for t in day_preds[cfg.ticker_col].head(k).tolist() if t in px.columns]
-        if not picks or d not in px.index:
+        ticker_list = day_preds[cfg.ticker_col].tolist()
+        ranks_today = {ticker: rank + 1 for rank, ticker in enumerate(ticker_list)}
+        picks = _stable_topk(ranks_today, prev_ranks, k, max_drop=20)
+        prev_ranks = ranks_today
+        cols = [t for t in picks if t in px.columns]
+        if not cols:
             continue
-        entry_px = px.loc[d, picks].dropna()
+        entry_px = px.loc[d, cols].dropna()
         if entry_px.empty:
             continue
         exit_idx = px.index.get_indexer([d])[0] + cfg.hold_days
@@ -137,3 +145,48 @@ def _empty_backtest(cfg: BacktestConfig) -> Dict[str, object]:
             "avg_hold_days": float(cfg.hold_days),
         },
     }
+
+
+def _compute_regimes(px: pd.DataFrame, fast: int = 20, slow: int = 100, vol_lookback: int = 20, vol_thresh: float = 0.03) -> pd.Series:
+    """Return bull/bear regimes based on equal-weight index trend and realized vol."""
+
+    idx = px.mean(axis=1)
+    ma_fast = idx.rolling(fast).mean()
+    ma_slow = idx.rolling(slow).mean()
+    trend_up = ma_fast > ma_slow
+
+    ret = idx.pct_change()
+    vol = ret.rolling(vol_lookback).std().fillna(0)
+
+    regime = pd.Series("bear", index=idx.index)
+    regime[(trend_up) & (vol < vol_thresh)] = "bull"
+    return regime
+def _stable_topk(ranks_today: Dict[str, int], ranks_prev: Optional[Dict[str, int]], k: int, max_drop: int = 20):
+    """Keep prior winners unless they fall sharply, then fill with today's best."""
+
+    ranks_prev = ranks_prev or {}
+    keep = [
+        t
+        for t, prev_rank in ranks_prev.items()
+        if prev_rank <= k and t in ranks_today and ranks_today[t] <= prev_rank + max_drop
+    ]
+    keep_set = set(keep)
+    ordered_today = sorted(ranks_today.items(), key=lambda x: x[1])
+    add = [t for t, _ in ordered_today if t not in keep_set][: max(0, k - len(keep))]
+    return keep + add
+
+
+def _compute_regimes(px: pd.DataFrame, fast: int = 20, slow: int = 100, vol_lookback: int = 20, vol_thresh: float = 0.03) -> pd.Series:
+    """Return bull/bear regimes based on equal-weight index trend and realized vol."""
+
+    idx = px.mean(axis=1)
+    ma_fast = idx.rolling(fast).mean()
+    ma_slow = idx.rolling(slow).mean()
+    trend_up = ma_fast > ma_slow
+
+    ret = idx.pct_change()
+    vol = ret.rolling(vol_lookback).std().fillna(0)
+
+    regime = pd.Series("bear", index=idx.index)
+    regime[(trend_up) & (vol < vol_thresh)] = "bull"
+    return regime

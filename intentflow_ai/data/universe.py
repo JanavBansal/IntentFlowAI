@@ -11,12 +11,34 @@ from intentflow_ai.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
-def load_universe(path: Path) -> pd.DataFrame:
+def _shim_universe_columns(df: pd.DataFrame) -> pd.DataFrame:
+    """Accept simplified CSVs and expand required columns."""
+
+    lower_cols = {c.lower(): c for c in df.columns}
+    required = {"ticker_nse", "ticker_yf"}
+    if required.issubset(lower_cols.keys()):
+        return df
+
+    ticker_col = lower_cols.get("ticker")
+    if ticker_col:
+        ticker_series = df[ticker_col].astype(str).str.upper().str.strip()
+        df["ticker_nse"] = ticker_series
+        df["ticker_yf"] = ticker_series
+
+    sector_col = lower_cols.get("sector")
+    if sector_col and "sector" not in df.columns:
+        df["sector"] = df[sector_col]
+    return df
+
+
+def load_universe(path: Path | str) -> pd.DataFrame:
     """Load the configured universe CSV and validate basic schema."""
 
+    path = Path(path)
     if not path.exists():
         raise FileNotFoundError(f"Universe file not found: {path}")
     df = pd.read_csv(path)
+    df = _shim_universe_columns(df)
     # Allow simplified schema by injecting required columns.
     if {"ticker", "sector"}.issubset(df.columns) and not {"ticker_nse", "ticker_yf"}.issubset(df.columns):
         df = df.copy()
