@@ -1,4 +1,5 @@
-experiments/v_universe_sanity/train.parquet
-experiments/v_universe_sanity/train.parquet
-experiments/v_universe_sanity/train.parquet
-experiments/v_universe_sanity/train.parquet
+# Ignore all parquet files in experiments (can be large)
+experiments/**/*.parquet
+experiments/**/train.parquet
+# Also ignore data parquet files (regenerated from source)
+data/raw/**/*.parquet
