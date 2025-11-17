@@ -1,11 +1,11 @@
 {
-  "CAGR": 0.0,
-  "Sharpe": 0.0,
-  "maxDD": 0.0,
-  "turnover": 0.0,
-  "win_rate": 0.0,
+  "CAGR": 0.3340774311638852,
+  "Sharpe": 1.7612917470841747,
+  "maxDD": -0.10243268613833334,
+  "turnover": 0.4280618311533888,
+  "win_rate": 0.6833333333333333,
   "avg_hold_days": 10.0,
-  "avg_positions": 0.0,
+  "avg_positions": 12.0,
   "cost_model": {
     "name": "realistic",
     "components": {

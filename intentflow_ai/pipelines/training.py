@@ -19,7 +19,7 @@ from intentflow_ai.modeling import (
     hit_rate,
     precision_at_k,
 )
-from intentflow_ai.utils.io import load_price_parquet
+from intentflow_ai.utils.io import load_enhanced_panel, load_price_parquet
 from intentflow_ai.utils.logging import get_logger
 from intentflow_ai.utils.splits import purged_time_series_splits, time_splits
 
@@ -49,11 +49,13 @@ class TrainingPipeline:
             DataIngestionWorkflow().run()
         leak_mode = self.leak_test if leak_test is None else leak_test
 
-        price_panel = load_price_parquet(
-            allow_fallback=False,
+        # Load price panel with delivery/ownership data merged (PIT-safe)
+        price_panel = load_enhanced_panel(
             start_date=self.cfg.price_start,
             end_date=self.cfg.price_end,
             cfg=self.cfg,
+            merge_delivery=True,
+            merge_ownership=True,
         )
         if tickers_subset is not None:
             price_panel = price_panel[price_panel["ticker"].isin(tickers_subset)]
@@ -123,10 +125,18 @@ class TrainingPipeline:
         regime_scores: Dict[str, pd.Series] = {}
         if self.regime_filter:
             regime_classifier = RegimeClassifier()
-            market_series = price_panel.groupby("date")["close"].mean().sort_index()
-            regime_map = regime_classifier.infer(market_series)
+            # RegimeClassifier.infer expects a DataFrame with [date, ticker, close] columns
+            # Create a minimal DataFrame from the price panel
+            market_df = price_panel[["date", "ticker", "close"]].copy()
+            regime_map = regime_classifier.infer(market_df)
             train_df["date"] = pd.to_datetime(train_df["date"])
-            train_df = train_df.merge(regime_map.rename("regime"), left_on="date", right_index=True, how="left")
+            # regime_map is a DataFrame indexed by date with composite_regime column
+            if not regime_map.empty and "composite_regime" in regime_map.columns:
+                regime_series = regime_map["composite_regime"].rename("regime")
+                train_df = train_df.merge(regime_series, left_on="date", right_index=True, how="left")
+            else:
+                # Fallback: assign default regime
+                train_df["regime"] = "sideways"
 
             for regime, subset in train_df.dropna(subset=["regime"]).groupby("regime"):
                 if subset.empty:
