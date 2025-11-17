@@ -1,0 +1,10 @@
+[11/17/25 01:57:08] INFO     2025-11-17 01:57:08,976 | INFO |    universe.py:133
+                             intentflow_ai.data.universe |                      
+                             Universe sector distribution                       
+[11/17/25 01:57:08] ERROR    2025-11-17 01:57:08,978 | ERROR |     sources.py:25
+                             intentflow_ai.data.sources | Failed                
+                             to load universe file                              
+Traceback (most recent call last):
+  File "/Users/janavbansal/.cursor/worktrees/IntentFlowAI/e85Lc/scripts/run_upgraded_validation.py", line 22, in <module>
+    from intentflow_ai.data.ingestion import prepare_training_frame
+ImportError: cannot import name 'prepare_training_frame' from 'intentflow_ai.data.ingestion' (/Users/janavbansal/.cursor/worktrees/IntentFlowAI/e85Lc/intentflow_ai/data/ingestion.py)

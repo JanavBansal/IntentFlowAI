@@ -19,8 +19,9 @@ import pandas as pd
 
 from intentflow_ai.config.experiments import load_experiment_config
 from intentflow_ai.config.settings import settings
-from intentflow_ai.data.ingestion import prepare_training_frame
 from intentflow_ai.features.engineering import FeatureEngineer
+from intentflow_ai.features.labels import make_excess_label
+from intentflow_ai.utils.io import load_price_parquet
 from intentflow_ai.features.selection import FeatureSelector, FeatureSelectionConfig, generate_feature_selection_report
 from intentflow_ai.modeling.ensemble import DiverseEnsemble, EnsembleConfig, evaluate_ensemble_diversity, generate_ensemble_report
 from intentflow_ai.meta_labeling.core import EnhancedMetaLabeler, EnhancedMetaLabelConfig
@@ -53,14 +54,61 @@ def main():
     # ======================================================================
     logger.info("Stage 1: Loading data and engineering features")
     
-    training_frame = prepare_training_frame(exp_cfg)
+    # Load price data
+    try:
+        price_panel = load_price_parquet(
+            allow_fallback=False,
+            start_date=exp_cfg.splits.get("train_start", "2018-01-01"),
+            end_date=None,
+            cfg=settings,
+        )
+    except Exception as exc:
+        logger.error(f"Failed to load price data: {exc}")
+        logger.info("Trying alternative data loading method...")
+        # Fallback: try loading from experiments directory
+        import glob
+        price_files = glob.glob(str(settings.data_dir / "**" / "*price*.parquet"), recursive=True)
+        if price_files:
+            logger.info(f"Found price file: {price_files[0]}")
+            price_panel = pd.read_parquet(price_files[0])
+        else:
+            logger.error("No price data found!")
+            return
     
-    if training_frame.empty:
-        logger.error("Training frame is empty!")
+    if price_panel.empty:
+        logger.error("Price panel is empty!")
         return
     
+    logger.info(f"Loaded price data: {len(price_panel)} rows, {price_panel['ticker'].nunique()} tickers")
+    
+    # Engineer features
     engineer = FeatureEngineer()
-    features = engineer.build(training_frame)
+    feature_frame = engineer.build(price_panel)
+    
+    # Join features with price data
+    dataset = price_panel.join(feature_frame)
+    
+    # Create labels
+    horizon_days = exp_cfg.get("signal_horizon_days", 10)
+    if "signal_horizon_days" in exp_cfg:
+        horizon_days = exp_cfg["signal_horizon_days"]
+    elif "meta_labeling" in exp_cfg and "horizon_days" in exp_cfg["meta_labeling"]:
+        horizon_days = exp_cfg["meta_labeling"]["horizon_days"]
+    else:
+        horizon_days = 10
+    
+    training_frame = make_excess_label(
+        dataset,
+        horizon_days=horizon_days,
+        thresh=exp_cfg.get("target_excess_return", 0.015),
+    )
+    
+    if training_frame.empty:
+        logger.error("Training frame is empty after labeling!")
+        return
+    
+    # Get feature columns
+    features = training_frame[feature_frame.columns.tolist()]
     
     logger.info(f"Generated {len(features.columns)} features")
     
