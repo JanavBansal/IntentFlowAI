@@ -8,6 +8,11 @@ from intentflow_ai.sanity.leakage_tests import (
 )
 from intentflow_ai.sanity.cost_sweep import CostSweepResult, run_cost_sweep
 from intentflow_ai.sanity.report import SanityReportBuilder
+from intentflow_ai.sanity.stress_tests import (
+    StressTestSuite,
+    StressTestConfig,
+    generate_stress_test_report,
+)
 
 __all__ = [
     "DataScopeChecks",
@@ -17,4 +22,7 @@ __all__ = [
     "run_cost_sweep",
     "CostSweepResult",
     "SanityReportBuilder",
+    "StressTestSuite",
+    "StressTestConfig",
+    "generate_stress_test_report",
 ]

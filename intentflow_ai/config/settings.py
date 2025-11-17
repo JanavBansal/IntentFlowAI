@@ -29,6 +29,9 @@ class LightGBMConfig:
     n_estimators: int = 800
     random_state: int = 42
     n_jobs: int = 1
+    reg_alpha: float = 0.0  # L1 regularization
+    reg_lambda: float = 1.0  # L2 regularization
+    min_child_samples: int = 20  # Minimum samples in leaf
 
 
 @dataclass
