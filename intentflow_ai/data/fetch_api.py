@@ -14,6 +14,7 @@ from typing import Dict, Iterable, List
 import pandas as pd
 import yfinance as yf
 
+from intentflow_ai.data.universe import DEFAULT_SYMBOL_OVERRIDES
 from intentflow_ai.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -22,20 +23,6 @@ os.environ.setdefault("YFINANCE_CACHE_DIR", str(Path(".yfcache").resolve()))
 Path(os.environ["YFINANCE_CACHE_DIR"]).mkdir(parents=True, exist_ok=True)
 YF_KW = dict(auto_adjust=False, actions=False, progress=False, threads=True)
 _SYNTH_SUFFIX = re.compile(r"_S\d+$")
-
-# Symbol override map for known renames/quirks on Yahoo Finance
-SYMBOL_OVERRIDES = {
-    # True Yahoo renames / brand changes
-    "ADANITRANS": "ADANIENSOL",   # Adani Transmission → Adani Energy Solutions
-    "MOTHERSUMI": "MOTHERSON",    # legacy → new
-    # Keep punctuation cases as-is (Yahoo needs them)
-    "M&M": "M&M",
-    "BAJAJ-AUTO": "BAJAJ-AUTO",
-    "L&TFH": "L&TFH",
-    # Add more here as you discover them during coverage checks
-}
-
-
 
 
 @dataclass
@@ -104,7 +91,7 @@ def _normalize_batch(df: pd.DataFrame, batch: List[str]) -> pd.DataFrame:
 def fetch_and_save(cfg: PriceFetchConfig) -> None:
     universe = sorted(set(load_universe(cfg.universe_path)))
     # Apply symbol overrides for known renames/quirks
-    universe = [SYMBOL_OVERRIDES.get(t, t) for t in universe]
+    universe = [DEFAULT_SYMBOL_OVERRIDES.get(t, t) for t in universe]
     universe = sorted(set(universe))  # Re-sort and dedupe after overrides
     logger.info("Universe tickers", extra={"count": len(universe)})
 

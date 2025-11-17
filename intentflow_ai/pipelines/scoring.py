@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 
 from intentflow_ai.features import FeatureEngineer
+from intentflow_ai.meta_labeling import MetaLabelConfig, MetaLabeler
 from intentflow_ai.modeling import RegimeClassifier
 from intentflow_ai.utils.logging import get_logger
 
@@ -23,6 +24,9 @@ class ScoringPipeline:
     feature_columns: Optional[List[str]] = None
     regime_classifier: Optional[RegimeClassifier] = None
     default_model_key: str = "overall"
+    meta_model: Any | None = None
+    meta_feature_columns: Optional[List[str]] = None
+    meta_config: Optional[MetaLabelConfig] = None
 
     def run(self, dataset: pd.DataFrame) -> pd.DataFrame:
         if dataset.empty:
@@ -45,6 +49,13 @@ class ScoringPipeline:
 
         signals = dataset[["date", "ticker"]].copy()
         signals["proba"] = proba
+        if self.meta_model is not None and self.meta_feature_columns and self.meta_config:
+            meta_labeler = MetaLabeler(self.meta_config)
+            try:
+                meta_proba = meta_labeler.predict(self.meta_model, dataset, proba, self.meta_feature_columns)
+                signals[self.meta_config.output_col] = meta_proba
+            except Exception as exc:  # pragma: no cover - optional path
+                logger.warning("Meta-model scoring failed", exc_info=exc)
         signals["rank"] = signals["proba"].rank(ascending=False, method="first")
         signals = signals.sort_values("rank").reset_index(drop=True)
         logger.info("Generated signals", extra={"count": len(signals)})

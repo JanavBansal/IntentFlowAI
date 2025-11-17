@@ -11,6 +11,7 @@ import pandas as pd
 from intentflow_ai.config.settings import Settings, settings
 from intentflow_ai.data.ingestion import DataIngestionWorkflow
 from intentflow_ai.features import FeatureEngineer, make_excess_label
+from intentflow_ai.meta_labeling import MetaLabelConfig, MetaLabeler
 from intentflow_ai.modeling import (
     LightGBMTrainer,
     ModelEvaluator,
@@ -31,6 +32,7 @@ class TrainingPipeline:
 
     cfg: Settings = field(default_factory=lambda: settings)
     feature_engineer: FeatureEngineer = field(default_factory=FeatureEngineer)
+    meta_labeling_cfg: Optional[MetaLabelConfig] = None
     regime_filter: bool = True
     use_live_sources: bool = False
     leak_test: bool = False
@@ -47,7 +49,12 @@ class TrainingPipeline:
             DataIngestionWorkflow().run()
         leak_mode = self.leak_test if leak_test is None else leak_test
 
-        price_panel = load_price_parquet(allow_fallback=False)
+        price_panel = load_price_parquet(
+            allow_fallback=False,
+            start_date=self.cfg.price_start,
+            end_date=self.cfg.price_end,
+            cfg=self.cfg,
+        )
         if tickers_subset is not None:
             price_panel = price_panel[price_panel["ticker"].isin(tickers_subset)]
             if price_panel.empty:
@@ -91,6 +98,17 @@ class TrainingPipeline:
         overall_model = trainer.train(features.loc[train_valid_mask], target.loc[train_valid_mask])
         overall_proba, _ = trainer.predict_with_meta_label(overall_model, features)
         train_df["proba"] = overall_proba
+        train_df["date"] = pd.to_datetime(train_df["date"])
+
+        meta_result: Dict[str, object] = {}
+        if self.meta_labeling_cfg and self.meta_labeling_cfg.enabled:
+            try:
+                meta_labeler = MetaLabeler(self.meta_labeling_cfg)
+                meta_result = meta_labeler.train(train_df, overall_proba)
+                if meta_result.get("proba") is not None:
+                    train_df[self.meta_labeling_cfg.output_col] = meta_result["proba"]
+            except Exception as exc:
+                logger.warning("Meta-labeling failed; continuing without gate.", exc_info=exc)
 
         metrics: Dict[str, Dict[str, float]] = {
             "overall": self._compute_metrics(train_df, overall_proba),
@@ -165,6 +183,8 @@ class TrainingPipeline:
             "leak_test": leak_mode,
             "feature_importances": feature_importances,
             "cv_metrics": cv_metrics,
+            "meta": meta_result,
+            "meta_config": self.meta_labeling_cfg,
         }
 
     def _compute_metrics(

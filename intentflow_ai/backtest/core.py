@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
+
+from intentflow_ai.backtest.filters import MetaFilterConfig, RiskFilterConfig, apply_cooldown, compute_regime_flags, update_cooldown
 
 
 @dataclass
@@ -23,6 +25,8 @@ class BacktestConfig:
     fee_bps: float = 1.0
     rebalance: str = "daily"
     long_only: bool = True
+    risk: RiskFilterConfig = field(default_factory=RiskFilterConfig)
+    meta: MetaFilterConfig = field(default_factory=MetaFilterConfig)
 
 
 def backtest_signals(preds: pd.DataFrame, prices: pd.DataFrame, cfg: BacktestConfig) -> Dict[str, object]:
@@ -41,23 +45,37 @@ def backtest_signals(preds: pd.DataFrame, prices: pd.DataFrame, cfg: BacktestCon
     if px.empty:
         return _empty_backtest(cfg)
 
-    regime = _compute_regimes(px)
+    regimes = compute_regime_flags(px, cfg.risk)
     dates = sorted(preds[cfg.date_col].unique())
     k = max(1, int(cfg.top_k))
     cost_mult_in = 1.0 + (cfg.slippage_bps + cfg.fee_bps) / 1e4
     cost_mult_out = 1.0 - (cfg.slippage_bps + cfg.fee_bps) / 1e4
-
-    trades = []
+    cooldown_state: Dict[str, pd.Timestamp] = {}
+    active_positions: list[Dict[str, object]] = []
+    trades: list[dict] = []
     prev_ranks: Optional[Dict[str, int]] = None
     for d in dates:
-        if regime.get(d, "bear") == "bear":
+        d_ts = pd.to_datetime(d)
+        active_positions = [pos for pos in active_positions if pos["date_out"] > d_ts]
+        if d_ts not in regimes.index:
+            continue
+        if not bool(regimes.loc[d_ts, "allow_entry"]):
             continue
         if d not in px.index:
             continue
         day_preds = preds.loc[preds[cfg.date_col] == d].sort_values(cfg.proba_col, ascending=False)
-        ticker_list = day_preds[cfg.ticker_col].tolist()
+        if cfg.meta.enabled and cfg.meta.proba_col in day_preds.columns:
+            day_preds = day_preds[day_preds[cfg.meta.proba_col] >= cfg.meta.min_prob]
+        ticker_list = apply_cooldown(day_preds[cfg.ticker_col].tolist(), cooldown_state, d_ts)
+        if cfg.risk.max_positions:
+            capacity = max(cfg.risk.max_positions - len(active_positions), 0)
+            if capacity <= 0:
+                continue
+            k_today = min(k, capacity)
+        else:
+            k_today = k
         ranks_today = {ticker: rank + 1 for rank, ticker in enumerate(ticker_list)}
-        picks = _stable_topk(ranks_today, prev_ranks, k, max_drop=20)
+        picks = _stable_topk(ranks_today, prev_ranks, k_today, max_drop=20)
         prev_ranks = ranks_today
         cols = [t for t in picks if t in px.columns]
         if not cols:
@@ -84,6 +102,8 @@ def backtest_signals(preds: pd.DataFrame, prices: pd.DataFrame, cfg: BacktestCon
         weights = np.full(len(valid), min(1.0 / len(valid), cfg.max_weight))
 
         for tkr, gr in gross.items():
+            update_cooldown(cooldown_state, [tkr], d_ts, cfg.risk.cooldown_days)
+            active_positions.append({"ticker": tkr, "date_out": d_out})
             trades.append(
                 {
                     "date_in": d,
@@ -116,6 +136,7 @@ def backtest_signals(preds: pd.DataFrame, prices: pd.DataFrame, cfg: BacktestCon
     maxdd = float(dd.min()) if not dd.empty else 0.0
     win_rate = float((trades_df["net_ret"] > 0).mean())
     turnover = float(len(trades_df) / length)
+    avg_positions = float(trades_df.groupby("date_in").size().mean()) if not trades_df.empty else 0.0
 
     summary = {
         "CAGR": cagr,
@@ -124,6 +145,7 @@ def backtest_signals(preds: pd.DataFrame, prices: pd.DataFrame, cfg: BacktestCon
         "turnover": turnover,
         "win_rate": win_rate,
         "avg_hold_days": float(cfg.hold_days),
+        "avg_positions": avg_positions,
     }
 
     equity.name = "equity"
@@ -143,24 +165,11 @@ def _empty_backtest(cfg: BacktestConfig) -> Dict[str, object]:
             "turnover": 0.0,
             "win_rate": 0.0,
             "avg_hold_days": float(cfg.hold_days),
+            "avg_positions": 0.0,
         },
     }
 
 
-def _compute_regimes(px: pd.DataFrame, fast: int = 20, slow: int = 100, vol_lookback: int = 20, vol_thresh: float = 0.03) -> pd.Series:
-    """Return bull/bear regimes based on equal-weight index trend and realized vol."""
-
-    idx = px.mean(axis=1)
-    ma_fast = idx.rolling(fast).mean()
-    ma_slow = idx.rolling(slow).mean()
-    trend_up = ma_fast > ma_slow
-
-    ret = idx.pct_change()
-    vol = ret.rolling(vol_lookback).std().fillna(0)
-
-    regime = pd.Series("bear", index=idx.index)
-    regime[(trend_up) & (vol < vol_thresh)] = "bull"
-    return regime
 def _stable_topk(ranks_today: Dict[str, int], ranks_prev: Optional[Dict[str, int]], k: int, max_drop: int = 20):
     """Keep prior winners unless they fall sharply, then fill with today's best."""
 
@@ -174,19 +183,3 @@ def _stable_topk(ranks_today: Dict[str, int], ranks_prev: Optional[Dict[str, int
     ordered_today = sorted(ranks_today.items(), key=lambda x: x[1])
     add = [t for t, _ in ordered_today if t not in keep_set][: max(0, k - len(keep))]
     return keep + add
-
-
-def _compute_regimes(px: pd.DataFrame, fast: int = 20, slow: int = 100, vol_lookback: int = 20, vol_thresh: float = 0.03) -> pd.Series:
-    """Return bull/bear regimes based on equal-weight index trend and realized vol."""
-
-    idx = px.mean(axis=1)
-    ma_fast = idx.rolling(fast).mean()
-    ma_slow = idx.rolling(slow).mean()
-    trend_up = ma_fast > ma_slow
-
-    ret = idx.pct_change()
-    vol = ret.rolling(vol_lookback).std().fillna(0)
-
-    regime = pd.Series("bear", index=idx.index)
-    regime[(trend_up) & (vol < vol_thresh)] = "bull"
-    return regime

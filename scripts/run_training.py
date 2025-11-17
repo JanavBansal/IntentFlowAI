@@ -5,11 +5,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import yaml
 from joblib import dump
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,6 +18,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from intentflow_ai.config import Settings
+from intentflow_ai.config.experiments import apply_experiment_overrides, load_experiment_config
+from intentflow_ai.meta_labeling import MetaLabelConfig
 from intentflow_ai.modeling.visuals import save_classification_plots
 from intentflow_ai.pipelines import TrainingPipeline
 from intentflow_ai.sanity import DataScopeChecks
@@ -36,8 +39,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--experiment",
-        default="v0",
-        help="Experiment subdirectory name under experiments/ (default: v0).",
+        default=None,
+        help="Experiment subdirectory name under experiments/ (default: config id or v0).",
+    )
+    parser.add_argument(
+        "--config",
+        default="config/experiments/v_universe_sanity.yaml",
+        help="Experiment YAML describing splits/hyperparameters.",
     )
     parser.add_argument("--max-tickers", type=int, help="Randomly sample this many tickers before training.")
     parser.add_argument("--valid-start", help="Override validation split start date (YYYY-MM-DD).")
@@ -81,22 +89,52 @@ def print_metrics_table(metrics: dict) -> None:
 
 def main() -> None:
     args = parse_args()
-    cfg = Settings()
+    exp_cfg = load_experiment_config(args.config) if args.config else None
+    cfg = apply_experiment_overrides(Settings(), exp_cfg)
     if args.valid_start:
         cfg = replace(cfg, valid_start=args.valid_start)
     if args.test_start:
         cfg = replace(cfg, test_start=args.test_start)
+    # Propagate overrides to global settings users (feature lookups, IO helpers).
+    import intentflow_ai.config.settings as settings_module
+    from intentflow_ai.features.engineering import _sector_lookup
+
+    settings_module.settings = cfg
+    _sector_lookup.cache_clear()
+
+    meta_cfg: MetaLabelConfig | None = None
+    if exp_cfg:
+        meta_block = exp_cfg.get("meta_labeling", {})
+        if meta_block:
+            meta_cfg = MetaLabelConfig(
+                enabled=bool(meta_block.get("enabled", False)),
+                horizon_days=meta_block.get("horizon_days", cfg.signal_horizon_days),
+                success_threshold=meta_block.get("success_threshold", cfg.target_excess_return),
+                min_signal_proba=meta_block.get("min_signal_proba", 0.0),
+                random_state=meta_block.get("random_state", cfg.lgbm_seed),
+                proba_col=meta_block.get("proba_col", "proba"),
+                output_col=meta_block.get("output_col", "meta_proba"),
+            )
+    if meta_cfg is None:
+        meta_cfg = MetaLabelConfig(enabled=False, horizon_days=cfg.signal_horizon_days, random_state=cfg.lgbm_seed)
+
+    experiment_name = args.experiment or (exp_cfg.id if exp_cfg else "v0")
 
     pipeline = TrainingPipeline(
         cfg=cfg,
         regime_filter=not args.no_regime_filter,
         use_live_sources=args.live,
         leak_test=args.leak_test,
+        meta_labeling_cfg=meta_cfg,
     )
 
     tickers_subset = None
     if args.max_tickers:
-        prices = load_price_parquet(allow_fallback=False)
+        prices = load_price_parquet(
+            allow_fallback=False,
+            start_date=cfg.price_start,
+            end_date=cfg.price_end,
+        )
         unique = np.array(sorted(prices["ticker"].unique()))
         if unique.size == 0:
             raise ValueError("No tickers available in price parquet.")
@@ -111,7 +149,7 @@ def main() -> None:
 
     result = pipeline.run(live=args.live, tickers_subset=tickers_subset)
 
-    exp_dir = Path("experiments") / args.experiment
+    exp_dir = Path("experiments") / experiment_name
     exp_dir.mkdir(parents=True, exist_ok=True)
     plot_paths = save_classification_plots(
         result["training_frame"]["label"],
@@ -128,6 +166,11 @@ def main() -> None:
         "regime_classifier": result.get("regime_classifier"),
         "feature_columns": result["feature_columns"],
     }
+    meta_payload = result.get("meta", {})
+    if meta_payload.get("model") is not None:
+        model_bundle["meta_model"] = meta_payload["model"]
+        model_bundle["meta_feature_columns"] = meta_payload.get("feature_columns")
+        model_bundle["meta_config"] = result.get("meta_config")
     model_path = exp_dir / "lgb.pkl"
     dump(model_bundle, model_path)
 
@@ -135,9 +178,11 @@ def main() -> None:
     train_frame_path = exp_dir / "train.parquet"
     train_frame.to_parquet(train_frame_path, index=False)
 
-    preds = train_frame[["date", "ticker", "label", "excess_fwd"]].copy()
+    preds_cols = ["date", "ticker", "label", "excess_fwd", "proba"]
+    if "meta_proba" in train_frame.columns:
+        preds_cols.append("meta_proba")
+    preds = train_frame[preds_cols].copy()
     preds["proba"] = result["probabilities"].values
-    preds = preds[["date", "ticker", "proba", "label", "excess_fwd"]]
     preds_path = exp_dir / "preds.csv"
     preds.to_csv(preds_path, index=False)
 
@@ -180,6 +225,18 @@ def main() -> None:
     metrics_path = exp_dir / "metrics.json"
     with metrics_path.open("w", encoding="utf-8") as f:
         json.dump(result["metrics"], f, indent=2)
+    params_path = exp_dir / "params.yaml"
+    params_path.write_text(
+        yaml.safe_dump(
+            {
+                "settings": asdict(cfg),
+                "meta_labeling": asdict(meta_cfg),
+                "experiment_config": exp_cfg.data if exp_cfg else {},
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
 
     logger.info(
         "Experiment artifacts written",

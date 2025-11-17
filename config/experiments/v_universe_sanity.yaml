@@ -1,5 +1,11 @@
 random_state: 42
 
+# Temporary sandbox: NIFTY100 via yfinance parquet (long-term target remains NIFTY200 PIT universe)
+universe:
+  universe_file: data/external/universe/nifty100_universe.csv
+  membership_file: null
+  use_membership: false
+
 splits:
   train_start: "2018-01-01"
   valid_start: "2023-01-01"
@@ -18,4 +24,29 @@ trainer:
     reg_alpha: 0.0
 
 runtime:
-  min_tickers: 120
+  min_tickers: 80
+
+backtest:
+  top_k: 15
+  hold_days: 10
+  fee_bps: 1.0
+  slippage_bps: 10.0
+  cost_model: realistic
+
+risk_filters:
+  trend_fast: 50
+  trend_slow: 200
+  vol_lookback: 20
+  vol_high: 0.04
+  allow_high_vol: false
+  allow_downtrend: false
+  max_positions: 12
+  cooldown_days: 2
+
+meta_labeling:
+  enabled: false
+  horizon_days: 10
+  success_threshold: 0.015
+  min_signal_proba: 0.55
+  proba_col: proba
+  output_col: meta_proba

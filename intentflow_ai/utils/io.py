@@ -8,8 +8,8 @@ from typing import Iterable, Sequence
 import pandas as pd
 import pyarrow.parquet as pq
 
-from intentflow_ai.config.settings import settings
-from intentflow_ai.data.universe import apply_membership_filter, load_universe, load_universe_membership
+from intentflow_ai.config.settings import Settings, settings
+from intentflow_ai.data.universe import apply_membership_filter, load_universe
 from intentflow_ai.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -37,10 +37,18 @@ def read_parquet_dataset(paths: Sequence[Path]) -> pd.DataFrame:
     return pd.concat(frames, ignore_index=True)
 
 
-def load_price_parquet(path: Path | None = None, *, allow_fallback: bool = False) -> pd.DataFrame:
+def load_price_parquet(
+    path: Path | None = None,
+    *,
+    allow_fallback: bool = False,
+    start_date: str | None = None,
+    end_date: str | None = None,
+    cfg: Settings | None = None,
+) -> pd.DataFrame:
     """Load the canonical price parquet into a normalized panel."""
 
-    target = Path(path) if path else settings.data_dir / "raw" / "price_confirmation" / "data.parquet"
+    cfg = cfg or settings
+    target = Path(path) if path else cfg.data_dir / "raw" / "price_confirmation" / "data.parquet"
     if not target.exists():
         raise FileNotFoundError(f"Price parquet not found at {target}")
 
@@ -71,9 +79,28 @@ def load_price_parquet(path: Path | None = None, *, allow_fallback: bool = False
     frame["date"] = pd.to_datetime(frame["date"]).dt.tz_localize(None)
     frame["ticker"] = frame["ticker"].astype(str).str.strip()
 
+    start_dt = pd.to_datetime(start_date or getattr(cfg, "price_start", None)).tz_localize(None) if (
+        start_date or getattr(cfg, "price_start", None)
+    ) else None
+    end_dt = pd.to_datetime(end_date or getattr(cfg, "price_end", None)).tz_localize(None) if (
+        end_date or getattr(cfg, "price_end", None)
+    ) else None
+    if start_dt is not None:
+        frame = frame.loc[frame["date"] >= start_dt]
+    if end_dt is not None:
+        frame = frame.loc[frame["date"] <= end_dt]
+
+    universe = None
     try:
-        universe_path = _resolve_data_path(settings.universe_file)
-        universe = load_universe(universe_path)
+        universe_path = _resolve_data_path(cfg.universe_file, cfg)
+        membership_attr = getattr(cfg, "universe_membership_file", "")
+        membership_path = _resolve_data_path(membership_attr, cfg) if membership_attr else None
+        universe = load_universe(
+            universe_path,
+            start_date=start_dt,
+            end_date=end_dt,
+            membership_path=membership_path if membership_path and membership_path.exists() else None,
+        )
         allowed = set(universe["ticker_nse"].astype(str).str.upper())
         before = len(frame)
         filtered = frame[frame["ticker"].str.upper().isin(allowed)]
@@ -86,25 +113,22 @@ def load_price_parquet(path: Path | None = None, *, allow_fallback: bool = False
     except Exception as exc:  # pragma: no cover - optional during tests
         logger.warning("Unable to apply static universe filter", exc_info=exc)
 
-    membership_attr = getattr(settings, "universe_membership_file", "")
-    if membership_attr:
-        membership_path = _resolve_data_path(membership_attr)
-        if membership_path.exists():
-            try:
-                membership = load_universe_membership(membership_path)
-                before = len(frame)
-                filtered = apply_membership_filter(frame, membership)
-                if filtered.empty and before > 0:
-                    logger.warning("Membership filter removed all rows; retaining original frame.")
-                else:
-                    frame = filtered
-                    if before != len(frame):
-                        logger.info(
-                            "Applied membership history filter",
-                            extra={"dropped": before - len(frame), "kept": len(frame)},
-                        )
-            except Exception as exc:  # pragma: no cover
-                logger.warning("Failed to apply membership history filter", exc_info=exc)
+    membership_cols = {"ticker", "start_date", "end_date"}
+    if universe is not None and membership_cols.issubset(universe.columns):
+        try:
+            before = len(frame)
+            filtered = apply_membership_filter(frame, universe[list(membership_cols)])
+            if filtered.empty and before > 0:
+                logger.warning("Membership filter removed all rows; retaining original frame.")
+            else:
+                frame = filtered
+                if before != len(frame):
+                    logger.info(
+                        "Applied membership history filter",
+                        extra={"dropped": before - len(frame), "kept": len(frame)},
+                    )
+        except Exception as exc:  # pragma: no cover
+            logger.warning("Failed to apply membership history filter", exc_info=exc)
 
     return frame.sort_values(["ticker", "date"]).reset_index(drop=True)
 
@@ -130,8 +154,9 @@ def _load_price_from_csv() -> pd.DataFrame:
     return combined
 
 
-def _resolve_data_path(relative: str) -> Path:
+def _resolve_data_path(relative: str, cfg: Settings | None = None) -> Path:
+    cfg = cfg or settings
     rel = Path(relative)
     if rel.is_absolute():
         return rel
-    return settings.data_dir / rel
+    return cfg.data_dir / rel
