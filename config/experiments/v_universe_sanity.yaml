@@ -2,7 +2,7 @@ random_state: 42
 
 # Temporary sandbox: NIFTY100 via yfinance parquet (long-term target remains NIFTY200 PIT universe)
 universe:
-  universe_file: data/external/universe/nifty100_universe.csv
+  universe_file: external/universe/nifty100_universe.csv
   membership_file: null
   use_membership: false
 

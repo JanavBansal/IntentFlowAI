@@ -9,7 +9,7 @@ import pandas as pd
 
 from intentflow_ai.features import FeatureEngineer
 from intentflow_ai.meta_labeling import MetaLabelConfig, MetaLabeler
-from intentflow_ai.modeling import RegimeClassifier
+from intentflow_ai.modeling import ExplanationConfig, RegimeClassifier, explain_signals
 from intentflow_ai.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -27,6 +27,8 @@ class ScoringPipeline:
     meta_model: Any | None = None
     meta_feature_columns: Optional[List[str]] = None
     meta_config: Optional[MetaLabelConfig] = None
+    explanation_config: Optional[ExplanationConfig] = None
+    background_data: Optional[pd.DataFrame] = None
 
     def run(self, dataset: pd.DataFrame) -> pd.DataFrame:
         if dataset.empty:
@@ -48,7 +50,11 @@ class ScoringPipeline:
             proba.loc[idx] = preds
 
         signals = dataset[["date", "ticker"]].copy()
+        if "sector" in dataset.columns:
+            signals["sector"] = dataset["sector"]
         signals["proba"] = proba
+        signals.index = dataset.index  # Preserve original index for SHAP alignment
+        
         if self.meta_model is not None and self.meta_feature_columns and self.meta_config:
             meta_labeler = MetaLabeler(self.meta_config)
             try:
@@ -56,8 +62,33 @@ class ScoringPipeline:
                 signals[self.meta_config.output_col] = meta_proba
             except Exception as exc:  # pragma: no cover - optional path
                 logger.warning("Meta-model scoring failed", exc_info=exc)
+        
         signals["rank"] = signals["proba"].rank(ascending=False, method="first")
+        
+        # Add SHAP explanations before sorting (to preserve index alignment)
+        if self.explanation_config and self.explanation_config.enabled and self.background_data is not None:
+            try:
+                # Use the default model for explanations
+                model = self.models.get(self.default_model_key)
+                if model is not None and not self.background_data.empty:
+                    # Generate explanations with aligned indices
+                    signals_with_explanations = explain_signals(
+                        model=model,
+                        features=features,
+                        signals=signals,
+                        background_data=self.background_data,
+                        config=self.explanation_config,
+                    )
+                    signals = signals_with_explanations
+                    logger.info("Added SHAP explanations to signals", extra={"count": len(signals)})
+                else:
+                    logger.warning("Model or background data unavailable for SHAP")
+            except Exception as exc:
+                logger.warning("SHAP explanation failed, returning signals without explanations", exc_info=exc)
+        
+        # Sort and reset index after explanations
         signals = signals.sort_values("rank").reset_index(drop=True)
+        
         logger.info("Generated signals", extra={"count": len(signals)})
         return signals
 
