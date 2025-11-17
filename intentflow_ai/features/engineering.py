@@ -49,6 +49,8 @@ class FeatureEngineer:
                 "narrative": self._narrative_block,
                 "sector_relative": self._sector_relative_block,
                 "regime": self._regime_block,
+                "regime_adaptive": self._regime_adaptive_block,
+                "mean_reversion": self._mean_reversion_block,
             }
 
     @staticmethod
@@ -563,6 +565,17 @@ class FeatureEngineer:
         merged = merged.merge(regime_frame, on="date", how="left")
         merged = merged.merge(vol_frame, on="date", how="left")
 
+        # Enhanced volatility features (VIX-equivalent, vol-of-vol, term structure)
+        # VIX-equivalent: 30-day forward-looking volatility estimate (using realized vol as proxy)
+        vol_30d = market.pct_change().rolling(30).std()
+        
+        # Volatility of volatility (vol regime uncertainty)
+        vol_of_vol = vol_series.rolling(20).std()
+        
+        # Term structure: short-vol (5d) vs long-vol (20d)
+        vol_5d = market.pct_change().rolling(5).std()
+        vol_term_structure = vol_5d / (vol_series + 1e-9)
+        
         # Create output features
         out = pd.DataFrame(index=dataset.index)
         out["regime_is_bull"] = (merged["market_regime"] == "bull").astype(float)
@@ -571,4 +584,178 @@ class FeatureEngineer:
         out["index_vol_pct"] = merged["index_vol_pct"]
         out["index_vol_spike"] = merged["index_vol_spike"]
         
+        # Add enhanced volatility features (align with dataset dates)
+        out["vix_equivalent_30d"] = vol_30d.reindex(dataset["date"], method="ffill").values
+        out["vol_of_vol_20d"] = vol_of_vol.reindex(dataset["date"], method="ffill").values
+        out["vol_term_structure_5_20"] = vol_term_structure.reindex(dataset["date"], method="ffill").values
+        
         return out
+
+    def _regime_adaptive_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Regime-adaptive features that work across all market conditions.
+        
+        Features:
+        - market_adj_mom_5, _10, _20: (Stock Return - Market Return) / Volatility
+          Separates true alpha from beta, scales by regime volatility
+        - regime_adj_volume: Current Volume / (20-Day Avg Volume * Volatility Percentile)
+          High vol days = big volume is normal, shouldn't trigger signal
+        - market_alpha_10d, _20d: Stock return minus market return (excess return)
+        - beta_estimate_20d: Rolling correlation * (stock_vol / market_vol)
+        """
+        required = {"ticker", "date", "close", "volume"}
+        if not required.issubset(dataset.columns):
+            return pd.DataFrame()
+        
+        # Construct market proxy (equal-weighted index)
+        market = dataset.groupby("date")["close"].mean().sort_index()
+        market_rets = market.pct_change()
+        market_vol = market_rets.rolling(20).std()
+        
+        def compute(group: pd.DataFrame) -> pd.DataFrame:
+            g = group.sort_values("date")
+            out = pd.DataFrame(index=g.index)
+            price = g["close"]
+            volume = g["volume"]
+            stock_rets = price.pct_change()
+            
+            # Align market data with stock dates - ensure proper index alignment
+            # Create Series aligned to group index with market values by date
+            g_dates = pd.to_datetime(g["date"])
+            # Use map to align by date values, then create Series with group index
+            aligned_market_rets = pd.Series(
+                market_rets.reindex(g_dates.values, method="ffill").values,
+                index=g.index,
+                dtype=float
+            )
+            aligned_market_vol = pd.Series(
+                market_vol.reindex(g_dates.values, method="ffill").values,
+                index=g.index,
+                dtype=float
+            )
+            
+            # Stock volatility (for normalization)
+            stock_vol = stock_rets.rolling(20).std()
+            
+            # Market-adjusted momentum: (Stock Return - Market Return) / Volatility
+            # This separates true skill from beta, scales by regime
+            excess_rets_5d = stock_rets.rolling(5).sum() - aligned_market_rets.rolling(5).sum()
+            excess_rets_10d = stock_rets.rolling(10).sum() - aligned_market_rets.rolling(10).sum()
+            excess_rets_20d = stock_rets.rolling(20).sum() - aligned_market_rets.rolling(20).sum()
+            
+            # Normalize by volatility (regime-adjusted) - ensure numeric types
+            vol_denom = stock_vol.astype(float) + 1e-9
+            out["market_adj_mom_5"] = (excess_rets_5d.astype(float) / vol_denom).fillna(0.0)
+            out["market_adj_mom_10"] = (excess_rets_10d.astype(float) / vol_denom).fillna(0.0)
+            out["market_adj_mom_20"] = (excess_rets_20d.astype(float) / vol_denom).fillna(0.0)
+            
+            # Pure excess returns (market alpha) - ensure numeric
+            out["market_alpha_5d"] = excess_rets_5d.astype(float).fillna(0.0)
+            out["market_alpha_10d"] = excess_rets_10d.astype(float).fillna(0.0)
+            out["market_alpha_20d"] = excess_rets_20d.astype(float).fillna(0.0)
+            
+            # Beta estimate: correlation * (stock_vol / market_vol)
+            # Rolling correlation between stock and market returns
+            # Ensure both series are numeric and aligned
+            stock_rets_numeric = stock_rets.astype(float)
+            aligned_market_rets_numeric = aligned_market_rets.astype(float)
+            rolling_corr = stock_rets_numeric.rolling(20).corr(aligned_market_rets_numeric)
+            vol_ratio = stock_vol.astype(float) / (aligned_market_vol.astype(float) + 1e-9)
+            out["beta_estimate_20d"] = (rolling_corr * vol_ratio).fillna(0.0)
+            
+            # Regime-adjusted volume: Current Volume / (20-Day Avg Volume * Volatility Percentile)
+            # Get volatility percentile from regime block (if available)
+            # For now, compute it here using expanding window
+            vol_pct = stock_vol.expanding(min_periods=20).apply(
+                lambda x: pd.Series(x).rank(pct=True).iloc[-1] * 100 if len(x) >= 20 else 50.0,
+                raw=False
+            )
+            vol_pct_normalized = vol_pct / 100.0  # Convert to 0-1 scale
+            volume_mean_20 = volume.rolling(20).mean()
+            # Adjust volume baseline by volatility regime
+            adjusted_volume_baseline = volume_mean_20 * (1.0 + vol_pct_normalized)
+            out["regime_adj_volume"] = volume / (adjusted_volume_baseline + 1e-9)
+            
+            # Volume surprise relative to volatility-adjusted baseline
+            out["volume_surprise_vol_adj"] = (volume - adjusted_volume_baseline) / (adjusted_volume_baseline + 1e-9)
+            
+            return out
+        
+        return self._group_apply(dataset.groupby("ticker", group_keys=False), compute)
+
+    def _mean_reversion_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Mean-reversion features for bear markets and range-bound conditions.
+        
+        Features:
+        - dist_from_200ma: (Close - 200MA) / 200MA (oversold/overbought signal)
+        - dist_from_200ma_pct: Percentile rank of distance (0-100)
+        - rsi_extreme_low, rsi_extreme_high: Binary flags for RSI < 30 or > 70
+        - bollinger_position: Position within Bollinger Bands (-2 to +2 std devs)
+        - bollinger_squeeze: Band width relative to historical (volatility compression)
+        - price_vs_ma_ratio_50, _200: Price / MA ratios (mean reversion entry zones)
+        """
+        required = {"ticker", "date", "close"}
+        if not required.issubset(dataset.columns):
+            return pd.DataFrame()
+        
+        def compute(group: pd.DataFrame) -> pd.DataFrame:
+            g = group.sort_values("date")
+            out = pd.DataFrame(index=g.index)
+            price = g["close"]
+            
+            # 200-day moving average (long-term trend)
+            ma_200 = price.rolling(200, min_periods=50).mean()
+            ma_50 = price.rolling(50, min_periods=20).mean()
+            
+            # Distance from 200MA (oversold/overbought)
+            out["dist_from_200ma"] = (price - ma_200) / (ma_200 + 1e-9)
+            out["dist_from_50ma"] = (price - ma_50) / (ma_50 + 1e-9)
+            
+            # Percentile rank of distance (point-in-time: expanding window)
+            out["dist_from_200ma_pct"] = out["dist_from_200ma"].expanding(min_periods=50).apply(
+                lambda x: pd.Series(x).rank(pct=True).iloc[-1] * 100 if len(x) >= 50 else 50.0,
+                raw=False
+            )
+            
+            # Price vs MA ratios
+            out["price_vs_ma_ratio_50"] = price / (ma_50 + 1e-9)
+            out["price_vs_ma_ratio_200"] = price / (ma_200 + 1e-9)
+            
+            # RSI (already computed in technical block, but compute here for extremes)
+            rets = price.pct_change()
+            delta = rets
+            gain = delta.clip(lower=0.0)
+            loss = -delta.clip(upper=0.0)
+            avg_gain = gain.ewm(alpha=1/14, adjust=False).mean()
+            avg_loss = loss.ewm(alpha=1/14, adjust=False).mean()
+            rs = avg_gain / (avg_loss + 1e-9)
+            rsi = 100 - (100 / (1 + rs))
+            
+            # RSI extreme flags
+            out["rsi_extreme_low"] = (rsi < 30).astype(float)  # Oversold
+            out["rsi_extreme_high"] = (rsi > 70).astype(float)  # Overbought
+            out["rsi_distance_from_50"] = rsi - 50.0  # Distance from neutral
+            
+            # Bollinger Bands
+            roll_mean = price.rolling(20).mean()
+            roll_std = price.rolling(20).std()
+            upper_band = roll_mean + 2 * roll_std
+            lower_band = roll_mean - 2 * roll_std
+            
+            # Position within Bollinger Bands (-2 to +2 std devs)
+            out["bollinger_position"] = (price - roll_mean) / (roll_std + 1e-9)
+            
+            # Bollinger Band width (volatility measure)
+            band_width = (upper_band - lower_band) / (roll_mean + 1e-9)
+            band_width_median = band_width.rolling(60, min_periods=20).median()
+            out["bollinger_squeeze"] = band_width / (band_width_median + 1e-9)  # < 1 = compression
+            
+            # Mean reversion signal: oversold conditions
+            out["oversold_signal"] = (
+                (out["dist_from_200ma"] < -0.1).astype(float) *  # 10% below 200MA
+                (rsi < 35).astype(float) *  # RSI oversold
+                (out["bollinger_position"] < -1.5).astype(float)  # Near lower Bollinger Band
+            )
+            
+            return out
+        
+        return self._group_apply(dataset.groupby("ticker", group_keys=False), compute)

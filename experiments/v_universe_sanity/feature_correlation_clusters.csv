@@ -1,0 +1,11 @@
+representative_feature,cluster_size,cluster_members,avg_correlation,max_correlation
+technical__ema_20,4,"technical__ema_20, technical__ema_50, atr__atr_14, sector_relative__sector_rel_close",0.953887260088469,0.9988841844149514
+technical__boll_z,4,"technical__boll_z, technical__rsi_14, mean_reversion__rsi_distance_from_50, mean_reversion__bollinger_position",0.8671693286239711,0.9999999999999981
+momentum__price_ret_20d,4,"momentum__price_ret_20d, momentum__price_mom_20, regime_adaptive__market_alpha_20d, mean_reversion__dist_from_50ma",0.8702175705696044,1.0
+turnover__volume_spike,4,"turnover__volume_spike, turnover__turnover_z_20, regime_adaptive__regime_adj_volume, regime_adaptive__volume_surprise_vol_adj",0.8596576638128427,0.9101442286316598
+momentum__price_ret_5d,3,"momentum__price_ret_5d, momentum__price_mom_5, regime_adaptive__market_alpha_5d",0.9526755989589225,1.0
+momentum__price_ret_10d,3,"momentum__price_ret_10d, momentum__price_mom_10, regime_adaptive__market_alpha_10d",0.9520271318142358,1.0
+sector_relative__sector_mom_10_z,3,"sector_relative__sector_mom_10_z, sector_relative__sector_ret_10d_z, regime_adaptive__market_adj_mom_10",0.8829918624878158,1.0
+sector_relative__sector_ret_z,3,"sector_relative__sector_ret_z, sector_relative__sector_rank_pct, regime_adaptive__market_adj_mom_5",0.8593191911697712,0.8867851353394085
+regime__market_vol_20d,3,"regime__market_vol_20d, regime__index_vol_spike, regime__vix_equivalent_30d",0.9342230670753798,0.9792341150012283
+technical__macd,2,"technical__macd, technical__macd_signal",0.9526502226880711,0.9526502226880711

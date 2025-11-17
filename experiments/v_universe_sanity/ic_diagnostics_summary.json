@@ -1,0 +1,163 @@
+{
+  "experiment": "v_universe_sanity",
+  "total_features": 62,
+  "block_ic_summary": [
+    {
+      "feature_block": "regime",
+      "feature_count": 6,
+      "mean_ic": 0.01741293140083302,
+      "median_ic": 0.018177937949851897,
+      "std_ic": 0.0052220438444501435,
+      "mean_rank_ic": 0.01884833420019393,
+      "median_rank_ic": 0.01941210785084327,
+      "std_rank_ic": 0.00581714865216835,
+      "positive_ic_count": 6,
+      "ic_above_0_1_count": 0,
+      "top_feature": "regime__index_vol_pct",
+      "top_ic": 0.024755293990834284
+    },
+    {
+      "feature_block": "regime_adaptive",
+      "feature_count": 9,
+      "mean_ic": 0.009854051579576186,
+      "median_ic": 0.00779670234134239,
+      "std_ic": 0.0071002152950801894,
+      "mean_rank_ic": 0.01423811181549737,
+      "median_rank_ic": 0.012978012318654199,
+      "std_rank_ic": 0.004976818875931072,
+      "positive_ic_count": 9,
+      "ic_above_0_1_count": 0,
+      "top_feature": "regime_adaptive__market_adj_mom_10",
+      "top_ic": 0.02399702331395512
+    },
+    {
+      "feature_block": "sector_relative",
+      "feature_count": 6,
+      "mean_ic": 0.008441618726372979,
+      "median_ic": 0.011645118384199125,
+      "std_ic": 0.008305890429718384,
+      "mean_rank_ic": 0.01310669580109483,
+      "median_rank_ic": 0.012608753750090275,
+      "std_rank_ic": 0.0041163752984792416,
+      "positive_ic_count": 5,
+      "ic_above_0_1_count": 0,
+      "top_feature": "sector_relative__sector_mom_10_z",
+      "top_ic": 0.013554768352778792
+    },
+    {
+      "feature_block": "atr",
+      "feature_count": 2,
+      "mean_ic": 0.006831372496932483,
+      "median_ic": 0.006831372496932483,
+      "std_ic": 0.015195636318572504,
+      "mean_rank_ic": 0.0179737160035796,
+      "median_rank_ic": 0.0179737160035796,
+      "std_rank_ic": 0.0030942676748864613,
+      "positive_ic_count": 1,
+      "ic_above_0_1_count": 0,
+      "top_feature": "atr__atr_pct_14",
+      "top_ic": 0.022027008815504987
+    },
+    {
+      "feature_block": "volatility",
+      "feature_count": 5,
+      "mean_ic": 0.00665169022776232,
+      "median_ic": 0.005747641589320184,
+      "std_ic": 0.0043662353027426925,
+      "mean_rank_ic": 0.012958686448106164,
+      "median_rank_ic": 0.014521055034934864,
+      "std_rank_ic": 0.0035880832616653692,
+      "positive_ic_count": 5,
+      "ic_above_0_1_count": 0,
+      "top_feature": "volatility__downside_vol_10d",
+      "top_ic": 0.014528513728732107
+    },
+    {
+      "feature_block": "turnover",
+      "feature_count": 5,
+      "mean_ic": 0.0018557893159287767,
+      "median_ic": 0.006044573974018319,
+      "std_ic": 0.008068151454590824,
+      "mean_rank_ic": 0.0013997260834377081,
+      "median_rank_ic": 0.007012245585252129,
+      "std_rank_ic": 0.013436080131857441,
+      "positive_ic_count": 3,
+      "ic_above_0_1_count": 0,
+      "top_feature": "turnover__turnover_z_20",
+      "top_ic": 0.010441143404638961
+    },
+    {
+      "feature_block": "mean_reversion",
+      "feature_count": 11,
+      "mean_ic": -0.0030536544097364902,
+      "median_ic": -0.005515681583454593,
+      "std_ic": 0.010893923812554957,
+      "mean_rank_ic": -0.005236219276107432,
+      "median_rank_ic": -0.004967816343028513,
+      "std_rank_ic": 0.01239540631381416,
+      "positive_ic_count": 5,
+      "ic_above_0_1_count": 0,
+      "top_feature": "mean_reversion__oversold_signal",
+      "top_ic": 0.014661838029916855
+    },
+    {
+      "feature_block": "momentum",
+      "feature_count": 10,
+      "mean_ic": -0.008965327543588534,
+      "median_ic": -0.006533519591341375,
+      "std_ic": 0.005062439298591426,
+      "mean_rank_ic": -0.008628317153599064,
+      "median_rank_ic": -0.00788049326614491,
+      "std_rank_ic": 0.0024517811483662955,
+      "positive_ic_count": 0,
+      "ic_above_0_1_count": 0,
+      "top_feature": "momentum__price_ret_1d",
+      "top_ic": -0.004445822289285076
+    },
+    {
+      "feature_block": "technical",
+      "feature_count": 6,
+      "mean_ic": -0.009038179535784516,
+      "median_ic": -0.00949552579795128,
+      "std_ic": 0.002102342638011457,
+      "mean_rank_ic": -0.00784135943325391,
+      "median_rank_ic": -0.008663677979284527,
+      "std_rank_ic": 0.01167209528384622,
+      "positive_ic_count": 0,
+      "ic_above_0_1_count": 0,
+      "top_feature": "technical__boll_z",
+      "top_ic": -0.00551568158118557
+    }
+  ],
+  "rolling_ic_summary": {
+    "mean": 0.002873122992558164,
+    "std": 0.00833426019824605,
+    "min": -0.01405902535690475,
+    "max": 0.017505692907126932
+  },
+  "regime_ic_summary": [],
+  "correlation_clusters": 10,
+  "orthogonal_factors": [
+    {
+      "factor": "risk_factor",
+      "feature_count": 13,
+      "ic": 0.020245329602521265,
+      "rank_ic": 0.02333491442194871,
+      "max_correlation": 0.26658941997999624
+    },
+    {
+      "factor": "liquidity_factor",
+      "feature_count": 5,
+      "ic": 0.0027834356709436877,
+      "rank_ic": 0.003597559547767249,
+      "max_correlation": 0.26658941997999624
+    },
+    {
+      "factor": "momentum_factor",
+      "feature_count": 25,
+      "ic": -0.0039324059894555365,
+      "rank_ic": 0.0011427258917793232,
+      "max_correlation": 0.24450998085147677
+    }
+  ]
+}

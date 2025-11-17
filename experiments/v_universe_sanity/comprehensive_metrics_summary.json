@@ -1,0 +1,18 @@
+{
+  "experiment": "v_universe_sanity",
+  "tier_1_decision_metrics": {
+    "expected_value": 0.03363990614691945,
+    "profit_factor": 3.809100710754446,
+    "hit_rate": 0.6833333333333333
+  },
+  "tier_2_quality_metrics": {
+    "test_return_ic": 0.39305733945538246,
+    "test_decile_ic": 1.2468652301719876
+  },
+  "tier_3_risk_metrics": {
+    "max_drawdown": -0.10243268613833323,
+    "sharpe": 1.761303242416602,
+    "sortino": 0.6433156105638105,
+    "calmar": 15.783809115306433
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "valid_roc_auc": {
+    "metric": "roc_auc",
+    "split": "valid",
+    "n_folds": 8,
+    "mean": 0.49741033953380376,
+    "std": 0.04112755072658467,
+    "min": 0.4385194033714542,
+    "max": 0.5785626007679219,
+    "coefficient_of_variation": 0.08268334503285826,
+    "stability_score": 0.9236310917571665,
+    "is_stable": true
+  },
+  "test_roc_auc": {
+    "metric": "roc_auc",
+    "split": "test",
+    "n_folds": 8,
+    "mean": 0.5002663003954768,
+    "std": 0.0328394163676978,
+    "min": 0.4646421259908404,
+    "max": 0.5733103496534171,
+    "coefficient_of_variation": 0.06564387075790867,
+    "stability_score": 0.9383998045132834,
+    "is_stable": true
+  },
+  "valid_ic": {
+    "metric": "ic",
+    "split": "valid",
+    "n_folds": 8,
+    "mean": -0.00029006736076907756,
+    "std": 0.0697589144297568,
+    "min": -0.07583545154783809,
+    "max": 0.13335142349075732,
+    "coefficient_of_variation": 240.49211964007156,
+    "stability_score": 0.004140921871448375,
+    "is_stable": false
+  },
+  "test_ic": {
+    "metric": "ic",
+    "split": "test",
+    "n_folds": 8,
+    "mean": -0.0011276132322061306,
+    "std": 0.05992010573417829,
+    "min": -0.06876287565020343,
+    "max": 0.1256752425266915,
+    "coefficient_of_variation": 53.13888133163086,
+    "stability_score": 0.018471013353128632,
+    "is_stable": false
+  },
+  "valid_rank_ic": {
+    "metric": "rank_ic",
+    "split": "valid",
+    "n_folds": 8,
+    "mean": -0.009775131678565908,
+    "std": 0.07795904776993136,
+    "min": -0.13560110895925662,
+    "max": 0.13570684110333212,
+    "coefficient_of_variation": 7.975242721371564,
+    "stability_score": 0.1114175996175381,
+    "is_stable": false
+  },
+  "test_rank_ic": {
+    "metric": "rank_ic",
+    "split": "test",
+    "n_folds": 8,
+    "mean": 0.002131656941509677,
+    "std": 0.059934084501546164,
+    "min": -0.0830056390299245,
+    "max": 0.12458633508294972,
+    "coefficient_of_variation": 28.11619606065683,
+    "stability_score": 0.03434514583968085,
+    "is_stable": false
+  }
+}

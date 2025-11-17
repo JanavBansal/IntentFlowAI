@@ -3,13 +3,18 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
 from sklearn import metrics
 
 from intentflow_ai.modeling.metrics import hit_rate
+from intentflow_ai.modeling.trading_metrics import (
+    compute_decile_ic,
+    compute_return_ic,
+    compute_sharpe_by_decile,
+)
 
 
 @dataclass
@@ -46,14 +51,35 @@ class ModelEvaluator:
                 }
             ).dropna()
             if not aligned.empty:
-                payload["ic"] = float(aligned["ret"].corr(aligned["score"], method="pearson"))
+                # Return IC (Pearson correlation of signal magnitude with returns)
+                payload["return_ic"] = compute_return_ic(aligned["score"], aligned["ret"])
+                # Rank IC (Spearman correlation)
                 payload["rank_ic"] = float(aligned["ret"].corr(aligned["score"], method="spearman"))
+                # Legacy: keep "ic" as alias for return_ic
+                payload["ic"] = payload["return_ic"]
+
+                # Decile analysis
+                decile_ic, decile_stats = compute_decile_ic(aligned["score"], aligned["ret"])
+                payload["decile_ic"] = decile_ic
+                payload["decile_stats"] = decile_stats.to_dict("records") if not decile_stats.empty else []
+
+                # Sharpe by decile
+                sharpe_by_decile = compute_sharpe_by_decile(aligned["score"], aligned["ret"])
+                payload["sharpe_by_decile"] = sharpe_by_decile
             else:
+                payload["return_ic"] = float("nan")
                 payload["ic"] = float("nan")
                 payload["rank_ic"] = float("nan")
+                payload["decile_ic"] = float("nan")
+                payload["decile_stats"] = []
+                payload["sharpe_by_decile"] = []
         else:
+            payload["return_ic"] = float("nan")
             payload["ic"] = float("nan")
             payload["rank_ic"] = float("nan")
+            payload["decile_ic"] = float("nan")
+            payload["decile_stats"] = []
+            payload["sharpe_by_decile"] = []
 
         if dates is not None:
             day_metrics = self._precision_by_day(y_true, y_score, pd.to_datetime(dates), 10)
