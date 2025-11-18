@@ -1,0 +1,15 @@
+{
+  "data_leakage_found": false,
+  "leakage_issues": [],
+  "original_sharpe": 13.816546207772213,
+  "sharpe_after_costs": 13.304901713118312,
+  "original_ic": 0.4066808878114531,
+  "test_ic_2025": 0.02039317120752161,
+  "walk_forward_avg_ic": 0.05055279912850233,
+  "suspicious_features": [
+    "technical__ema_50",
+    "technical__ema_20",
+    "atr__atr_14"
+  ],
+  "recommendation": "REVIEW_NEEDED"
+}

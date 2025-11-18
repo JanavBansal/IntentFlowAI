@@ -1,0 +1,14 @@
+Feature_Block,Uses_Only_Past_Data,Rolling_Windows_Correct,Shift_Operations_Correct,Potential_Issues,Risk_Level
+technical,Yes,Yes,Yes,None,Low
+momentum,Yes,Yes,Yes,None,Low
+volatility,Yes,Yes,Yes,None,Low
+atr,Yes,Yes,Yes,None,Low
+turnover,Yes,Yes,Yes,None,Low
+ownership,Yes,Yes,Yes,None,Low
+delivery,Yes,Yes,Yes,None,Low
+fundamental,Yes,Yes,Yes,None,Low
+narrative,Yes,Yes,Yes,None,Low
+sector_relative,Yes,Yes,Yes,None,Low
+regime,Yes,Yes,Yes,None,Low
+regime_adaptive,Yes,Yes,Yes,None,Low
+mean_reversion,Yes,Yes,Yes,None,Low
