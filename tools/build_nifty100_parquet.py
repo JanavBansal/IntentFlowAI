@@ -58,21 +58,43 @@ def load_universe(path: Path) -> list[str]:
 
 def fetch_ticker(ticker: str, start: str, end: str | None) -> pd.DataFrame:
     symbol = f"{ticker}.NS"
-    df = yf.download(symbol, start=start, end=end, progress=False, auto_adjust=False, actions=False, group_by="ticker")
+    # Don't use group_by for single ticker - it causes MultiIndex issues
+    df = yf.download(symbol, start=start, end=end, progress=False, auto_adjust=False, actions=False)
     if df.empty:
         raise ValueError("Empty dataframe returned.")
     if isinstance(df.columns, pd.MultiIndex):
-        # Newer yfinance returns MultiIndex even for single tickers
-        first_level = df.columns.get_level_values(0)
-        if ticker in df.columns.get_level_values(1):
-            df = df.xs(ticker, axis=1, level=1, drop_level=True)
-        elif symbol in df.columns.get_level_values(1):
-            df = df.xs(symbol, axis=1, level=1, drop_level=True)
-        elif len(df.columns.get_level_values(1).unique()) == 1:
-            df.columns = first_level
+        # Handle MultiIndex columns
+        if len(df.columns.get_level_values(1).unique()) == 1:
+            # Single ticker, just use first level
+            df.columns = df.columns.get_level_values(0)
         else:
-            raise ValueError("Unexpected MultiIndex columns from yfinance.")
-    df = df.reset_index().rename(columns=str.lower)
+            # Multiple tickers (shouldn't happen for single symbol, but handle it)
+            if symbol in df.columns.get_level_values(1):
+                df = df.xs(symbol, axis=1, level=1, drop_level=True)
+            elif ticker in df.columns.get_level_values(1):
+                df = df.xs(ticker, axis=1, level=1, drop_level=True)
+            else:
+                # Take first ticker's data
+                first_ticker = df.columns.get_level_values(1)[0]
+                df = df.xs(first_ticker, axis=1, level=1, drop_level=True)
+    # Reset index to get date as column
+    df = df.reset_index()
+    # Rename columns to lowercase
+    df = df.rename(columns=str.lower)
+    # Map column names to expected format - prefer Close over Adj Close
+    if "adj close" in df.columns and "close" not in df.columns:
+        df = df.rename(columns={"adj close": "close"})
+    elif "adj close" in df.columns and "close" in df.columns:
+        # Keep Close, drop Adj Close
+        df = df.drop(columns=["adj close"])
+    # Ensure date column exists (it should be from reset_index)
+    if "date" not in df.columns:
+        # If index name is Date, it should have been converted
+        if df.index.name and "date" in str(df.index.name).lower():
+            df = df.reset_index()
+            df = df.rename(columns={df.columns[0]: "date"})
+        else:
+            raise ValueError("Date column not found after reset_index")
     expected_cols = {"date", "open", "high", "low", "close", "volume"}
     missing = expected_cols - set(df.columns)
     if missing:

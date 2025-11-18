@@ -1,0 +1,53 @@
+random_state: 42
+
+# NIFTY 200 Full universe expansion
+universe:
+  universe_file: external/universe/nifty200_clean.csv
+  membership_file: null
+  use_membership: false
+
+splits:
+  train_start: "2018-01-01"
+  valid_start: "2023-01-01"
+  test_start: "2024-07-01"
+
+trainer:
+  model: lightgbm
+  params:
+    random_state: 42
+    n_estimators: 600
+    learning_rate: 0.03
+    max_depth: -1
+    subsample: 0.9
+    feature_fraction: 0.7
+    reg_lambda: 1.0
+    reg_alpha: 0.0
+
+runtime:
+  min_tickers: 50
+
+backtest:
+  top_k: 15
+  hold_days: 10
+  fee_bps: 1.0
+  slippage_bps: 10.0
+  cost_model: realistic
+
+risk_filters:
+  trend_fast: 50
+  trend_slow: 200
+  vol_lookback: 20
+  vol_high: 0.04
+  allow_high_vol: false
+  allow_downtrend: false
+  max_positions: 12
+  cooldown_days: 2
+
+meta_labeling:
+  enabled: false
+  horizon_days: 10
+  success_threshold: 0.015
+  min_signal_proba: 0.55
+  proba_col: proba
+  output_col: meta_proba
+
