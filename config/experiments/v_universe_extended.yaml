@@ -1,29 +1,15 @@
 random_state: 42
 
-# Temporary sandbox: NIFTY100 via yfinance parquet (long-term target remains NIFTY200 PIT universe)
+# NIFTY 200 Full universe expansion with Extended History
 universe:
-  universe_file: external/universe/nifty100_universe.csv
-  features:
-    enabled:
-      - technical
-      - momentum
-      - momentum_enhanced      # NEW: Qlib-inspired MA ratios, momentum accel
-      - volatility
-      - atr
-      - turnover
-      - mean_reversion
-      - mean_reversion_enhanced  # NEW: Distance to extremes, range position
-      - volume_enhanced          # NEW: Price-volume corr, volume trends
-      - ranking                  # NEW: Cross-sectional ranks
-      - orthogonal
-      - sector_relative
+  universe_file: external/universe/nifty200_clean.csv
   membership_file: null
   use_membership: false
 
 splits:
-  train_start: "2018-01-01"
+  train_start: "2005-01-01"
   valid_start: "2023-01-01"
-  test_start: "2024-03-01"
+  test_start: "2024-07-01"
 
 trainer:
   model: lightgbm
@@ -38,7 +24,7 @@ trainer:
     reg_alpha: 0.0
 
 runtime:
-  min_tickers: 2  # Reduced for testing with limited data
+  min_tickers: 50
 
 backtest:
   top_k: 15

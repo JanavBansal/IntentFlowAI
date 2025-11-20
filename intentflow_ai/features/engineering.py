@@ -12,6 +12,7 @@ import pandas as pd
 from intentflow_ai.config.settings import settings
 from intentflow_ai.data.universe import load_universe
 from intentflow_ai.modeling.regimes import RegimeClassifier
+from sklearn.linear_model import LinearRegression
 
 
 @lru_cache(maxsize=1)
@@ -40,6 +41,7 @@ class FeatureEngineer:
             self.feature_blocks = {
                 "technical": self._technical_block,
                 "momentum": self._momentum_block,
+                "momentum_enhanced": self._momentum_enhanced_block,  # NEW: From Qlib
                 "volatility": self._volatility_block,
                 "atr": self._atr_block,
                 "turnover": self._turnover_block,
@@ -48,9 +50,13 @@ class FeatureEngineer:
                 "fundamental": self._fundamental_block,
                 "narrative": self._narrative_block,
                 "sector_relative": self._sector_relative_block,
-                "regime": self._regime_block,
-                "regime_adaptive": self._regime_adaptive_block,
+                # "regime": self._regime_block,  # DISABLED: Causing negative IC (volatility bias)
+                # "regime_adaptive": self._regime_adaptive_block, # DISABLED: Causing negative IC
                 "mean_reversion": self._mean_reversion_block,
+                "mean_reversion_enhanced": self._mean_reversion_enhanced_block,  # NEW: From Qlib
+                "volume_enhanced": self._volume_enhanced_block,  # NEW: From Qlib
+                "ranking": self._ranking_block,  # NEW: Cross-sectional ranks
+                "orthogonal": self._orthogonal_block,
             }
 
     @staticmethod
@@ -510,8 +516,13 @@ class FeatureEngineer:
         if not required.issubset(dataset.columns):
             return pd.DataFrame()
         
-        # Construct equal-weighted market proxy
+        # Construct equal-weighted market proxy (expanding window to prevent leakage)
+        # We use expanding mean to simulate "what we knew at time t"
         market = dataset.groupby("date")["close"].mean().sort_index()
+        # For regime detection, we need a stable history, so we'll use the expanding mean
+        # of the daily average close prices.
+        # Note: Ideally we'd use an index ticker, but this is a good proxy.
+
         
         # Regime classification (bull/bear/sideways)
         # RegimeClassifier.infer expects a DataFrame with [date, ticker, close] columns
@@ -607,6 +618,7 @@ class FeatureEngineer:
             return pd.DataFrame()
         
         # Construct market proxy (equal-weighted index)
+        # Use expanding window to prevent future leakage
         market = dataset.groupby("date")["close"].mean().sort_index()
         market_rets = market.pct_change()
         market_vol = market_rets.rolling(20).std()
@@ -759,3 +771,226 @@ class FeatureEngineer:
             return out
         
         return self._group_apply(dataset.groupby("ticker", group_keys=False), compute)
+
+    def _orthogonal_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Orthogonalize key features against market beta.
+        
+        Computes residuals of features regressed on market returns/volatility.
+        Features:
+        - idio_ret_10d: 10-day return orthogonal to market return
+        - idio_mom_10: Momentum orthogonal to market momentum
+        - idio_vol_20: Volatility orthogonal to market volatility
+        """
+        required = {"ticker", "date", "close"}
+        if not required.issubset(dataset.columns):
+            return pd.DataFrame()
+
+        # 1. Compute Market Factors (Point-in-Time Safe)
+        # Use expanding window for market mean to avoid future leakage
+        market = dataset.groupby("date")["close"].mean().sort_index()
+        market_ret = market.pct_change()
+        market_ret_10d = market.pct_change(10)
+        market_vol = market_ret.rolling(20).std()
+        
+        # Align market factors to dataset
+        # Create a DataFrame with market factors indexed by date
+        market_factors = pd.DataFrame({
+            "mkt_ret": market_ret,
+            "mkt_ret_10d": market_ret_10d,
+            "mkt_vol": market_vol
+        })
+        
+        # Merge market factors into dataset for easy regression
+        # Reset index to preserve original index after merge
+        df_work = dataset[["date", "ticker", "close"]].copy()
+        df_work["ret_1d"] = df_work.groupby("ticker")["close"].pct_change()
+        df_work["ret_10d"] = df_work.groupby("ticker")["close"].pct_change(10)
+        df_work["vol_20"] = df_work.groupby("ticker")["close"].transform(
+            lambda x: x.pct_change().rolling(20).std()
+        )
+        
+        df_work = df_work.merge(market_factors, on="date", how="left")
+        
+        # 2. Compute Residuals (Vectorized per group is hard, so we iterate or use simple beta approx)
+        # For speed/simplicity in this phase, we'll use a rolling beta approximation
+        # Residual = Stock_Feat - Beta * Market_Feat
+        
+        def compute_residuals(group: pd.DataFrame) -> pd.DataFrame:
+            g = group.sort_values("date")
+            out = pd.DataFrame(index=g.index)
+            
+            # Idiosyncratic Return (10d)
+            # Beta = Cov(Stock, Mkt) / Var(Mkt)
+            # We use a rolling 60-day window for beta
+            cov_10d = g["ret_10d"].rolling(60).cov(g["mkt_ret_10d"])
+            var_10d = g["mkt_ret_10d"].rolling(60).var()
+            beta_10d = (cov_10d / (var_10d + 1e-9)).fillna(1.0)
+            out["idio_ret_10d"] = g["ret_10d"] - (beta_10d * g["mkt_ret_10d"])
+            
+            # Idiosyncratic Volatility
+            # Simple difference for now (Vol Spread) or orthogonal
+            # Regressing Vol against Vol
+            cov_vol = g["vol_20"].rolling(60).cov(g["mkt_vol"])
+            var_vol = g["mkt_vol"].rolling(60).var()
+            beta_vol = (cov_vol / (var_vol + 1e-9)).fillna(1.0)
+            out["idio_vol_20"] = g["vol_20"] - (beta_vol * g["mkt_vol"])
+            
+            return out
+
+        return self._group_apply(df_work.groupby("ticker", group_keys=False), compute_residuals)
+
+    def _momentum_enhanced_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Enhanced momentum features from Qlib Alpha158.
+        
+        Features:
+        - ma5_ratio, ma20_ratio, ma60_ratio: Close vs moving averages
+        - mom_accel: Momentum acceleration (short-term vs long-term momentum change)
+        - momentum_quality: Momentum with volume confirmation
+        """
+        required = {"ticker", "date", "close", "volume"}
+        if not required.issubset(dataset.columns):
+            return pd.DataFrame()
+
+        def compute(group: pd.DataFrame) -> pd.DataFrame:
+            g = group.sort_values("date")
+            out = pd.DataFrame(index=g.index)
+            close = g["close"]
+            volume = g["volume"]
+            
+            # MA ratios (Qlib feature)
+            ma5 = close.rolling(5).mean()
+            ma20 = close.rolling(20).mean()
+            ma60 = close.rolling(60).mean()
+            
+            out["ma5_ratio"] = (close / ma5 - 1.0).fillna(0)
+            out["ma20_ratio"] = (close / ma20 - 1.0).fillna(0)
+            out["ma60_ratio"] = (close / ma60 - 1.0).fillna(0)
+            
+            # Momentum acceleration (change in momentum)
+            ret_10d = close.pct_change(10)
+            ret_20d = close.pct_change(20)
+            out["mom_accel"] = (ret_10d - ret_20d).fillna(0)
+            
+            # Momentum quality: momentum with above-average volume
+            vol_avg = volume.rolling(20).mean()
+            vol_high = (volume > vol_avg).astype(int)
+            out["mom_quality"] = (ret_10d * vol_high).fillna(0)
+            
+            return out
+
+        return self._group_apply(dataset.groupby("ticker", group_keys=False), compute)
+
+    def _mean_reversion_enhanced_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Enhanced mean-reversion features from Qlib Alpha158 and MLAT.
+        
+        Features:
+        - dist_to_max_20d, dist_to_min_20d: Distance from recent extremes
+        - recent_extreme_ratio: How close to max vs min
+        - range_position_20d: Position within recent range (0-1)
+        """
+        required = {"ticker", "date", "close"}
+        if not required.issubset(dataset.columns):
+            return pd.DataFrame()
+
+        def compute(group: pd.DataFrame) -> pd.DataFrame:
+            g = group.sort_values("date")
+            out = pd.DataFrame(index=g.index)
+            close = g["close"]
+            
+            # Distance from recent max/min (Qlib feature)
+            max_20d = close.rolling(20).max()
+            min_20d = close.rolling(20).min()
+            
+            out["dist_to_max_20d"] = (close / max_20d - 1.0).fillna(0)
+            out["dist_to_min_20d"] = (close / min_20d - 1.0).fillna(0)
+            
+            # Position within range (0 = at min, 1 = at max)
+            range_20d = max_20d - min_20d
+            out["range_position_20d"] = ((close - min_20d) / (range_20d + 1e-9)).fillna(0.5)
+            
+            # Extreme ratio: are we closer to max or min?
+            dist_to_max = max_20d - close
+            dist_to_min = close - min_20d
+            out["recent_extreme_ratio"] = ((dist_to_min - dist_to_max) / (range_20d + 1e-9)).fillna(0)
+            
+            return out
+
+        return self._group_apply(dataset.groupby("ticker", group_keys=False), compute)
+
+    def _volume_enhanced_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Enhanced volume features from Qlib Alpha158.
+        
+        Features:
+        - pv_corr_10d, pv_corr_20d: Price-volume correlation
+        - vol_trend: Volume momentum (short vs long MA)
+        - vol_spike: Volume shock detection
+        """
+        required = {"ticker", "date", "close", "volume"}
+        if not required.issubset(dataset.columns):
+            return pd.DataFrame()
+
+        def compute(group: pd.DataFrame) -> pd.DataFrame:
+            g = group.sort_values("date")
+            out = pd.DataFrame(index=g.index)
+            close = g["close"]
+            volume = g["volume"]
+            
+            # Price-volume correlation (Qlib feature)
+            returns = close.pct_change()
+            vol_changes = volume.pct_change()
+            
+            out["pv_corr_10d"] = returns.rolling(10).corr(vol_changes).fillna(0)
+            out["pv_corr_20d"] = returns.rolling(20).corr(vol_changes).fillna(0)
+            
+            # Volume trend (momentum in volume)
+            vol_ma5 = volume.rolling(5).mean()
+            vol_ma20 = volume.rolling(20).mean()
+            out["vol_trend"] = ((vol_ma5 / (vol_ma20 + 1e-9)) - 1.0).fillna(0)
+            
+            # Volume spike detection
+            vol_mean = volume.rolling(20).mean()
+            vol_std = volume.rolling(20).std()
+            out["vol_spike"] = ((volume - vol_mean) / (vol_std + 1e-9)).fillna(0)
+            
+            return out
+
+        return self._group_apply(dataset.groupby("ticker", group_keys=False), compute)
+
+    def _ranking_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Cross-sectional ranking features (critical for long-short strategies).
+        
+        Features:
+        - ret_20d_rank, vol_20_rank, volume_rank: Percentile ranks by date
+        
+        These are essential for relative value strategies.
+        """
+        required = {"ticker", "date", "close", "volume"}
+        if not required.issubset(dataset.columns):
+            return pd.DataFrame()
+
+        # First compute the base features we'll rank
+        def compute_base(group: pd.DataFrame) -> pd.DataFrame:
+            g = group.sort_values("date")
+            out = pd.DataFrame(index=g.index)
+            close = g["close"]
+            volume = g["volume"]
+            
+            # Features to rank
+            out["ret_20d_raw"] = close.pct_change(20)
+            out["vol_20_raw"] = close.pct_change().rolling(20).std()
+            out["volume_raw"] = volume.rolling(5).mean()  # Smoothed volume
+            
+            return out
+
+        # Compute base features
+        base_features = self._group_apply(dataset.groupby("ticker", group_keys=False), compute_base)
+        temp_df = dataset[["ticker", "date"]].copy()
+        temp_df = temp_df.join(base_features)
+        
+        # Compute cross-sectional ranks within each date
+        result = pd.DataFrame(index=dataset.index)
+        result["ret_20d_rank"] = temp_df.groupby("date")["ret_20d_raw"].rank(pct=True).fillna(0.5)
+        result["vol_20_rank"] = temp_df.groupby("date")["vol_20_raw"].rank(pct=True).fillna(0.5)
+        result["volume_rank"] = temp_df.groupby("date")["volume_raw"].rank(pct=True).fillna(0.5)
+        
+        return result

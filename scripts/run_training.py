@@ -55,6 +55,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Shuffle labels before training to confirm metrics collapse.",
     )
+    parser.add_argument(
+        "--wfo",
+        action="store_true",
+        help="Run Walk-Forward Optimization (rolling window training).",
+    )
     return parser.parse_args()
 
 
@@ -62,12 +67,23 @@ def fmt(value: float) -> str:
     return "nan" if value != value else f"{value:.3f}"
 
 
+def convert_paths_to_str(obj):
+    """Recursively convert Path objects to strings for YAML serialization."""
+    if isinstance(obj, Path):
+        return str(obj)
+    elif isinstance(obj, dict):
+        return {k: convert_paths_to_str(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return type(obj)(convert_paths_to_str(item) for item in obj)
+    return obj
+
+
 def print_metrics_table(metrics: dict) -> None:
     columns = ["roc_auc", "pr_auc", "precision_at_10", "precision_at_20", "hit_rate_0.6"]
     header = "split".ljust(10) + " ".join(col.rjust(16) for col in columns)
     print("\nSplit metrics")
     print(header)
-    for split in ["train", "valid", "test", "overall"]:
+    for split in ["train", "valid", "test", "overall", "wfo_test"]:
         if split not in metrics:
             continue
         row = split.ljust(10)
@@ -147,25 +163,48 @@ def main() -> None:
     if args.leak_test:
         print("Leak test enabled: labels will be shuffled before training.")
 
-    result = pipeline.run(live=args.live, tickers_subset=tickers_subset)
+    if args.wfo:
+        result = pipeline.run_wfo(live=args.live, tickers_subset=tickers_subset)
+    else:
+        result = pipeline.run(live=args.live, tickers_subset=tickers_subset)
 
     exp_dir = Path("experiments") / experiment_name
     exp_dir.mkdir(parents=True, exist_ok=True)
-    plot_paths = save_classification_plots(
-        result["training_frame"]["label"],
-        result["probabilities"],
-        result["metrics"]["overall"].get("hit_curve", []),
-        exp_dir / "plots",
-    )
-    if plot_paths:
-        relative = {name: str(path.relative_to(exp_dir)) for name, path in plot_paths.items()}
-        result["metrics"]["plots"] = relative
+    
+    # For WFO, we might not have 'overall' metrics or 'hit_curve' in the same place
+    # But run_wfo returns 'metrics' with 'wfo_test'
+    hit_curve = []
+    if "overall" in result["metrics"]:
+        hit_curve = result["metrics"]["overall"].get("hit_curve", [])
+    elif "wfo_test" in result["metrics"]:
+        hit_curve = result["metrics"]["wfo_test"].get("hit_curve", [])
+        
+    # Filter out NaNs (e.g. from WFO initial window) before plotting
+    y_true = result["training_frame"]["label"]
+    y_score = result["probabilities"]
+    valid_mask = y_score.notna() & y_true.notna()
+    
+    if valid_mask.any():
+        plot_paths = save_classification_plots(
+            y_true[valid_mask],
+            y_score[valid_mask],
+            hit_curve,
+            exp_dir / "plots",
+        )
+        if plot_paths:
+            relative = {name: str(path.relative_to(exp_dir)) for name, path in plot_paths.items()}
+            result["metrics"]["plots"] = relative
+    else:
+        logger.warning("No valid predictions for plotting.")
 
     model_bundle = {
-        "models": result["models"],
+        "models": result.get("models"), # Might be None for WFO
         "regime_classifier": result.get("regime_classifier"),
         "feature_columns": result["feature_columns"],
     }
+    if "model" in result:
+        model_bundle["model"] = result["model"] # Static model
+        
     meta_payload = result.get("meta", {})
     if meta_payload.get("model") is not None:
         model_bundle["meta_model"] = meta_payload["model"]
@@ -186,10 +225,17 @@ def main() -> None:
     preds_path = exp_dir / "preds.csv"
     preds.to_csv(preds_path, index=False)
 
-    train_mask = pd.Series(result["splits"]["train"], index=train_frame.index, dtype=bool)
-    data_scope = DataScopeChecks(min_train_tickers=cfg.min_train_tickers)
-    snapshot_path = exp_dir / "universe_snapshot.csv"
-    data_scope.validate_and_snapshot(train_frame, train_mask, output_path=snapshot_path)
+    # WFO doesn't have static splits, but we can save the mask of predictions
+    if args.wfo:
+        # For WFO, 'test' is effectively where we have predictions
+        train_mask = pd.Series(False, index=train_frame.index) # No single train set
+    else:
+        train_mask = pd.Series(result["splits"]["train"], index=train_frame.index, dtype=bool)
+        
+    if not args.wfo:
+        data_scope = DataScopeChecks(min_train_tickers=cfg.min_train_tickers)
+        snapshot_path = exp_dir / "universe_snapshot.csv"
+        data_scope.validate_and_snapshot(train_frame, train_mask, output_path=snapshot_path)
 
     fi = result.get("feature_importances", {})
     if fi:
@@ -199,40 +245,49 @@ def main() -> None:
             .sort_values(ascending=False)
             .to_csv(fi_path, header=True)
         )
+        
+    # Save WFO importance history
+    if "importance_history" in result:
+        hist_path = exp_dir / "importance_history.csv"
+        result["importance_history"].to_csv(hist_path)
 
     shap_plot_path = exp_dir / "plots" / "shap_summary.png"
-    try:  # Optional dependency
-        import shap
-        import matplotlib.pyplot as plt
+    # SHAP might be tricky for WFO as we don't have a single model. Skip for WFO for now or use last model?
+    # result['model'] is missing in WFO.
+    if not args.wfo:
+        try:  # Optional dependency
+            import shap
+            import matplotlib.pyplot as plt
 
-        sample = train_frame[result["feature_columns"]].sample(
-            n=min(500, len(train_frame)),
-            random_state=cfg.lgbm_seed,
-        )
-        explainer = shap.TreeExplainer(result["model"])
-        shap_values = explainer.shap_values(sample)
-        shap.summary_plot(shap_values, sample, show=False, plot_type="violin")
-        plt.tight_layout()
-        shap_plot_path.parent.mkdir(parents=True, exist_ok=True)
-        plt.savefig(shap_plot_path, bbox_inches="tight")
-        plt.close()
-        result["metrics"].setdefault("plots", {})["shap_summary"] = str(shap_plot_path.relative_to(exp_dir))
-    except ImportError:
-        logger.warning("SHAP not installed; skipping shap summary plot.")
-    except Exception as exc:  # pragma: no cover
-        logger.warning("Failed to compute SHAP summary", exc_info=exc)
+            sample = train_frame[result["feature_columns"]].sample(
+                n=min(500, len(train_frame)),
+                random_state=cfg.lgbm_seed,
+            )
+            explainer = shap.TreeExplainer(result["model"])
+            shap_values = explainer.shap_values(sample)
+            shap.summary_plot(shap_values, sample, show=False, plot_type="violin")
+            plt.tight_layout()
+            shap_plot_path.parent.mkdir(parents=True, exist_ok=True)
+            plt.savefig(shap_plot_path, bbox_inches="tight")
+            plt.close()
+            result["metrics"].setdefault("plots", {})["shap_summary"] = str(shap_plot_path.relative_to(exp_dir))
+        except ImportError:
+            logger.warning("SHAP not installed; skipping shap summary plot.")
+        except Exception as exc:  # pragma: no cover
+            logger.warning("Failed to compute SHAP summary", exc_info=exc)
 
     metrics_path = exp_dir / "metrics.json"
     with metrics_path.open("w", encoding="utf-8") as f:
         json.dump(result["metrics"], f, indent=2)
     params_path = exp_dir / "params.yaml"
+    params_dict = {
+        "settings": asdict(cfg),
+        "meta_labeling": asdict(meta_cfg),
+        "experiment_config": exp_cfg.data if exp_cfg else {},
+    }
     params_path.write_text(
         yaml.safe_dump(
-            {
-                "settings": asdict(cfg),
-                "meta_labeling": asdict(meta_cfg),
-                "experiment_config": exp_cfg.data if exp_cfg else {},
-            },
+            convert_paths_to_str(params_dict),
             sort_keys=False,
         ),
         encoding="utf-8",

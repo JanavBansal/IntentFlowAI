@@ -1,7 +1,7 @@
 """Feature engineering interfaces."""
 
 from intentflow_ai.features.engineering import FeatureEngineer
-from intentflow_ai.features.labels import make_excess_label
+from intentflow_ai.features.labels import make_excess_label, make_triple_barrier_label
 from intentflow_ai.features.validation import print_validation_report, validate_features
 
 try:
@@ -14,6 +14,7 @@ try:
     __all__ = [
         "FeatureEngineer",
         "make_excess_label",
+        "make_triple_barrier_label",
         "FeatureOrthogonalityAnalyzer",
         "OrthogonalityConfig",
         "generate_orthogonality_report",
@@ -25,6 +26,7 @@ except ImportError:
     __all__ = [
         "FeatureEngineer",
         "make_excess_label",
+        "make_triple_barrier_label",
         "validate_features",
         "print_validation_report",
     ]

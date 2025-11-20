@@ -3,6 +3,7 @@ experiments/**/*.parquet
 experiments/**/train.parquet
 # Also ignore data parquet files (regenerated from source)
 data/raw/**/*.parquet
+data/processed/**/*.parquet
 
 # Python cache files
 __pycache__/
@@ -10,3 +11,10 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
+# Large experiment artifacts
+experiments/**/lgb.pkl
+experiments/**/preds.csv
+experiments/**/models/
+experiments/**/outputs/
+*.log

@@ -22,6 +22,9 @@ def _load_universe_df() -> pd.DataFrame:
     try:
         return load_universe(path)
     except Exception as exc:  # pragma: no cover - config issues surfaced at runtime
+        print(f"DEBUG: Failed to load universe: {exc}")
+        import traceback
+        traceback.print_exc()
         logger.error("Failed to load universe file", extra={"error": str(exc), "path": str(path)})
         return pd.DataFrame(columns=["ticker_nse", "ticker_yf", "sector"])
 
@@ -182,6 +185,12 @@ class PriceAPISource:
         if frames:
             df = pd.concat(frames, ignore_index=True)
             df["date"] = pd.to_datetime(df["date"])
+            # Robustness: Fill missing volume with 0, forward fill prices
+            df["volume"] = df["volume"].fillna(0.0)
+            df["close"] = df["close"].ffill()
+            df["open"] = df["open"].fillna(df["close"])
+            df["high"] = df["high"].fillna(df["close"])
+            df["low"] = df["low"].fillna(df["close"])
             return df
         return pd.DataFrame(columns=list(PRICE_SCHEMA.keys()))
 

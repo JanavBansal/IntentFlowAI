@@ -10,7 +10,7 @@ import pandas as pd
 
 from intentflow_ai.config.settings import Settings, settings
 from intentflow_ai.data.ingestion import DataIngestionWorkflow
-from intentflow_ai.features import FeatureEngineer, make_excess_label
+from intentflow_ai.features import FeatureEngineer, make_excess_label, make_triple_barrier_label
 from intentflow_ai.meta_labeling import MetaLabelConfig, MetaLabeler
 from intentflow_ai.modeling import (
     LightGBMTrainer,
@@ -19,6 +19,7 @@ from intentflow_ai.modeling import (
     hit_rate,
     precision_at_k,
 )
+from intentflow_ai.modeling.wfo import WalkForwardTrainer
 from intentflow_ai.utils.io import load_enhanced_panel, load_price_parquet
 from intentflow_ai.utils.logging import get_logger
 from intentflow_ai.utils.splits import purged_time_series_splits, time_splits
@@ -63,14 +64,15 @@ class TrainingPipeline:
                 raise ValueError("No price data left after ticker filtering.")
         feature_frame = self.feature_engineer.build(price_panel)
         dataset = price_panel.join(feature_frame)
+        # Switch to Excess Return Label (Alpha) instead of Triple Barrier (Volatility dependent)
         labeled = make_excess_label(
             dataset,
             horizon_days=self.cfg.signal_horizon_days,
-            thresh=self.cfg.target_excess_return,
+            thresh=0.01, # 1% excess return over sector
         )
 
         feature_cols = feature_frame.columns.tolist()
-        label_cols = ["label", "excess_fwd", f"fwd_ret_{self.cfg.signal_horizon_days}d", "sector_fwd"]
+        label_cols = ["label", "excess_fwd", f"fwd_ret_{self.cfg.signal_horizon_days}d"]
         train_df = labeled.dropna(subset=feature_cols + label_cols).reset_index(drop=True)
         if train_df.empty:
             raise ValueError("Training dataset is empty after dropping NA rows.")
@@ -195,6 +197,111 @@ class TrainingPipeline:
             "cv_metrics": cv_metrics,
             "meta": meta_result,
             "meta_config": self.meta_labeling_cfg,
+        }
+
+    def run_wfo(
+        self,
+        *,
+        live: bool | None = None,
+        tickers_subset: Optional[Sequence[str]] = None,
+    ) -> dict:
+        """Run Walk-Forward Optimization (Rolling Window Training)."""
+        live_mode = self.use_live_sources if live is None else live
+        if live_mode:
+            DataIngestionWorkflow().run()
+
+        # Load price panel with delivery/ownership data merged (PIT-safe)
+        price_panel = load_enhanced_panel(
+            start_date=self.cfg.price_start,
+            end_date=self.cfg.price_end,
+            cfg=self.cfg,
+            merge_delivery=True,
+            merge_ownership=True,
+        )
+        if tickers_subset is not None:
+            price_panel = price_panel[price_panel["ticker"].isin(tickers_subset)]
+            if price_panel.empty:
+                raise ValueError("No price data left after ticker filtering.")
+        feature_frame = self.feature_engineer.build(price_panel)
+        dataset = price_panel.join(feature_frame)
+        
+        # Use Excess Return Label
+        labeled = make_excess_label(
+            dataset,
+            horizon_days=self.cfg.signal_horizon_days,
+            thresh=0.01,
+        )
+
+        feature_cols = feature_frame.columns.tolist()
+        label_cols = ["label", "excess_fwd", f"fwd_ret_{self.cfg.signal_horizon_days}d"]
+        train_df = labeled.dropna(subset=feature_cols + label_cols).reset_index(drop=True)
+        
+        if train_df.empty:
+            raise ValueError("Training dataset is empty after dropping NA rows.")
+            
+        train_df["date"] = pd.to_datetime(train_df["date"])
+
+        logger.info("Starting Walk-Forward Optimization...")
+        wfo_trainer = WalkForwardTrainer(
+            lgbm_cfg=self.cfg.lgbm,
+            initial_train_days=365 * 2, # 2 years initial history
+            step_days=30, # Monthly updates
+            embargo_days=self.cfg.signal_horizon_days,
+        )
+        
+        predictions, importance_history = wfo_trainer.train_and_predict(
+            train_df,
+            feature_cols=feature_cols,
+            target_col="label",
+            date_col="date"
+        )
+        
+        # Align predictions with dataframe
+        # Predictions index matches train_df index
+        train_df["proba"] = float("nan")
+        train_df.loc[predictions.index, "proba"] = predictions
+        
+        # Compute metrics only on the out-of-sample predictions
+        # We treat the entire set of predictions as "test"
+        test_mask = train_df["proba"].notna()
+        
+        # DEBUG: Check for NaNs/Infs
+        debug_subset = train_df.loc[test_mask]
+        logger.info(
+            "WFO Debug", 
+            extra={
+                "total_rows": len(train_df),
+                "test_rows": len(debug_subset),
+                "proba_nans": train_df["proba"].isna().sum(),
+                "label_nans": train_df["label"].isna().sum(),
+                "proba_infs": np.isinf(train_df["proba"]).sum(),
+                "label_infs": np.isinf(train_df["label"]).sum(),
+                "subset_proba_nans": debug_subset["proba"].isna().sum(),
+                "subset_label_nans": debug_subset["label"].isna().sum(),
+            }
+        )
+        
+        # CLEANUP: Replace Inf with NaN and drop
+        train_df.replace([np.inf, -np.inf], np.nan, inplace=True)
+        test_mask = train_df["proba"].notna() & train_df["label"].notna()
+        
+        metrics = {
+            "wfo_test": self._compute_metrics(train_df, train_df["proba"], mask=test_mask)
+        }
+        
+        # Aggregate feature importance
+        avg_importance = importance_history.mean().to_dict() if not importance_history.empty else {}
+        
+        logger.info("WFO complete", extra={"metrics": metrics})
+        
+        return {
+            "probabilities": train_df["proba"],
+            "metrics": metrics,
+            "training_frame": train_df,
+            "feature_columns": feature_cols,
+            "feature_importances": avg_importance,
+            "importance_history": importance_history,
+            "tickers_used": sorted(train_df["ticker"].unique()),
         }
 
     def _compute_metrics(

@@ -189,13 +189,13 @@ def _point_in_time_universe(
 
     base = base.copy()
     base["ticker"] = base["ticker_nse"]
-    base["start_date"] = pd.to_datetime(start_date).tz_localize(None) if start_date else pd.Timestamp.min.floor("D")
-    base["end_date"] = pd.to_datetime(end_date).tz_localize(None) if end_date else pd.Timestamp.max.floor("D")
+    base["start_date"] = pd.to_datetime(start_date).tz_localize(None) if start_date else pd.Timestamp("1900-01-01")
+    base["end_date"] = pd.to_datetime(end_date).tz_localize(None) if end_date else pd.Timestamp("2100-01-01")
 
     if membership is not None and not membership.empty:
         membership = membership.copy()
-        membership["start_date"] = membership["start_date"].fillna(pd.Timestamp.min.floor("D"))
-        membership["end_date"] = membership["end_date"].fillna(pd.Timestamp.max.floor("D"))
+        membership["start_date"] = membership["start_date"].fillna(pd.Timestamp("1900-01-01"))
+        membership["end_date"] = membership["end_date"].fillna(pd.Timestamp("2100-01-01"))
         membership["ticker"] = membership["ticker_nse"]
         merged = membership.merge(
             base[["ticker_nse", "ticker_yf", "sector"]].drop_duplicates("ticker_nse"),

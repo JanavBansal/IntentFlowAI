@@ -18,17 +18,20 @@ class LightGBMConfig:
     """Defaults passed to the LightGBM trainer."""
 
     objective: str = "binary"
-    metric: List[str] = field(default_factory=lambda: ["auc", "binary_logloss"])
+    metric: str = "auc"
     boosting_type: str = "gbdt"
-    num_leaves: int = 64
-    learning_rate: float = 0.05
-    feature_fraction: float = 0.7
+    n_estimators: int = 1000
+    learning_rate: float = 0.01
+    num_leaves: int = 32  # Reduced from 64 to prevent overfitting
+    max_depth: int = 5    # Constrained depth
+    min_child_samples: int = 100  # Increased to require more data per leaf
     subsample: float = 0.8
-    subsample_freq: int = 5
-    max_depth: int = -1
-    n_estimators: int = 800
+    colsample_bytree: float = 0.6  # Feature subsampling
+    reg_alpha: float = 0.1  # L1 regularization
+    reg_lambda: float = 1.0  # L2 regularization
     random_state: int = 42
-    n_jobs: int = 1
+    n_jobs: int = -1
+    verbose: int = -1
 
 
 @dataclass
@@ -55,13 +58,13 @@ class Settings:
         }
     )
     trading_universe: str = "nifty_200"
-    universe_file: str = "external/universe/nifty200.csv"
+    universe_file: str = "external/universe/nifty100_universe.csv"
     universe_membership_file: str = "external/universe/nifty200_history.csv"
     signal_horizon_days: int = 10
     target_excess_return: float = 0.015
     price_start: str = "2018-01-01"
     price_end: str | None = None
-    min_trading_days: int = 600
+    min_trading_days: int = 250  # Lowered from 600 to get more ticker coverage
     min_train_tickers: int = 180  # Restored to production guard - requires universe with ≥180 tickers
     cv_splits: int = 3
     valid_start: str = "2023-07-01"

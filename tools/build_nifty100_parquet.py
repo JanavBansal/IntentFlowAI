@@ -1,3 +1,4 @@
+
 """Build a NIFTY100 OHLCV parquet using yfinance.
 
 This is a temporary helper to make the NIFTY100 universe the working sandbox
