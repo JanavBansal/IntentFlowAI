@@ -1,0 +1,96 @@
+settings:
+  project_root: /Users/janavbansal/Documents/IntentFlowAI
+  data_dir: /Users/janavbansal/Documents/IntentFlowAI/data
+  models_dir: /Users/janavbansal/Documents/IntentFlowAI/models
+  experiments_dir: /Users/janavbansal/Documents/IntentFlowAI/experiments
+  raw_sources:
+    nse_bhavcopy: s3://intentflow/raw/nse/bhavcopy/
+    fiidii: s3://intentflow/raw/ownership/
+    newswire: s3://intentflow/raw/news/
+  trading_universe: nifty_200
+  universe_file: external/universe/nifty200_clean.csv
+  universe_membership_file: ''
+  signal_horizon_days: 10
+  target_excess_return: 0.015
+  price_start: '2005-01-01'
+  price_end: null
+  min_trading_days: 250
+  min_train_tickers: 50
+  cv_splits: 3
+  valid_start: '2023-01-01'
+  test_start: '2024-07-01'
+  lgbm_seed: 42
+  backtest:
+    top_k: 15
+    hold_days: 10
+    slippage_bps: 10.0
+    fee_bps: 1.0
+  lgbm:
+    objective: binary
+    metric: auc
+    boosting_type: gbdt
+    n_estimators: 1000
+    learning_rate: 0.01
+    num_leaves: 32
+    max_depth: 5
+    min_child_samples: 100
+    subsample: 0.8
+    colsample_bytree: 0.6
+    reg_alpha: 0.1
+    reg_lambda: 1.0
+    random_state: 42
+    n_jobs: -1
+    verbose: -1
+meta_labeling:
+  enabled: false
+  horizon_days: 10
+  success_threshold: 0.015
+  min_signal_proba: 0.55
+  random_state: 42
+  proba_col: proba
+  output_col: meta_proba
+experiment_config:
+  random_state: 42
+  universe:
+    universe_file: external/universe/nifty200_clean.csv
+    membership_file: null
+    use_membership: false
+  splits:
+    train_start: '2005-01-01'
+    valid_start: '2023-01-01'
+    test_start: '2024-07-01'
+  trainer:
+    model: lightgbm
+    params:
+      random_state: 42
+      n_estimators: 600
+      learning_rate: 0.03
+      max_depth: -1
+      subsample: 0.9
+      feature_fraction: 0.7
+      reg_lambda: 1.0
+      reg_alpha: 0.0
+  runtime:
+    min_tickers: 50
+  backtest:
+    top_k: 15
+    hold_days: 10
+    fee_bps: 1.0
+    slippage_bps: 10.0
+    cost_model: realistic
+  risk_filters:
+    trend_fast: 50
+    trend_slow: 200
+    vol_lookback: 20
+    vol_high: 0.04
+    allow_high_vol: false
+    allow_downtrend: false
+    max_positions: 12
+    cooldown_days: 2
+  meta_labeling:
+    enabled: false
+    horizon_days: 10
+    success_threshold: 0.015
+    min_signal_proba: 0.55
+    proba_col: proba
+    output_col: meta_proba
