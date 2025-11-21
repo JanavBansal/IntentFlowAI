@@ -414,18 +414,52 @@ class FeatureEngineer:
         return self._group_apply(dataset.groupby("ticker", group_keys=False), compute)
 
     def _fundamental_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
-        required = {"ticker", "report_date", "eps", "pe"}
-        if not required.issubset(dataset.columns):
+        """
+        Fundamental features using Screener.in for NSE stocks.
+        
+        Fetches and computes:
+        - Valuation: P/E sector-relative, value composite
+        - Profitability: ROE, ROCE sector-relative  
+        - Quality: Operating profit metrics
+        """
+        # Check if we have required columns
+        if "ticker" not in dataset.columns or "date" not in dataset.columns:
             return pd.DataFrame()
-
-        def compute(group: pd.DataFrame) -> pd.DataFrame:
-            g = group.sort_values("report_date")
-            out = pd.DataFrame(index=g.index)
-            out["eps_yoy"] = g["eps"].pct_change(4)
-            out["pe_z"] = (g["pe"] - g["pe"].rolling(4).mean()) / g["pe"].rolling(4).std()
-            return out
-
-        return self._group_apply(dataset.groupby("ticker", group_keys=False), compute)
+        
+        try:
+            from intentflow_ai.data.fundamentals_provider import get_fundamental_provider
+            from intentflow_ai.features.fundamental_features import FundamentalFeatures
+            
+            # Get unique symbols and date range
+            symbols = dataset['ticker'].unique().tolist()
+            start_date = dataset['date'].min()
+            end_date = dataset['date'].max()
+            
+            # Fetch fundamentals
+            provider = get_fundamental_provider()
+            all_fundamentals = []
+            
+            for symbol in symbols:
+                fund_df = provider.fetch_fundamentals(symbol, start_date, end_date)
+                if not fund_df.empty:
+                    all_fundamentals.append(fund_df)
+            
+            if not all_fundamentals:
+                # No fundamental data available
+                return pd.DataFrame()
+            
+            fundamentals = pd.concat(all_fundamentals, ignore_index=True)
+            
+            # Compute fundamental features
+            feature_engine = FundamentalFeatures()
+            features = feature_engine.compute_all_features(dataset, fundamentals)
+            
+            # Prefix with "fundamental__" is already done in compute_all_features
+            return features
+            
+        except Exception as e:
+            print(f"Warning: Failed to compute fundamental features: {e}")
+            return pd.DataFrame()
 
     def _narrative_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
         if not {"ticker", "sentiment"}.issubset(dataset.columns):
