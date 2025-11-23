@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "HINDPETRO",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": -1771.0,
+    "eps": -11.63
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1674.0,
+    "eps": 2.09
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 5130.0,
+    "eps": 16.96
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 9646.0,
+    "eps": 31.8
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 8240.0,
+    "eps": 27.38
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 2160.0,
+    "eps": 3.35
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 4882.0,
+    "eps": 12.73
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 2089.0,
+    "eps": 2.98
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 2296.0,
+    "eps": 0.67
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 5495.0,
+    "eps": 11.95
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 5795.0,
+    "eps": 16.05
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 7461.0,
+    "eps": 19.32
+  },
+  {
+    "ticker": "HINDPETRO",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 6852.0,
+    "eps": 18.14
+  }
+]

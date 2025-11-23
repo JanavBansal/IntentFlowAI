@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "PFC",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 11.92
+  },
+  {
+    "ticker": "PFC",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 11.7
+  },
+  {
+    "ticker": "PFC",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 14.17
+  },
+  {
+    "ticker": "PFC",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 13.87
+  },
+  {
+    "ticker": "PFC",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 14.65
+  },
+  {
+    "ticker": "PFC",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 14.33
+  },
+  {
+    "ticker": "PFC",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 17.04
+  },
+  {
+    "ticker": "PFC",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 16.8
+  },
+  {
+    "ticker": "PFC",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 16.07
+  },
+  {
+    "ticker": "PFC",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 17.66
+  },
+  {
+    "ticker": "PFC",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 19.14
+  },
+  {
+    "ticker": "PFC",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 20.81
+  },
+  {
+    "ticker": "PFC",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 17.4
+  }
+]

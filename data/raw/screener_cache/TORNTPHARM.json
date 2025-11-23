@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 679.0,
+    "eps": 9.22
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 724.0,
+    "eps": 8.63
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 727.0,
+    "eps": 8.48
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 791.0,
+    "eps": 11.17
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 825.0,
+    "eps": 11.41
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 869.0,
+    "eps": 13.09
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 883.0,
+    "eps": 13.27
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 904.0,
+    "eps": 13.5
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 939.0,
+    "eps": 13.39
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 914.0,
+    "eps": 14.86
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 964.0,
+    "eps": 14.71
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1032.0,
+    "eps": 16.19
+  },
+  {
+    "ticker": "TORNTPHARM",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1083.0,
+    "eps": 17.46
+  }
+]

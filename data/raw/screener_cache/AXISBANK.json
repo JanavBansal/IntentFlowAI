@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "AXISBANK",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 18.27
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 20.12
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": -17.43
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 19.78
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 20.13
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 21.05
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 24.62
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 20.83
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 23.93
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 21.78
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 24.13
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 20.13
+  },
+  {
+    "ticker": "AXISBANK",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 17.82
+  }
+]

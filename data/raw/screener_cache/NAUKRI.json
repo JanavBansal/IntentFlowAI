@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "NAUKRI",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 47.0,
+    "eps": 1.6
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 155.0,
+    "eps": -1.8
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 107.0,
+    "eps": -4.22
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 181.0,
+    "eps": 2.46
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 130.0,
+    "eps": 3.18
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 183.0,
+    "eps": 2.34
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 204.0,
+    "eps": 0.93
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 210.0,
+    "eps": 3.6
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 154.0,
+    "eps": 0.36
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 266.0,
+    "eps": 3.74
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 232.0,
+    "eps": 7.15
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 260.0,
+    "eps": 4.57
+  },
+  {
+    "ticker": "NAUKRI",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 280.0,
+    "eps": 4.88
+  }
+]

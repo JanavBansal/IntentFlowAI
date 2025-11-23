@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "MOTHERSON",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1438.0,
+    "eps": 0.24
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1602.0,
+    "eps": 0.45
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 2036.0,
+    "eps": 0.64
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1925.0,
+    "eps": 0.59
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1889.0,
+    "eps": 0.2
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 2370.0,
+    "eps": 0.53
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 2935.0,
+    "eps": 1.35
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 2775.0,
+    "eps": 0.98
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 2448.0,
+    "eps": 0.83
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 2686.0,
+    "eps": 0.83
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 2643.0,
+    "eps": 1.0
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 2458.0,
+    "eps": 0.48
+  },
+  {
+    "ticker": "MOTHERSON",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 2611.0,
+    "eps": 0.78
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "INFY",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 8902.0,
+    "eps": 14.31
+  },
+  {
+    "ticker": "INFY",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 9367.0,
+    "eps": 15.7
+  },
+  {
+    "ticker": "INFY",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 8998.0,
+    "eps": 14.77
+  },
+  {
+    "ticker": "INFY",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 9064.0,
+    "eps": 14.32
+  },
+  {
+    "ticker": "INFY",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 9440.0,
+    "eps": 14.97
+  },
+  {
+    "ticker": "INFY",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 9137.0,
+    "eps": 14.71
+  },
+  {
+    "ticker": "INFY",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 8784.0,
+    "eps": 19.2
+  },
+  {
+    "ticker": "INFY",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 9437.0,
+    "eps": 15.34
+  },
+  {
+    "ticker": "INFY",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 9809.0,
+    "eps": 15.67
+  },
+  {
+    "ticker": "INFY",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 10115.0,
+    "eps": 16.39
+  },
+  {
+    "ticker": "INFY",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 9874.0,
+    "eps": 16.93
+  },
+  {
+    "ticker": "INFY",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 9943.0,
+    "eps": 16.66
+  },
+  {
+    "ticker": "INFY",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 10535.0,
+    "eps": 17.73
+  }
+]

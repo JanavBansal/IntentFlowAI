@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "TATAPOWER",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1760.0,
+    "eps": 2.56
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 2319.0,
+    "eps": 2.96
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1928.0,
+    "eps": 2.43
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 2713.0,
+    "eps": 3.04
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 2771.0,
+    "eps": 2.74
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 2417.0,
+    "eps": 2.98
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 2307.0,
+    "eps": 2.8
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 3062.0,
+    "eps": 3.04
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 3271.0,
+    "eps": 2.9
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 3079.0,
+    "eps": 3.23
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 3068.0,
+    "eps": 3.26
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 3565.0,
+    "eps": 3.32
+  },
+  {
+    "ticker": "TATAPOWER",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 3302.0,
+    "eps": 2.88
+  }
+]

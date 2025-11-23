@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 310.0,
+    "eps": 8.76
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 940.0,
+    "eps": 19.32
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 369.0,
+    "eps": 13.21
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 474.0,
+    "eps": 8.85
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 638.0,
+    "eps": 12.56
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 509.0,
+    "eps": 9.91
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 789.0,
+    "eps": 21.67
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 815.0,
+    "eps": 16.08
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 814.0,
+    "eps": 16.21
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 856.0,
+    "eps": 17.01
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 618.0,
+    "eps": 11.91
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 520.0,
+    "eps": 11.59
+  },
+  {
+    "ticker": "OBEROIRLTY",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1020.0,
+    "eps": 20.91
+  }
+]

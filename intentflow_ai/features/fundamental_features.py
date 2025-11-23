@@ -44,41 +44,234 @@ class FundamentalFeatures:
         Returns:
             DataFrame with fundamental features
         """
-        # Merge fundamentals with price data
-        df = price_data.merge(
-            fundamental_data,
-            left_on=['ticker', 'date'],
-            right_on=['symbol', 'date'],
-            how='left'
+        # Merge fundamentals with price data using point-in-time correctness
+        from intentflow_ai.utils.time_enforcer import TimeEnforcer
+        
+        # Ensure both are sorted by date
+        price_data = price_data.sort_values('date')
+        
+        # Prepare fundamentals for merge
+        fund_merge = fundamental_data.copy()
+        
+        # Ensure available_date exists and is correct
+        if 'available_date' not in fund_merge.columns:
+             if 'report_date' in fund_merge.columns:
+                 fund_merge = TimeEnforcer.apply_reporting_delay(
+                     fund_merge, 'report_date', delay_days=45, output_col='available_date'
+                 )
+             else:
+                 # Fallback: assume date is report date
+                 fund_merge = TimeEnforcer.apply_reporting_delay(
+                     fund_merge, 'date', delay_days=90, output_col='available_date'
+                 )
+        
+        # Rename symbol to ticker for consistency
+        if 'symbol' in fund_merge.columns and 'ticker' not in fund_merge.columns:
+            fund_merge = fund_merge.rename(columns={'symbol': 'ticker'})
+            
+        # Drop rows with missing available_date (cannot merge)
+        if 'available_date' in fund_merge.columns:
+            fund_merge = fund_merge.dropna(subset=['available_date'])
+            fund_merge['available_date'] = pd.to_datetime(fund_merge['available_date'])
+            fund_merge = fund_merge.sort_values('available_date')
+            
+        # Perform strict point-in-time merge
+        # This ensures we ONLY see fundamental data where available_date <= price_date
+        df = TimeEnforcer.merge_asof_safe(
+            left=price_data,
+            right=fund_merge,
+            left_date_col='date',
+            right_date_col='available_date',
+            by='ticker',
+            suffixes=('', '_fund')
         )
         
+        df = df.sort_values(['ticker', 'date'])
+        
+        # FORWARD FILL FUNDAMENTALS
+        # Fundamentals are quarterly/annual, prices are daily.
+        # merge_asof gives us the latest fundamental row for each price row, but subsequent
+        # daily rows for the same stock will have NaNs for fundamental columns if not merged correctly.
+        # Actually, merge_asof matches to the *closest previous* row. So every price row gets a match.
+        # However, if there is NO previous fundamental row (e.g. start of history), it will be NaN.
+        
+        # Let's check the fundamental columns.
+        # The issue might be that `merge_asof` logic in TimeEnforcer is correct, but
+        # the column mapping or something is failing.
+        
+        # Wait, TimeEnforcer.merge_asof_safe implementation:
+        # It uses pd.merge_asof(direction='backward').
+        # This should populate every row in price_data that has at least one prior fundamental record.
+        
+        # Let's verify the column names.
+        # The input `fundamental_data` has columns like 'balance_sheet__totalAssets', 'income_statement__netIncome'.
+        # But the feature computation methods look for 'pe_ratio', 'roe', 'revenue', etc.
+        # THESE COLUMNS ARE MISSING in the input `fundamental_data`!
+        # We need to MAP the raw EODHD columns to the internal feature names.
+        
+        # Mapping Raw EODHD -> Internal Feature Names
+        # Coalesce total_assets from multiple possible columns
+        # Prioritize existing total_assets, then balance_sheet__totalAssets, then sum of parts
+        # We use combine_first to fill NaNs in the primary column with values from the backups
+        if 'total_assets' not in df.columns:
+            df['total_assets'] = np.nan
+            
+        if 'balance_sheet__totalAssets' in df.columns:
+            df['total_assets'] = df['total_assets'].combine_first(df['balance_sheet__totalAssets'])
+            
+        if 'balance_sheet__nonCurrentAssetsTotal' in df.columns and 'balance_sheet__totalCurrentAssets' in df.columns:
+            calculated_assets = df['balance_sheet__nonCurrentAssetsTotal'].fillna(0) + df['balance_sheet__totalCurrentAssets'].fillna(0)
+            # Only use calculated if it's non-zero
+            calculated_assets = calculated_assets.replace(0, np.nan)
+            df['total_assets'] = df['total_assets'].combine_first(calculated_assets)
+        
+        # Revenue
+        if 'income_statement__totalRevenue' in df.columns:
+            if 'revenue' not in df.columns:
+                 df['revenue'] = df['income_statement__totalRevenue']
+            else:
+                 df['revenue'] = df['revenue'].combine_first(df['income_statement__totalRevenue'])
+        elif 'GeneralInfo__RevenueTTM' in df.columns: # Fallback
+            if 'revenue' not in df.columns:
+                df['revenue'] = df['GeneralInfo__RevenueTTM']
+            else:
+                df['revenue'] = df['revenue'].combine_first(df['GeneralInfo__RevenueTTM'])
+            
+        # Net Income
+        if 'income_statement__netIncome' in df.columns:
+            if 'net_income' not in df.columns:
+                df['net_income'] = df['income_statement__netIncome']
+            else:
+                df['net_income'] = df['net_income'].combine_first(df['income_statement__netIncome'])
+            
+        # Operating Cash Flow (Critical for Accruals/Quality)
+        if 'cash_flow__totalCashFromOperatingActivities' in df.columns:
+            if 'operating_cash_flow' not in df.columns:
+                df['operating_cash_flow'] = df['cash_flow__totalCashFromOperatingActivities']
+            else:
+                df['operating_cash_flow'] = df['operating_cash_flow'].combine_first(df['cash_flow__totalCashFromOperatingActivities'])
+        elif 'cash_flow__operatingCashFlow' in df.columns:
+             if 'operating_cash_flow' not in df.columns:
+                 df['operating_cash_flow'] = df['cash_flow__operatingCashFlow']
+             else:
+                 df['operating_cash_flow'] = df['operating_cash_flow'].combine_first(df['cash_flow__operatingCashFlow'])
+             
+        # Accruals = (Net Income - Operating Cash Flow) / Total Assets
+        # Lower is better (less manipulation)
+        if 'accruals' not in df.columns and 'net_income' in df.columns and 'operating_cash_flow' in df.columns and 'total_assets' in df.columns:
+            df['accruals'] = (df['net_income'] - df['operating_cash_flow']) / df['total_assets'].replace(0, np.nan)
+            
+        # Cash Flow to Net Income (Conversion Ratio)
+        if 'cf_to_ni' not in df.columns and 'net_income' in df.columns and 'operating_cash_flow' in df.columns:
+            df['cf_to_ni'] = df['operating_cash_flow'] / df['net_income'].replace(0, np.nan)
+
+        # EPS (Calculated if missing)
+        if 'eps' not in df.columns and 'net_income' in df.columns and 'balance_sheet__commonStockSharesOutstanding' in df.columns:
+            df['eps'] = df['net_income'] / df['balance_sheet__commonStockSharesOutstanding'].replace(0, np.nan)
+            
+        # Equity
+        if 'balance_sheet__totalStockholderEquity' in df.columns:
+            df['total_equity'] = df['balance_sheet__totalStockholderEquity']
+            
+        # Debt
+        if 'balance_sheet__shortLongTermDebtTotal' in df.columns:
+            df['total_debt'] = df['balance_sheet__shortLongTermDebtTotal']
+        elif 'balance_sheet__shortTermDebt' in df.columns and 'balance_sheet__longTermDebt' in df.columns:
+            df['total_debt'] = df['balance_sheet__shortTermDebt'].fillna(0) + df['balance_sheet__longTermDebt'].fillna(0)
+            
+        # Cash
+        if 'balance_sheet__cashAndEquivalents' in df.columns:
+            df['cash_and_equivalents'] = df['balance_sheet__cashAndEquivalents']
+            
+        # Current Assets/Liabilities
+        if 'balance_sheet__totalCurrentAssets' in df.columns:
+            df['total_current_assets'] = df['balance_sheet__totalCurrentAssets']
+        if 'balance_sheet__totalCurrentLiabilities' in df.columns:
+            df['total_current_liabilities'] = df['balance_sheet__totalCurrentLiabilities']
+            
+        # Inventory
+        if 'balance_sheet__inventory' in df.columns:
+            df['inventory'] = df['balance_sheet__inventory']
+            
+        # Operating Income / EBIT
+        if 'income_statement__operatingIncome' in df.columns:
+            df['operating_income'] = df['income_statement__operatingIncome']
+        elif 'income_statement__ebit' in df.columns:
+            df['operating_income'] = df['income_statement__ebit']
+            
+        # Compute derived metrics if missing
+        
+        # ROE = Net Income / Total Equity
+        if 'roe' not in df.columns and 'net_income' in df.columns and 'total_equity' in df.columns:
+            df['roe'] = df['net_income'] / df['total_equity'].replace(0, np.nan)
+            
+        # ROA = Net Income / Total Assets
+        if 'roa' not in df.columns and 'net_income' in df.columns and 'total_assets' in df.columns:
+            df['roa'] = df['net_income'] / df['total_assets'].replace(0, np.nan)
+            
+        # Margins
+        if 'revenue' in df.columns:
+            if 'gross_margin' not in df.columns and 'income_statement__grossProfit' in df.columns:
+                df['gross_margin'] = df['income_statement__grossProfit'] / df['revenue'].replace(0, np.nan)
+            
+            if 'operating_margin' not in df.columns and 'operating_income' in df.columns:
+                df['operating_margin'] = df['operating_income'] / df['revenue'].replace(0, np.nan)
+                
+            if 'net_margin' not in df.columns and 'net_income' in df.columns:
+                df['net_margin'] = df['net_income'] / df['revenue'].replace(0, np.nan)
+        
+        # Leverage
+        if 'debt_to_equity' not in df.columns and 'total_debt' in df.columns and 'total_equity' in df.columns:
+            df['debt_to_equity'] = df['total_debt'] / df['total_equity'].replace(0, np.nan)
+            
+        # Liquidity
+        if 'current_ratio' not in df.columns and 'total_current_assets' in df.columns and 'total_current_liabilities' in df.columns:
+            df['current_ratio'] = df['total_current_assets'] / df['total_current_liabilities'].replace(0, np.nan)
+            
+        if 'quick_ratio' not in df.columns and 'total_current_assets' in df.columns and 'inventory' in df.columns and 'total_current_liabilities' in df.columns:
+            df['quick_ratio'] = (df['total_current_assets'] - df['inventory']) / df['total_current_liabilities'].replace(0, np.nan)
+            
+        # Cash to Debt
+        if 'cash_to_debt' not in df.columns and 'cash_and_equivalents' in df.columns and 'total_debt' in df.columns:
+            df['cash_to_debt'] = df['cash_and_equivalents'] / df['total_debt'].replace(0, np.nan)
+            
+        # Valuation (P/E, P/B, P/S)
+        # Note: P/E is computed in _valuation_features using 'eps' and 'close'
+        if 'pb_ratio' not in df.columns and 'close' in df.columns and 'total_equity' in df.columns and 'balance_sheet__commonStockSharesOutstanding' in df.columns:
+            book_value_per_share = df['total_equity'] / df['balance_sheet__commonStockSharesOutstanding'].replace(0, np.nan)
+            df['pb_ratio'] = df['close'] / book_value_per_share.replace(0, np.nan)
+            
+        if 'ps_ratio' not in df.columns and 'close' in df.columns and 'revenue' in df.columns and 'balance_sheet__commonStockSharesOutstanding' in df.columns:
+            revenue_per_share = df['revenue'] / df['balance_sheet__commonStockSharesOutstanding'].replace(0, np.nan)
+            df['ps_ratio'] = df['close'] / revenue_per_share.replace(0, np.nan)
+
         # Compute feature blocks
         features = pd.DataFrame(index=df.index)
         
         # Valuation features
         val_features = self._valuation_features(df)
         for col in val_features.columns:
-            features[f"fundamental__{col}"] = val_features[col]
+            features[col] = val_features[col]
         
         # Profitability features
         prof_features = self._profitability_features(df)
         for col in prof_features.columns:
-            features[f"fundamental__{col}"] = prof_features[col]
+            features[col] = prof_features[col]
         
         # Growth features
         growth_features = self._growth_features(df)
         for col in growth_features.columns:
-            features[f"fundamental__{col}"] = growth_features[col]
+            features[col] = growth_features[col]
         
         # Balance sheet features
         bs_features = self._balance_sheet_features(df)
         for col in bs_features.columns:
-            features[f"fundamental__{col}"] = bs_features[col]
+            features[col] = bs_features[col]
         
         # Quality features
         quality_features = self._quality_features(df)
         for col in quality_features.columns:
-            features[f"fundamental__{col}"] = quality_features[col]
+            features[col] = quality_features[col]
         
         return features
     
@@ -95,7 +288,16 @@ class FundamentalFeatures:
         features = pd.DataFrame(index=df.index)
         
         # Raw valuation multiples (handle missing fields gracefully)
-        features['pe_ratio'] = df.get('pe_ratio', pd.Series(index=df.index, dtype=float))
+        # Compute P/E from price and EPS if available (preferred for point-in-time)
+        if 'eps' in df.columns and 'close' in df.columns:
+            # Annualize quarterly EPS (simple approximation: eps * 4)
+            # Better: TTM EPS (requires rolling sum, but here we just have the merged row)
+            # We'll use eps * 4 as a proxy for now
+            annualized_eps = df['eps'] * 4
+            features['pe_ratio'] = df['close'] / annualized_eps.replace(0, np.nan)
+        else:
+            features['pe_ratio'] = df.get('pe_ratio', pd.Series(index=df.index, dtype=float))
+
         features['pb_ratio'] = df.get('pb_ratio', pd.Series(index=df.index, dtype=float))
         features['ps_ratio'] = df.get('ps_ratio', pd.Series(index=df.index, dtype=float))
         
@@ -368,14 +570,23 @@ class FundamentalFeatures:
         if method == 'relative_mean':
             # (value / sector_mean) - 1
             sector_mean = grouped.transform('mean')
-            return (df[column] / sector_mean.replace(0, np.nan)) - 1.0
+            rel = (df[column] / sector_mean.replace(0, np.nan)) - 1.0
+            # If sector_mean is NaN, rel is NaN.
+            # If df[column] is NaN, rel is NaN.
+            # We might want to fill 0.0 if sector_mean is missing but value exists?
+            # For now, let's keep NaNs to be safe.
+            return rel
         
         elif method == 'zscore':
             # (value - sector_mean) / sector_std
             sector_mean = grouped.transform('mean')
             sector_std = grouped.transform('std')
             z = (df[column] - sector_mean) / sector_std.replace(0, np.nan)
-            return z.fillna(0.0)
+            # Only fill NaN if the original value was NOT NaN (i.e. sector stats missing)
+            # If original value was NaN, keep it NaN
+            mask = df[column].notna()
+            z[mask] = z[mask].fillna(0.0)
+            return z
         
         elif method == 'rank_pct':
             # Percentile rank within sector

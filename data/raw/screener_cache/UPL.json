@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "UPL",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 2417.0,
+    "eps": 9.64
+  },
+  {
+    "ticker": "UPL",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 2884.0,
+    "eps": 12.87
+  },
+  {
+    "ticker": "UPL",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 2722.0,
+    "eps": 9.38
+  },
+  {
+    "ticker": "UPL",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1216.0,
+    "eps": 1.97
+  },
+  {
+    "ticker": "UPL",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1121.0,
+    "eps": -2.24
+  },
+  {
+    "ticker": "UPL",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 67.0,
+    "eps": -14.41
+  },
+  {
+    "ticker": "UPL",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1848.0,
+    "eps": 0.47
+  },
+  {
+    "ticker": "UPL",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1069.0,
+    "eps": -4.55
+  },
+  {
+    "ticker": "UPL",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1217.0,
+    "eps": -5.25
+  },
+  {
+    "ticker": "UPL",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1678.0,
+    "eps": 9.81
+  },
+  {
+    "ticker": "UPL",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 3164.0,
+    "eps": 10.61
+  },
+  {
+    "ticker": "UPL",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1396.0,
+    "eps": -1.04
+  },
+  {
+    "ticker": "UPL",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1947.0,
+    "eps": 6.56
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "DLF",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 437.0,
+    "eps": 1.93
+  },
+  {
+    "ticker": "DLF",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 477.0,
+    "eps": 2.1
+  },
+  {
+    "ticker": "DLF",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 398.0,
+    "eps": 2.3
+  },
+  {
+    "ticker": "DLF",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 396.0,
+    "eps": 2.13
+  },
+  {
+    "ticker": "DLF",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 462.0,
+    "eps": 2.52
+  },
+  {
+    "ticker": "DLF",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 511.0,
+    "eps": 2.65
+  },
+  {
+    "ticker": "DLF",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 754.0,
+    "eps": 3.72
+  },
+  {
+    "ticker": "DLF",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 229.0,
+    "eps": 2.61
+  },
+  {
+    "ticker": "DLF",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 502.0,
+    "eps": 5.58
+  },
+  {
+    "ticker": "DLF",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 400.0,
+    "eps": 4.28
+  },
+  {
+    "ticker": "DLF",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 978.0,
+    "eps": 5.18
+  },
+  {
+    "ticker": "DLF",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 364.0,
+    "eps": 3.08
+  },
+  {
+    "ticker": "DLF",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 284.0,
+    "eps": 4.77
+  }
+]

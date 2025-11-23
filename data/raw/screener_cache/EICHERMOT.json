@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "EICHERMOT",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 822.0,
+    "eps": 24.02
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 857.0,
+    "eps": 27.09
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 934.0,
+    "eps": 33.11
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1021.0,
+    "eps": 33.58
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1087.0,
+    "eps": 37.12
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1090.0,
+    "eps": 36.38
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1129.0,
+    "eps": 39.1
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1165.0,
+    "eps": 40.2
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1088.0,
+    "eps": 40.15
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1201.0,
+    "eps": 42.7
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1258.0,
+    "eps": 49.68
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1203.0,
+    "eps": 43.95
+  },
+  {
+    "ticker": "EICHERMOT",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1512.0,
+    "eps": 49.93
+  }
+]

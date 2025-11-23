@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 3479.0,
+    "eps": 11.34
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 3694.0,
+    "eps": 10.53
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 3572.0,
+    "eps": 11.07
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 3664.0,
+    "eps": 10.87
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 3795.0,
+    "eps": 11.3
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 3665.0,
+    "eps": 10.68
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 3535.0,
+    "eps": 10.89
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 3742.0,
+    "eps": 11.11
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 3787.0,
+    "eps": 11.03
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 3695.0,
+    "eps": 12.7
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 3618.0,
+    "eps": 10.49
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 3717.0,
+    "eps": 11.73
+  },
+  {
+    "ticker": "HINDUNILVR",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 3726.0,
+    "eps": 11.43
+  }
+]

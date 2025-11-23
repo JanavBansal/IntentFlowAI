@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "SBIN",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 16.53
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 17.34
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 20.27
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 20.77
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 18.04
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 12.4
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 23.96
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 21.65
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 22.17
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 21.12
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 21.96
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 23.76
+  },
+  {
+    "ticker": "SBIN",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 22.9
+  }
+]

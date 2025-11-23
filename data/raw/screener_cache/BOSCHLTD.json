@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 431.0,
+    "eps": 126.67
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 404.0,
+    "eps": 108.4
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 522.0,
+    "eps": 134.98
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 468.0,
+    "eps": 138.78
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 491.0,
+    "eps": 338.99
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 578.0,
+    "eps": 175.7
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 557.0,
+    "eps": 191.23
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 520.0,
+    "eps": 158.1
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 560.0,
+    "eps": 181.97
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 583.0,
+    "eps": 155.53
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 647.0,
+    "eps": 187.67
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 639.0,
+    "eps": 378.42
+  },
+  {
+    "ticker": "BOSCHLTD",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 617.0,
+    "eps": 188.01
+  }
+]

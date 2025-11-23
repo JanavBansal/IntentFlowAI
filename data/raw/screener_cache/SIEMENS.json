@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "SIEMENS",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 516.0,
+    "eps": 18.32
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 599.0,
+    "eps": 12.99
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 621.0,
+    "eps": 13.24
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 567.0,
+    "eps": 12.79
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 700.0,
+    "eps": 16.04
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 453.0,
+    "eps": 14.19
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 637.0,
+    "eps": 22.54
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 485.0,
+    "eps": 16.22
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 545.0,
+    "eps": 23.33
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 401.0,
+    "eps": 17.25
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 468.0,
+    "eps": 16.34
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 521.0,
+    "eps": 11.88
+  },
+  {
+    "ticker": "SIEMENS",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 617.0,
+    "eps": 13.62
+  }
+]

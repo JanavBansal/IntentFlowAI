@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "MARUTI",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 2771.0,
+    "eps": 69.93
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 3373.0,
+    "eps": 79.65
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 3894.0,
+    "eps": 88.97
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 3520.0,
+    "eps": 84.18
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 5312.0,
+    "eps": 125.34
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 4440.0,
+    "eps": 102.0
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 5221.0,
+    "eps": 125.71
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 5107.0,
+    "eps": 119.58
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 4999.0,
+    "eps": 98.68
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 5076.0,
+    "eps": 118.54
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 4844.0,
+    "eps": 124.4
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 4623.0,
+    "eps": 120.62
+  },
+  {
+    "ticker": "MARUTI",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 5086.0,
+    "eps": 106.52
+  }
+]

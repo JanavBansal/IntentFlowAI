@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1062.0,
+    "eps": 34.45
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 942.0,
+    "eps": 36.33
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1089.0,
+    "eps": 40.29
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1117.0,
+    "eps": 35.53
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1360.0,
+    "eps": 50.35
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1385.0,
+    "eps": 54.7
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1319.0,
+    "eps": 46.77
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1407.0,
+    "eps": 52.31
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1450.0,
+    "eps": 53.19
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1416.0,
+    "eps": 55.38
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1441.0,
+    "eps": 58.06
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1413.0,
+    "eps": 85.26
+  },
+  {
+    "ticker": "HEROMOTOCO",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1766.0,
+    "eps": 65.42
+  }
+]

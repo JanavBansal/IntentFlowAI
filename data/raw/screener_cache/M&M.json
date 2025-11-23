@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "M&M",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 5068.0,
+    "eps": 22.3
+  },
+  {
+    "ticker": "M&M",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 5254.0,
+    "eps": 21.53
+  },
+  {
+    "ticker": "M&M",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 5658.0,
+    "eps": 21.2
+  },
+  {
+    "ticker": "M&M",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 6249.0,
+    "eps": 28.21
+  },
+  {
+    "ticker": "M&M",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 5730.0,
+    "eps": 18.88
+  },
+  {
+    "ticker": "M&M",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 6224.0,
+    "eps": 21.38
+  },
+  {
+    "ticker": "M&M",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 6604.0,
+    "eps": 22.15
+  },
+  {
+    "ticker": "M&M",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 7243.0,
+    "eps": 26.4
+  },
+  {
+    "ticker": "M&M",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 7133.0,
+    "eps": 25.5
+  },
+  {
+    "ticker": "M&M",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 8231.0,
+    "eps": 25.58
+  },
+  {
+    "ticker": "M&M",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 7911.0,
+    "eps": 26.5
+  },
+  {
+    "ticker": "M&M",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 8228.0,
+    "eps": 32.84
+  },
+  {
+    "ticker": "M&M",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 8929.0,
+    "eps": 29.54
+  }
+]

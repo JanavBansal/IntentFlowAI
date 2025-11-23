@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "ADANIENT",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1869.0,
+    "eps": 3.61
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1629.0,
+    "eps": 6.42
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 3607.0,
+    "eps": 5.66
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 2525.0,
+    "eps": 5.28
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 2430.0,
+    "eps": 1.78
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 3226.0,
+    "eps": 14.79
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 3195.0,
+    "eps": 3.53
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 3706.0,
+    "eps": 11.39
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 3766.0,
+    "eps": 13.64
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 3070.0,
+    "eps": 0.45
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 3710.0,
+    "eps": 29.74
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 3310.0,
+    "eps": 5.68
+  },
+  {
+    "ticker": "ADANIENT",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 3307.0,
+    "eps": 24.74
+  }
+]

@@ -1,20 +1,20 @@
 settings:
-  project_root: /Users/janavbansal/Documents/IntentFlowAI
-  data_dir: /Users/janavbansal/Documents/IntentFlowAI/data
-  models_dir: /Users/janavbansal/Documents/IntentFlowAI/models
-  experiments_dir: /Users/janavbansal/Documents/IntentFlowAI/experiments
+  project_root: /Users/janavbansal/.cursor/worktrees/IntentFlowAI/N7VX4
+  data_dir: /Users/janavbansal/.cursor/worktrees/IntentFlowAI/N7VX4/data
+  models_dir: /Users/janavbansal/.cursor/worktrees/IntentFlowAI/N7VX4/models
+  experiments_dir: /Users/janavbansal/.cursor/worktrees/IntentFlowAI/N7VX4/experiments
   raw_sources:
     nse_bhavcopy: s3://intentflow/raw/nse/bhavcopy/
     fiidii: s3://intentflow/raw/ownership/
     newswire: s3://intentflow/raw/news/
   trading_universe: nifty_200
-  universe_file: external/universe/nifty100_universe.csv
+  universe_file: external/universe/nifty464_universe.csv
   universe_membership_file: ''
   signal_horizon_days: 10
   target_excess_return: 0.015
-  price_start: '2018-01-01'
+  price_start: '2015-01-01'
   price_end: null
-  min_trading_days: 250
+  min_trading_days: 100
   min_train_tickers: 2
   cv_splits: 3
   valid_start: '2023-01-01'
@@ -52,7 +52,7 @@ meta_labeling:
 experiment_config:
   random_state: 42
   universe:
-    universe_file: external/universe/nifty100_universe.csv
+    universe_file: external/universe/nifty464_universe.csv
     features:
       enabled:
       - technical
@@ -65,25 +65,30 @@ experiment_config:
       - mean_reversion_enhanced
       - volume_enhanced
       - ranking
+      - fundamental
       - orthogonal
       - sector_relative
+      - financial_ratios
+      - sector_normalized
     membership_file: null
     use_membership: false
   splits:
-    train_start: '2018-01-01'
+    train_start: '2015-01-01'
     valid_start: '2023-01-01'
     test_start: '2024-03-01'
   trainer:
     model: lightgbm
     params:
       random_state: 42
-      n_estimators: 600
-      learning_rate: 0.03
-      max_depth: -1
-      subsample: 0.9
-      feature_fraction: 0.7
-      reg_lambda: 1.0
-      reg_alpha: 0.0
+      n_estimators: 1000
+      learning_rate: 0.01
+      max_depth: 4
+      num_leaves: 16
+      min_data_in_leaf: 500
+      subsample: 0.7
+      feature_fraction: 0.6
+      reg_lambda: 10.0
+      reg_alpha: 1.0
   runtime:
     min_tickers: 2
   backtest:

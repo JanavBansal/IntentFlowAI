@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "PIIND",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 432.0,
+    "eps": 22.07
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 415.0,
+    "eps": 23.19
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 343.0,
+    "eps": 18.49
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 468.0,
+    "eps": 25.24
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 551.0,
+    "eps": 31.67
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 554.0,
+    "eps": 29.57
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 442.0,
+    "eps": 24.35
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 583.0,
+    "eps": 29.58
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 628.0,
+    "eps": 33.5
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 512.0,
+    "eps": 24.57
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 456.0,
+    "eps": 21.78
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 519.0,
+    "eps": 26.36
+  },
+  {
+    "ticker": "PIIND",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 541.0,
+    "eps": 26.98
+  }
+]

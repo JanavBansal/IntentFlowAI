@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "TITAN",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1247.0,
+    "eps": 9.36
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1347.0,
+    "eps": 10.18
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1089.0,
+    "eps": 8.22
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1125.0,
+    "eps": 8.48
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1411.0,
+    "eps": 10.31
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1565.0,
+    "eps": 11.86
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1191.0,
+    "eps": 8.68
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1247.0,
+    "eps": 8.05
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1236.0,
+    "eps": 7.93
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1674.0,
+    "eps": 11.79
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1537.0,
+    "eps": 9.81
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1830.0,
+    "eps": 12.29
+  },
+  {
+    "ticker": "TITAN",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1875.0,
+    "eps": 12.62
+  }
+]

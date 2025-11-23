@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "DABUR",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 600.0,
+    "eps": 2.77
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 609.0,
+    "eps": 2.69
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 410.0,
+    "eps": 1.7
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 605.0,
+    "eps": 2.62
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 661.0,
+    "eps": 2.91
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 667.0,
+    "eps": 2.9
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 466.0,
+    "eps": 1.97
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 655.0,
+    "eps": 2.82
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 553.0,
+    "eps": 2.4
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 682.0,
+    "eps": 2.95
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 427.0,
+    "eps": 1.81
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 667.0,
+    "eps": 2.9
+  },
+  {
+    "ticker": "DABUR",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 588.0,
+    "eps": 2.55
+  }
+]

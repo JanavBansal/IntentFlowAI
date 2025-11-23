@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "INDHOTEL",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 294.0,
+    "eps": 0.86
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 597.0,
+    "eps": 2.69
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 535.0,
+    "eps": 2.31
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 410.0,
+    "eps": 1.57
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 355.0,
+    "eps": 1.18
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 732.0,
+    "eps": 3.18
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 660.0,
+    "eps": 2.93
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 450.0,
+    "eps": 1.75
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 501.0,
+    "eps": 3.9
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 962.0,
+    "eps": 4.09
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 857.0,
+    "eps": 3.67
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 576.0,
+    "eps": 2.08
+  },
+  {
+    "ticker": "INDHOTEL",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 570.0,
+    "eps": 2.0
+  }
+]

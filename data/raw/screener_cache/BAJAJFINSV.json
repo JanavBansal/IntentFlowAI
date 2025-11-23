@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 7387.0,
+    "eps": 9.77
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 7831.0,
+    "eps": 11.19
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 8154.0,
+    "eps": 11.11
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 9345.0,
+    "eps": 12.2
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 9950.0,
+    "eps": 12.09
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 10438.0,
+    "eps": 13.52
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 10933.0,
+    "eps": 13.28
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 11825.0,
+    "eps": 13.39
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 12283.0,
+    "eps": 13.07
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 12373.0,
+    "eps": 13.97
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 12728.0,
+    "eps": 15.14
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 14315.0,
+    "eps": 17.46
+  },
+  {
+    "ticker": "BAJAJFINSV",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 14050.0,
+    "eps": 14.04
+  }
+]

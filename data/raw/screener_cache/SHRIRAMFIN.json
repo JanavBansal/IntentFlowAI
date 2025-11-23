@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 11.65
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 9.61
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 6.86
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 9.1
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 9.52
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 9.94
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 10.69
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 10.76
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 11.39
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 17.27
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 11.4
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 11.48
+  },
+  {
+    "ticker": "SHRIRAMFIN",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 12.3
+  }
+]

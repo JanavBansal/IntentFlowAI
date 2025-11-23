@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "DMART",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 892.0,
+    "eps": 10.59
+  },
+  {
+    "ticker": "DMART",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 965.0,
+    "eps": 9.1
+  },
+  {
+    "ticker": "DMART",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 772.0,
+    "eps": 7.1
+  },
+  {
+    "ticker": "DMART",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1035.0,
+    "eps": 10.12
+  },
+  {
+    "ticker": "DMART",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1005.0,
+    "eps": 9.58
+  },
+  {
+    "ticker": "DMART",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1120.0,
+    "eps": 10.61
+  },
+  {
+    "ticker": "DMART",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 944.0,
+    "eps": 8.66
+  },
+  {
+    "ticker": "DMART",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1221.0,
+    "eps": 11.89
+  },
+  {
+    "ticker": "DMART",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1094.0,
+    "eps": 10.14
+  },
+  {
+    "ticker": "DMART",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1217.0,
+    "eps": 11.12
+  },
+  {
+    "ticker": "DMART",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 955.0,
+    "eps": 8.47
+  },
+  {
+    "ticker": "DMART",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1299.0,
+    "eps": 11.88
+  },
+  {
+    "ticker": "DMART",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1214.0,
+    "eps": 10.53
+  }
+]

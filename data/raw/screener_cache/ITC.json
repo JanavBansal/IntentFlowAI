@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "ITC",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 6259.0,
+    "eps": 3.73
+  },
+  {
+    "ticker": "ITC",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 6705.0,
+    "eps": 4.03
+  },
+  {
+    "ticker": "ITC",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 6624.0,
+    "eps": 4.16
+  },
+  {
+    "ticker": "ITC",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 6670.0,
+    "eps": 4.1
+  },
+  {
+    "ticker": "ITC",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 6454.0,
+    "eps": 3.93
+  },
+  {
+    "ticker": "ITC",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 6210.0,
+    "eps": 4.28
+  },
+  {
+    "ticker": "ITC",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 6302.0,
+    "eps": 4.1
+  },
+  {
+    "ticker": "ITC",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 6545.0,
+    "eps": 4.08
+  },
+  {
+    "ticker": "ITC",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 6552.0,
+    "eps": 3.99
+  },
+  {
+    "ticker": "ITC",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 6362.0,
+    "eps": 3.94
+  },
+  {
+    "ticker": "ITC",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 6519.0,
+    "eps": 15.76
+  },
+  {
+    "ticker": "ITC",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 6816.0,
+    "eps": 4.19
+  },
+  {
+    "ticker": "ITC",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 6695.0,
+    "eps": 4.09
+  }
+]

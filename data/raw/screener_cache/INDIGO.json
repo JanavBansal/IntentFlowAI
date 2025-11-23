@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "INDIGO",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 27.0,
+    "eps": -41.08
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 3118.0,
+    "eps": 36.91
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 2752.0,
+    "eps": 23.84
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 4974.0,
+    "eps": 80.16
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 2200.0,
+    "eps": 4.9
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 5149.0,
+    "eps": 77.68
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 3994.0,
+    "eps": 49.09
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 5159.0,
+    "eps": 70.7
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1631.0,
+    "eps": -25.54
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 5179.0,
+    "eps": 63.38
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 6089.0,
+    "eps": 79.38
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 5226.0,
+    "eps": 56.31
+  },
+  {
+    "ticker": "INDIGO",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 580.0,
+    "eps": -66.79
+  }
+]

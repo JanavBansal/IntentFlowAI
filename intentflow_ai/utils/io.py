@@ -48,9 +48,14 @@ def load_price_parquet(
     """Load the canonical price parquet into a normalized panel."""
 
     cfg = cfg or settings
-    target = Path(path) if path else cfg.data_dir / "raw" / "price_confirmation" / "data.parquet"
+    target = Path(path) if path else cfg.data_dir / "processed" / "prices.parquet"
     if not target.exists():
-        raise FileNotFoundError(f"Price parquet not found at {target}")
+        # Fallback to raw/price_confirmation if processed doesn't exist
+        fallback = cfg.data_dir / "raw" / "price_confirmation" / "data.parquet"
+        if fallback.exists():
+            target = fallback
+        else:
+            raise FileNotFoundError(f"Price parquet not found at {target} or {fallback}")
 
     try:
         frame = pd.read_parquet(target)
@@ -71,7 +76,7 @@ def load_price_parquet(
                 frame = _load_price_from_csv()
 
     frame.columns = [col.strip().lower() for col in frame.columns]
-    required = {"date", "ticker", "close", "volume", "sector"}
+    required = {"date", "ticker", "close", "volume"} # Removed "sector" requirement as we handle it downstream
     missing = required - set(frame.columns)
     if missing:
         raise ValueError(f"Parquet missing columns: {', '.join(sorted(missing))}")

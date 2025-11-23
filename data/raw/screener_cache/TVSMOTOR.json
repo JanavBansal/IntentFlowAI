@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1071.0,
+    "eps": 8.13
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1011.0,
+    "eps": 6.33
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1049.0,
+    "eps": 7.07
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1204.0,
+    "eps": 9.14
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1345.0,
+    "eps": 8.13
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1475.0,
+    "eps": 10.08
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1455.0,
+    "eps": 8.15
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1431.0,
+    "eps": 9.7
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1624.0,
+    "eps": 11.8
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1633.0,
+    "eps": 11.91
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1904.0,
+    "eps": 13.64
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1803.0,
+    "eps": 12.84
+  },
+  {
+    "ticker": "TVSMOTOR",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 2110.0,
+    "eps": 16.74
+  }
+]

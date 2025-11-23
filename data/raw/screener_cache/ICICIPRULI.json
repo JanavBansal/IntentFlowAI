@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": -264.0,
+    "eps": 1.39
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": -76.0,
+    "eps": 1.54
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": -416.0,
+    "eps": 1.64
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": -280.0,
+    "eps": 1.43
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": -293.0,
+    "eps": 1.69
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": -155.0,
+    "eps": 1.58
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": -278.0,
+    "eps": 1.21
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 34.0,
+    "eps": 1.56
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 319.0,
+    "eps": 1.74
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 241.0,
+    "eps": 2.25
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 415.0,
+    "eps": 2.67
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 213.0,
+    "eps": 2.08
+  },
+  {
+    "ticker": "ICICIPRULI",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": -19.0,
+    "eps": 2.04
+  }
+]

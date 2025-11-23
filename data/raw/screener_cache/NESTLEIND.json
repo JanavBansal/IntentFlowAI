@@ -1,0 +1,51 @@
+[
+  {
+    "ticker": "NESTLEIND",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1095.0,
+    "eps": 3.4
+  },
+  {
+    "ticker": "NESTLEIND",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1114.0,
+    "eps": 3.87
+  },
+  {
+    "ticker": "NESTLEIND",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1164.0,
+    "eps": 4.66
+  },
+  {
+    "ticker": "NESTLEIND",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1095.0,
+    "eps": 3.57
+  },
+  {
+    "ticker": "NESTLEIND",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1377.0,
+    "eps": 4.53
+  },
+  {
+    "ticker": "NESTLEIND",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1088.0,
+    "eps": 3.35
+  },
+  {
+    "ticker": "NESTLEIND",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1227.0,
+    "eps": 3.85
+  }
+]

@@ -209,10 +209,13 @@ class ScreenerInProvider:
                     values = [col.text.strip() for col in cols[1:]]
                     
                     # Map metric names to our schema
+                    # Based on actual Screener.in HTML structure
+                    # Note: Screener.in uses non-breaking space (\xa0) before + symbol
+                    # Metric names are lowercased for matching
                     field_mapping = {
-                        'sales': 'revenue',
+                        'sales\xa0+': 'revenue',
+                        'net profit\xa0+': 'net_income',
                         'operating profit': 'operating_profit',
-                        'net profit': 'net_income',
                         'eps in rs': 'eps',
                     }
                     
@@ -230,10 +233,9 @@ class ScreenerInProvider:
         except Exception as e:
             print(f"   Error parsing quarterly table: {e}")
         
-        # Now extract ratios from the page for the latest quarter
-        if records:
-            latest = records[0]
-            self._add_ratios_to_record(latest, section.find_parent())
+        # LEAKAGE FIX: Do NOT attach current ratios (P/E, Market Cap) to historical records.
+        # These are "current" values and would cause look-ahead bias if attached to past quarters.
+        # We calculate P/E dynamically in FundamentalFeatures using Point-in-Time price.
         
         return records
     

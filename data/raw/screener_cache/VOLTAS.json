@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "VOLTAS",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 72.0,
+    "eps": -0.22
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 44.0,
+    "eps": -3.34
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 190.0,
+    "eps": 4.35
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 154.0,
+    "eps": 3.91
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 37.0,
+    "eps": 1.11
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": -8.0,
+    "eps": -0.92
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 152.0,
+    "eps": 3.52
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 394.0,
+    "eps": 10.1
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 130.0,
+    "eps": 4.05
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 165.0,
+    "eps": 3.99
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 301.0,
+    "eps": 7.28
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 153.0,
+    "eps": 4.24
+  },
+  {
+    "ticker": "VOLTAS",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 34.0,
+    "eps": 1.04
+  }
+]

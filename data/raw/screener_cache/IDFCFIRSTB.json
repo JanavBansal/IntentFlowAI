@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 0.91
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 0.99
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 1.23
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 1.1
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 1.11
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 1.04
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 1.04
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 0.91
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 0.28
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 0.46
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 0.4
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 0.62
+  },
+  {
+    "ticker": "IDFCFIRSTB",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 0.47
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "IGL",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 528.0,
+    "eps": 3.05
+  },
+  {
+    "ticker": "IGL",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 428.0,
+    "eps": 2.39
+  },
+  {
+    "ticker": "IGL",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 461.0,
+    "eps": 2.84
+  },
+  {
+    "ticker": "IGL",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 642.0,
+    "eps": 3.73
+  },
+  {
+    "ticker": "IGL",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 657.0,
+    "eps": 3.95
+  },
+  {
+    "ticker": "IGL",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 562.0,
+    "eps": 3.4
+  },
+  {
+    "ticker": "IGL",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 521.0,
+    "eps": 3.1
+  },
+  {
+    "ticker": "IGL",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 576.0,
+    "eps": 3.44
+  },
+  {
+    "ticker": "IGL",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 535.0,
+    "eps": 3.25
+  },
+  {
+    "ticker": "IGL",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 362.0,
+    "eps": 2.33
+  },
+  {
+    "ticker": "IGL",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 493.0,
+    "eps": 3.25
+  },
+  {
+    "ticker": "IGL",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 511.0,
+    "eps": 3.06
+  },
+  {
+    "ticker": "IGL",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 441.0,
+    "eps": 2.76
+  }
+]

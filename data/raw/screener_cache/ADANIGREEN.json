@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 866.0,
+    "eps": 0.94
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 853.0,
+    "eps": 0.65
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 2264.0,
+    "eps": 3.21
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 2081.0,
+    "eps": 2.03
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1699.0,
+    "eps": 2.35
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1666.0,
+    "eps": 1.62
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1834.0,
+    "eps": 0.95
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 2379.0,
+    "eps": 2.82
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 2217.0,
+    "eps": 1.74
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1880.0,
+    "eps": 3.11
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 2393.0,
+    "eps": 1.45
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 3042.0,
+    "eps": 4.39
+  },
+  {
+    "ticker": "ADANIGREEN",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 2603.0,
+    "eps": 3.54
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1164.0,
+    "eps": 1.85
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1478.0,
+    "eps": 4.26
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1203.0,
+    "eps": 3.49
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1269.0,
+    "eps": 1.57
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1350.0,
+    "eps": 2.47
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1471.0,
+    "eps": 2.91
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1566.0,
+    "eps": 3.24
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1651.0,
+    "eps": -7.39
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1715.0,
+    "eps": 5.62
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1661.0,
+    "eps": 4.68
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 2040.0,
+    "eps": 5.39
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1811.0,
+    "eps": 4.27
+  },
+  {
+    "ticker": "ADANIENSOL",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1955.0,
+    "eps": 4.44
+  }
+]

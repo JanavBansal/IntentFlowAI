@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from functools import lru_cache
+from pathlib import Path
 from typing import Dict, List
 
 import numpy as np
@@ -12,7 +13,10 @@ import pandas as pd
 from intentflow_ai.config.settings import settings
 from intentflow_ai.data.universe import load_universe
 from intentflow_ai.modeling.regimes import RegimeClassifier
+from intentflow_ai.utils.logging import get_logger
 from sklearn.linear_model import LinearRegression
+
+logger = get_logger(__name__)
 
 
 @lru_cache(maxsize=1)
@@ -57,6 +61,11 @@ class FeatureEngineer:
                 "volume_enhanced": self._volume_enhanced_block,  # NEW: From Qlib
                 "ranking": self._ranking_block,  # NEW: Cross-sectional ranks
                 "orthogonal": self._orthogonal_block,
+                "sector_momentum": self._sector_momentum_block,  # NEW: Sector relative performance
+                "earnings_metrics": self._earnings_metrics_block,  # NEW: Earnings surprise, growth
+                "quality_scores": self._quality_scores_block,  # NEW: ROE, margins, cash conversion
+                "financial_ratios": self._financial_ratios_block,  # NEW: Professional ratios via FinanceToolkit
+                "sector_normalized": self._sector_normalized_block,  # NEW: Sector-relative features
             }
 
     @staticmethod
@@ -67,6 +76,10 @@ class FeatureEngineer:
             return grouped.apply(func)
 
     def build(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        # === WATERFALL LOGGING: Track ticker count at each step ===
+        initial_tickers = dataset['ticker'].nunique() if 'ticker' in dataset.columns else 0
+        logger.info(f"[FeatureEngineer.build] STEP 0: Input dataset has {initial_tickers} unique tickers, {len(dataset)} rows")
+        
         dataset = dataset.copy()
         if "date" in dataset.columns:
             dataset["date"] = pd.to_datetime(dataset["date"], errors="coerce")
@@ -75,18 +88,35 @@ class FeatureEngineer:
             if not lookup.empty and "ticker" in dataset.columns:
                 dataset["sector"] = dataset.get("sector", pd.Series(index=dataset.index, dtype="string"))
                 dataset["sector"] = dataset["sector"].fillna(dataset["ticker"].map(lookup))
+        
+        logger.info(f"[FeatureEngineer.build] STEP 1: After date/sector prep, {dataset['ticker'].nunique() if 'ticker' in dataset.columns else 0} tickers, {len(dataset)} rows")
+        
         frames: List[pd.DataFrame] = []
         for name, builder in self.feature_blocks.items():
             block = builder(dataset.copy())
+            tickers_before = dataset['ticker'].nunique() if 'ticker' in dataset.columns else 0
             if block.empty:
+                logger.warning(f"[FeatureEngineer.build] Feature block '{name}' returned EMPTY, skipping")
                 continue
             block.columns = [f"{name}__{col}" for col in block.columns]
             frames.append(block)
+            logger.info(f"[FeatureEngineer.build] STEP 2.{len(frames)}: After '{name}' block, added {len(block.columns)} features ({len(frames)} blocks total)")
+        
         if frames:
             combined = pd.concat(frames, axis=1)
+            logger.info(f"[FeatureEngineer.build] STEP 3: After concat all blocks, {len(combined.columns)} total features, {len(combined)} rows")
+            
             combined = combined.apply(pd.to_numeric, errors="coerce")
+            logger.info(f"[FeatureEngineer.build] STEP 4: After to_numeric coercion, {len(combined)} rows")
+            
             combined = combined.replace([np.inf, -np.inf], np.nan)
-            return combined.fillna(0.0)
+            logger.info(f"[FeatureEngineer.build] STEP 5: After replacing inf with NaN, {len(combined)} rows")
+            
+            result = combined.fillna(0.0)
+            logger.info(f"[FeatureEngineer.build] STEP 6: After fillna(0.0), {len(result)} rows (FINAL)")
+            return result
+        
+        logger.warning(f"[FeatureEngineer.build] No feature blocks succeeded, using baseline features")
         return self._baseline_features(dataset)
 
     def _baseline_features(self, dataset: pd.DataFrame) -> pd.DataFrame:
@@ -430,25 +460,55 @@ class FeatureEngineer:
             from intentflow_ai.data.fundamentals_provider import get_fundamental_provider
             from intentflow_ai.features.fundamental_features import FundamentalFeatures
             
-            # Get unique symbols and date range
-            symbols = dataset['ticker'].unique().tolist()
-            start_date = dataset['date'].min()
-            end_date = dataset['date'].max()
+            # Try loading from EODHD parquet first (Professional Data Lake)
+            eodhd_path = Path(settings.data_dir) / "processed" / "fundamentals_eodhd.parquet"
+            poc_path = Path(settings.data_dir) / "processed" / "fundamentals_poc.parquet"
+            csv_path = Path(settings.data_dir) / "fundamentals.csv"
             
-            # Fetch fundamentals
-            provider = get_fundamental_provider()
-            all_fundamentals = []
-            
-            for symbol in symbols:
-                fund_df = provider.fetch_fundamentals(symbol, start_date, end_date)
-                if not fund_df.empty:
-                    all_fundamentals.append(fund_df)
-            
-            if not all_fundamentals:
-                # No fundamental data available
-                return pd.DataFrame()
-            
-            fundamentals = pd.concat(all_fundamentals, ignore_index=True)
+            if eodhd_path.exists():
+                fundamentals = pd.read_parquet(eodhd_path)
+                print(f"✅ Loaded {len(fundamentals)} fundamental records from EODHD parquet")
+                # Ensure date columns are datetime
+                for col in ['date', 'report_date', 'available_date']:
+                    if col in fundamentals.columns:
+                        fundamentals[col] = pd.to_datetime(fundamentals[col])
+            elif poc_path.exists():
+                fundamentals = pd.read_parquet(poc_path)
+                print(f"✅ Loaded {len(fundamentals)} fundamental records from POC parquet")
+                # Ensure date columns are datetime
+                for col in ['date', 'report_date', 'available_date']:
+                    if col in fundamentals.columns:
+                        fundamentals[col] = pd.to_datetime(fundamentals[col])
+            elif csv_path.exists():
+                fundamentals = pd.read_csv(csv_path)
+                # Ensure date columns are datetime
+                if 'date' in fundamentals.columns:
+                    fundamentals['date'] = pd.to_datetime(fundamentals['date'])
+                if 'report_date' in fundamentals.columns:
+                    fundamentals['report_date'] = pd.to_datetime(fundamentals['report_date'])
+                if 'available_date' in fundamentals.columns:
+                    fundamentals['available_date'] = pd.to_datetime(fundamentals['available_date'])
+            else:
+                # Fallback to fetching (slow/rate-limited)
+                # Get unique symbols and date range
+                symbols = dataset['ticker'].unique().tolist()
+                start_date = dataset['date'].min()
+                end_date = dataset['date'].max()
+                
+                # Fetch fundamentals
+                provider = get_fundamental_provider()
+                all_fundamentals = []
+                
+                for symbol in symbols:
+                    fund_df = provider.fetch_fundamentals(symbol, start_date, end_date)
+                    if not fund_df.empty:
+                        all_fundamentals.append(fund_df)
+                
+                if not all_fundamentals:
+                    # No fundamental data available
+                    return pd.DataFrame()
+                
+                fundamentals = pd.concat(all_fundamentals, ignore_index=True)
             
             # Compute fundamental features
             feature_engine = FundamentalFeatures()
@@ -1028,3 +1088,49 @@ class FeatureEngineer:
         result["volume_rank"] = temp_df.groupby("date")["volume_raw"].rank(pct=True).fillna(0.5)
         
         return result
+
+    def _sector_momentum_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        try:
+            from intentflow_ai.features.advanced_features import sector_momentum_features
+            
+            return sector_momentum_features(dataset)
+        except Exception as e:
+            logger.warning(f"Sector momentum feature computation failed: {e}")
+            return pd.DataFrame(index=dataset.index)
+    
+    def _earnings_metrics_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        try:
+            from intentflow_ai.features.advanced_features import earnings_metrics_features
+            
+            return earnings_metrics_features(dataset)
+        except Exception as e:
+            logger.warning(f"Earnings metrics feature computation failed: {e}")
+            return pd.DataFrame(index=dataset.index)
+    
+    def _quality_scores_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        try:
+            from intentflow_ai.features.advanced_features import quality_scores_features
+            
+            return quality_scores_features(dataset)
+        except Exception as e:
+            logger.warning(f"Quality scores feature computation failed: {e}")
+            return pd.DataFrame(index=dataset.index)
+
+    def _financial_ratios_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        try:
+            from intentflow_ai.features.financial_ratios import FinancialRatioEngine
+            
+            engine = FinancialRatioEngine()
+            return engine.calculate_basic_ratios(dataset)
+        except Exception as e:
+            logger.warning(f"Financial ratios computation failed: {e}")
+            return pd.DataFrame(index=dataset.index)
+    
+    def _sector_normalized_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        try:
+            from intentflow_ai.features.financial_ratios import sector_normalized_features
+            
+            return sector_normalized_features(dataset)
+        except Exception as e:
+            logger.warning(f"Sector normalization failed: {e}")
+            return pd.DataFrame(index=dataset.index)

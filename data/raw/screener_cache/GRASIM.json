@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "GRASIM",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 4591.0,
+    "eps": 14.83
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 4863.0,
+    "eps": 36.97
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 6131.0,
+    "eps": 20.12
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 6357.0,
+    "eps": 23.17
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 6048.0,
+    "eps": 17.1
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 6893.0,
+    "eps": 22.25
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 7892.0,
+    "eps": 20.8
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 6682.0,
+    "eps": 16.33
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 6026.0,
+    "eps": 4.78
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 6804.0,
+    "eps": 12.45
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 8750.0,
+    "eps": 21.98
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 8822.0,
+    "eps": 20.85
+  },
+  {
+    "ticker": "GRASIM",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 7671.0,
+    "eps": 8.13
+  }
+]

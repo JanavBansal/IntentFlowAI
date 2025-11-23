@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "GAIL",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1904.0,
+    "eps": 2.0
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 482.0,
+    "eps": 0.63
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 556.0,
+    "eps": 0.96
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 2660.0,
+    "eps": 2.73
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 3580.0,
+    "eps": 3.72
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 4208.0,
+    "eps": 4.86
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 3849.0,
+    "eps": 3.75
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 4790.0,
+    "eps": 4.84
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 3937.0,
+    "eps": 4.1
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 3169.0,
+    "eps": 6.21
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 3535.0,
+    "eps": 3.79
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 3669.0,
+    "eps": 3.6
+  },
+  {
+    "ticker": "GAIL",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 3460.0,
+    "eps": 3.0
+  }
+]

@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "BANKBARODA",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 6.58
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 8.33
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 10.16
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 8.61
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 8.5
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 9.26
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 9.92
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 9.14
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 10.36
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 10.08
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 10.48
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 6.71
+  },
+  {
+    "ticker": "BANKBARODA",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 9.93
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "GODREJCP",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 542.0,
+    "eps": 3.51
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 727.0,
+    "eps": 5.34
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 641.0,
+    "eps": 4.42
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 643.0,
+    "eps": 3.12
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 704.0,
+    "eps": 4.23
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 841.0,
+    "eps": 5.68
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 756.0,
+    "eps": -18.51
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 724.0,
+    "eps": 4.41
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 760.0,
+    "eps": 4.8
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 756.0,
+    "eps": 4.87
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 759.0,
+    "eps": 4.03
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 695.0,
+    "eps": 4.42
+  },
+  {
+    "ticker": "GODREJCP",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 733.0,
+    "eps": 4.49
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "CIPLA",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1302.0,
+    "eps": 9.78
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1408.0,
+    "eps": 9.92
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1174.0,
+    "eps": 6.51
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1494.0,
+    "eps": 12.33
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1734.0,
+    "eps": 14.01
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1748.0,
+    "eps": 13.08
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1316.0,
+    "eps": 11.63
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1716.0,
+    "eps": 14.58
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1886.0,
+    "eps": 16.13
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1989.0,
+    "eps": 19.45
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1538.0,
+    "eps": 15.13
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1778.0,
+    "eps": 16.06
+  },
+  {
+    "ticker": "CIPLA",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1895.0,
+    "eps": 16.73
+  }
+]

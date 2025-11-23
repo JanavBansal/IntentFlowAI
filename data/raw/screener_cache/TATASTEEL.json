@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "TATASTEEL",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 6060.0,
+    "eps": 1.24
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 4048.0,
+    "eps": -1.82
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 7219.0,
+    "eps": 1.4
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 4903.0,
+    "eps": 0.52
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 4268.0,
+    "eps": -5.07
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 6264.0,
+    "eps": 0.42
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 6601.0,
+    "eps": 0.49
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 6694.0,
+    "eps": 0.77
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 6116.0,
+    "eps": 0.67
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 5903.0,
+    "eps": 0.26
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 6559.0,
+    "eps": 1.04
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 7428.0,
+    "eps": 1.66
+  },
+  {
+    "ticker": "TATASTEEL",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 8897.0,
+    "eps": 2.48
+  }
+]

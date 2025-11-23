@@ -62,6 +62,25 @@ class TrainingPipeline:
             price_panel = price_panel[price_panel["ticker"].isin(tickers_subset)]
             if price_panel.empty:
                 raise ValueError("No price data left after ticker filtering.")
+
+        # === FIX: Ensure sectors are populated to prevent dropping in make_excess_label ===
+        if "sector" not in price_panel.columns:
+            price_panel["sector"] = pd.NA
+        
+        missing_sectors = price_panel["sector"].isna()
+        if missing_sectors.any():
+            from intentflow_ai.features.engineering import _sector_lookup
+            lookup = _sector_lookup()
+            if not lookup.empty:
+                price_panel.loc[missing_sectors, "sector"] = price_panel.loc[missing_sectors, "ticker"].map(lookup)
+            
+            # Fallback for any remaining NaNs
+            remaining_missing = price_panel["sector"].isna()
+            if remaining_missing.any():
+                count = remaining_missing.sum()
+                logger.warning(f"Filling {count} rows with missing sector as 'Unknown' to prevent data loss.")
+                price_panel.loc[remaining_missing, "sector"] = "Unknown"
+
         feature_frame = self.feature_engineer.build(price_panel)
         dataset = price_panel.join(feature_frame)
         # Switch to Excess Return Label (Alpha) instead of Triple Barrier (Volatility dependent)
@@ -222,6 +241,25 @@ class TrainingPipeline:
             price_panel = price_panel[price_panel["ticker"].isin(tickers_subset)]
             if price_panel.empty:
                 raise ValueError("No price data left after ticker filtering.")
+
+        # === FIX: Ensure sectors are populated to prevent dropping in make_excess_label ===
+        if "sector" not in price_panel.columns:
+            price_panel["sector"] = pd.NA
+        
+        missing_sectors = price_panel["sector"].isna()
+        if missing_sectors.any():
+            from intentflow_ai.features.engineering import _sector_lookup
+            lookup = _sector_lookup()
+            if not lookup.empty:
+                price_panel.loc[missing_sectors, "sector"] = price_panel.loc[missing_sectors, "ticker"].map(lookup)
+            
+            # Fallback for any remaining NaNs
+            remaining_missing = price_panel["sector"].isna()
+            if remaining_missing.any():
+                count = remaining_missing.sum()
+                logger.warning(f"Filling {count} rows with missing sector as 'Unknown' to prevent data loss.")
+                price_panel.loc[remaining_missing, "sector"] = "Unknown"
+
         feature_frame = self.feature_engineer.build(price_panel)
         dataset = price_panel.join(feature_frame)
         

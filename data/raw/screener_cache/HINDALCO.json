@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "HINDALCO",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 5362.0,
+    "eps": 9.81
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 3548.0,
+    "eps": 6.06
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 5327.0,
+    "eps": 10.73
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 5714.0,
+    "eps": 10.92
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 5612.0,
+    "eps": 9.77
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 5865.0,
+    "eps": 10.37
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 6680.0,
+    "eps": 14.12
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 7503.0,
+    "eps": 13.68
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 7883.0,
+    "eps": 17.39
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 7583.0,
+    "eps": 16.62
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 8836.0,
+    "eps": 23.51
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 7906.0,
+    "eps": 17.82
+  },
+  {
+    "ticker": "HINDALCO",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 8966.0,
+    "eps": 21.1
+  }
+]

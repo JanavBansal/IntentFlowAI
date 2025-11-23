@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 552.0,
+    "eps": 14.19
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 484.0,
+    "eps": 10.68
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 488.0,
+    "eps": 10.05
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 509.0,
+    "eps": 11.59
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 628.0,
+    "eps": 16.2
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 614.0,
+    "eps": 17.06
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 640.0,
+    "eps": 17.65
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 675.0,
+    "eps": 21.23
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 816.0,
+    "eps": 26.34
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 762.0,
+    "eps": 25.89
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 770.0,
+    "eps": 27.1
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 852.0,
+    "eps": 30.1
+  },
+  {
+    "ticker": "APOLLOHOSP",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 941.0,
+    "eps": 33.19
+  }
+]

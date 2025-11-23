@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "ICICIBANK",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 11.49
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 12.6
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 14.11
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 15.2
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 15.56
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 15.76
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 16.62
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 16.62
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 18.38
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 18.25
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 18.96
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 19.0
+  },
+  {
+    "ticker": "ICICIBANK",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 18.7
+  }
+]

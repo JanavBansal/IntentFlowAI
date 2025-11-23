@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "POWERGRID",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 9366.0,
+    "eps": 3.92
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 9893.0,
+    "eps": 3.92
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 10831.0,
+    "eps": 4.65
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 9332.0,
+    "eps": 3.87
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 9710.0,
+    "eps": 4.07
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 10175.0,
+    "eps": 4.33
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 9923.0,
+    "eps": 4.48
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 9540.0,
+    "eps": 4.0
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 9597.0,
+    "eps": 4.08
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 9533.0,
+    "eps": 4.15
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 10194.0,
+    "eps": 4.45
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 9102.0,
+    "eps": 3.9
+  },
+  {
+    "ticker": "POWERGRID",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 9055.0,
+    "eps": 3.83
+  }
+]

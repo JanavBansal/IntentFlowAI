@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "TCS",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 14516.0,
+    "eps": 28.51
+  },
+  {
+    "ticker": "TCS",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 15553.0,
+    "eps": 29.64
+  },
+  {
+    "ticker": "TCS",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 15774.0,
+    "eps": 31.13
+  },
+  {
+    "ticker": "TCS",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 14998.0,
+    "eps": 30.26
+  },
+  {
+    "ticker": "TCS",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 15746.0,
+    "eps": 31.0
+  },
+  {
+    "ticker": "TCS",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 16388.0,
+    "eps": 30.56
+  },
+  {
+    "ticker": "TCS",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 17164.0,
+    "eps": 34.37
+  },
+  {
+    "ticker": "TCS",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 16662.0,
+    "eps": 33.28
+  },
+  {
+    "ticker": "TCS",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 16731.0,
+    "eps": 32.92
+  },
+  {
+    "ticker": "TCS",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 17034.0,
+    "eps": 34.22
+  },
+  {
+    "ticker": "TCS",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 16980.0,
+    "eps": 33.79
+  },
+  {
+    "ticker": "TCS",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 16875.0,
+    "eps": 35.27
+  },
+  {
+    "ticker": "TCS",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 17978.0,
+    "eps": 33.37
+  }
+]

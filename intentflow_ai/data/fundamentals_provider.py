@@ -157,11 +157,14 @@ class YahooFinanceProvider(FundamentalDataProvider):
             df['date'] = pd.to_datetime(df['date'])
             df = df.sort_values('date').reset_index(drop=True)
             
-            # Forward fill to create daily data (fundamentals change quarterly)
-            df = self._expand_to_daily(df, start_date, end_date)
-            
             # Apply reporting delay (45 days) - critical for point-in-time correctness
-            df = self._apply_reporting_delay(df, delay_days=45)
+            # MUST be done BEFORE expansion to prevent leakage
+            from intentflow_ai.utils.time_enforcer import TimeEnforcer
+            df = TimeEnforcer.apply_reporting_delay(df, 'report_date', delay_days=45)
+            
+            # Forward fill to create daily data (fundamentals change quarterly)
+            # This will now merge on 'available_date' to ensure safety
+            df = self._expand_to_daily(df, start_date, end_date)
             
             # Cache results
             if not df.empty:
@@ -270,7 +273,7 @@ class YahooFinanceProvider(FundamentalDataProvider):
         }
     
     def _expand_to_daily(self, df: pd.DataFrame, start_date: datetime, end_date: datetime) -> pd.DataFrame:
-        """Expand quarterly data to daily by forward-filling."""
+        """Expand quarterly data to daily by forward-filling using available_date."""
         if df.empty:
             return df
         
@@ -279,38 +282,21 @@ class YahooFinanceProvider(FundamentalDataProvider):
         daily_df = pd.DataFrame({'date': date_range})
         daily_df['symbol'] = df['symbol'].iloc[0]
         
+        # Determine merge key: use available_date if present (SAFE), else date (UNSAFE but fallback)
+        merge_key = 'available_date' if 'available_date' in df.columns else 'date'
+        
         # Merge and forward fill
+        # This ensures we only see data on/after available_date
         df_daily = pd.merge_asof(
             daily_df.sort_values('date'),
-            df.sort_values('date'),
-            on='date',
+            df.sort_values(merge_key),
+            left_on='date',
+            right_on=merge_key,
             by='symbol',
             direction='backward'
         )
         
         return df_daily
-    
-    def _apply_reporting_delay(self, df: pd.DataFrame, delay_days: int = 45) -> pd.DataFrame:
-        """
-        Apply reporting delay to ensure point-in-time correctness.
-        
-        Earnings are reported ~45 days after quarter end.
-        This shifts the availability date forward.
-        """
-        if df.empty or 'report_date' not in df.columns:
-            return df
-        
-        df = df.copy()
-        df['report_date'] = pd.to_datetime(df['report_date'])
-        df['date'] = pd.to_datetime(df['date'])
-        
-        # Shift the date that this data becomes available
-        df['available_date'] = df['report_date'] + pd.Timedelta(days=delay_days)
-        
-        # Only use data after it's available
-        df = df[df['date'] >= df['available_date']].copy()
-        
-        return df
 
 
 class FMPProvider(FundamentalDataProvider):
@@ -358,6 +344,13 @@ class HybridFundamentalProvider:
             self.screener = get_screener_provider()
         except ImportError:
             self.screener = None
+
+        # Import TradingView provider
+        try:
+            from intentflow_ai.data.tradingview_provider import get_tradingview_provider
+            self.tv = get_tradingview_provider()
+        except ImportError:
+            self.tv = None
     
     def _is_nse_ticker(self, symbol: str) -> bool:
         """Detect if symbol is an NSE ticker (no .NS suffix, Indian format)."""
@@ -385,15 +378,24 @@ class HybridFundamentalProvider:
         is_nse = self._is_nse_ticker(symbol)
         
         if is_nse:
-            # NSE Stock - Try Screener.in first
+            # NSE Stock - Try Screener.in first (Better history)
             if self.screener:
                 try:
                     df = self.screener.fetch_fundamentals(symbol, start_date, end_date)
                     if not df.empty:
                         return df
-                    print(f"   Screener.in returned no data for {symbol}, trying Yahoo with .NS...")
+                    print(f"   Screener.in returned no data for {symbol}, trying TradingView...")
                 except Exception as e:
-                    print(f"   Screener.in failed for {symbol}: {e}, trying Yahoo...")
+                    print(f"   Screener.in failed for {symbol}: {e}, trying TradingView...")
+
+            # NSE Stock - Try TradingView second (Backup/Current data)
+            if self.tv and self.tv.is_available():
+                try:
+                    df = self.tv.fetch_fundamentals(symbol, start_date, end_date)
+                    if not df.empty:
+                        return df
+                except Exception as e:
+                    print(f"   TradingView failed for {symbol}: {e}")
             
             # Fallback: Yahoo Finance with .NS suffix
             if self.yahoo.is_available():
@@ -424,7 +426,7 @@ class HybridFundamentalProvider:
                     print(f"   FMP failed for {symbol}: {e}")
         
         # All methods failed
-        print(f"⚠️  No fundamental data available for {symbol}")
+        print(f"⚠️  No fundamental data available for {symbol} (All providers failed)")
         return pd.DataFrame()
     
     def fetch_batch(

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "BEL",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 868.0,
+    "eps": 0.85
+  },
+  {
+    "ticker": "BEL",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 863.0,
+    "eps": 0.84
+  },
+  {
+    "ticker": "BEL",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1832.0,
+    "eps": 1.89
+  },
+  {
+    "ticker": "BEL",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 673.0,
+    "eps": 0.74
+  },
+  {
+    "ticker": "BEL",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1014.0,
+    "eps": 1.08
+  },
+  {
+    "ticker": "BEL",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1072.0,
+    "eps": 1.18
+  },
+  {
+    "ticker": "BEL",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 2287.0,
+    "eps": 2.46
+  },
+  {
+    "ticker": "BEL",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 948.0,
+    "eps": 1.08
+  },
+  {
+    "ticker": "BEL",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1400.0,
+    "eps": 1.49
+  },
+  {
+    "ticker": "BEL",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1669.0,
+    "eps": 1.79
+  },
+  {
+    "ticker": "BEL",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 2816.0,
+    "eps": 2.91
+  },
+  {
+    "ticker": "BEL",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1238.0,
+    "eps": 1.33
+  },
+  {
+    "ticker": "BEL",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1702.0,
+    "eps": 1.76
+  }
+]

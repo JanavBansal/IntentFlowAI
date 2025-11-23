@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 815.0,
+    "eps": 5.16
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 956.0,
+    "eps": 6.15
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1256.0,
+    "eps": 2.93
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1505.0,
+    "eps": 10.74
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1146.0,
+    "eps": 7.91
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1102.0,
+    "eps": 7.8
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1630.0,
+    "eps": 11.75
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 2084.0,
+    "eps": 14.11
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1461.0,
+    "eps": 9.06
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1388.0,
+    "eps": 10.17
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 2126.0,
+    "eps": 11.64
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 2088.0,
+    "eps": 14.58
+  },
+  {
+    "ticker": "ZYDUSLIFE",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 2016.0,
+    "eps": 12.51
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 290.0,
+    "eps": 9.64
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 413.0,
+    "eps": 14.93
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 330.0,
+    "eps": 12.59
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 342.0,
+    "eps": 12.76
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 346.0,
+    "eps": 11.87
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 543.0,
+    "eps": 18.0
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 539.0,
+    "eps": 19.44
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 473.0,
+    "eps": 16.69
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 484.0,
+    "eps": 16.21
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 598.0,
+    "eps": 20.15
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 525.0,
+    "eps": 19.1
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 624.0,
+    "eps": 21.79
+  },
+  {
+    "ticker": "CUMMINSIND",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 695.0,
+    "eps": 22.45
+  }
+]

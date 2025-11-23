@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "DRREDDY",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1899.0,
+    "eps": 13.39
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1939.0,
+    "eps": 14.94
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1534.0,
+    "eps": 11.53
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 2062.0,
+    "eps": 16.87
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 2008.0,
+    "eps": 17.77
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 2023.0,
+    "eps": 16.56
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1831.0,
+    "eps": 15.7
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 2130.0,
+    "eps": 16.69
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 2076.0,
+    "eps": 15.05
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 2273.0,
+    "eps": 16.94
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1998.0,
+    "eps": 19.09
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 2174.0,
+    "eps": 16.99
+  },
+  {
+    "ticker": "DRREDDY",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 2010.0,
+    "eps": 16.14
+  }
+]

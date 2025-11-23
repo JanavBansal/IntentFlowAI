@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "POLYCAB",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 427.0,
+    "eps": 17.91
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 503.0,
+    "eps": 23.89
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 603.0,
+    "eps": 28.38
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 549.0,
+    "eps": 26.67
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 609.0,
+    "eps": 28.37
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 570.0,
+    "eps": 27.49
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 762.0,
+    "eps": 36.34
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 583.0,
+    "eps": 26.34
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 632.0,
+    "eps": 29.24
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 720.0,
+    "eps": 30.42
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1025.0,
+    "eps": 48.31
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 858.0,
+    "eps": 39.34
+  },
+  {
+    "ticker": "POLYCAB",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1021.0,
+    "eps": 45.54
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 2891.0,
+    "eps": 7.94
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 2696.0,
+    "eps": 6.09
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 3271.0,
+    "eps": 5.36
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 3689.0,
+    "eps": 9.79
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 3664.0,
+    "eps": 8.09
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 4196.0,
+    "eps": 10.22
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 4009.0,
+    "eps": 9.44
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 4739.0,
+    "eps": 14.41
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 4367.0,
+    "eps": 11.32
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 4802.0,
+    "eps": 11.67
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 5006.0,
+    "eps": 13.95
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 5495.0,
+    "eps": 15.34
+  },
+  {
+    "ticker": "ADANIPORTS",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 5340.0,
+    "eps": 14.39
+  }
+]

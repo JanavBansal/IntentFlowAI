@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "HDFCBANK",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 9.99
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 11.39
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 11.29
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 11.06
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 11.09
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 11.37
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 11.6
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 10.83
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 11.68
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 11.54
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 12.31
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 10.6
+  },
+  {
+    "ticker": "HDFCBANK",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 12.76
+  }
+]

@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 23.29
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 25.32
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 26.34
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 27.38
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 28.34
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 29.59
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 30.18
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 27.88
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 17.09
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 18.0
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": -29.89
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 7.75
+  },
+  {
+    "ticker": "INDUSINDBK",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": -5.61
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "TATACOMM",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1130.0,
+    "eps": 18.68
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1077.0,
+    "eps": 13.82
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1034.0,
+    "eps": 11.44
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1024.0,
+    "eps": 13.39
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1015.0,
+    "eps": 7.74
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1153.0,
+    "eps": 1.57
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1076.0,
+    "eps": 11.27
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1137.0,
+    "eps": 11.68
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1129.0,
+    "eps": 7.97
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1181.0,
+    "eps": 8.28
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1122.0,
+    "eps": 36.5
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1137.0,
+    "eps": 6.67
+  },
+  {
+    "ticker": "TATACOMM",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1174.0,
+    "eps": 6.42
+  }
+]

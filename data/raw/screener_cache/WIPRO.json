@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "WIPRO",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 3932.0,
+    "eps": 2.42
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 4539.0,
+    "eps": 2.78
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 4519.0,
+    "eps": 2.8
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 4204.0,
+    "eps": 2.61
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 3970.0,
+    "eps": 2.53
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 4198.0,
+    "eps": 2.58
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 4381.0,
+    "eps": 2.71
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 4350.0,
+    "eps": 2.87
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 4503.0,
+    "eps": 3.07
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 4540.0,
+    "eps": 3.2
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 4624.0,
+    "eps": 3.41
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 4233.0,
+    "eps": 3.18
+  },
+  {
+    "ticker": "WIPRO",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 4372.0,
+    "eps": 3.1
+  }
+]

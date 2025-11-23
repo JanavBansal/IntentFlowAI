@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "MARICO",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 433.0,
+    "eps": 2.33
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 456.0,
+    "eps": 2.54
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 393.0,
+    "eps": 2.34
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 574.0,
+    "eps": 3.3
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 497.0,
+    "eps": 2.73
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 513.0,
+    "eps": 2.96
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 442.0,
+    "eps": 2.46
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 626.0,
+    "eps": 3.58
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 522.0,
+    "eps": 3.27
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 533.0,
+    "eps": 3.08
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 458.0,
+    "eps": 2.65
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 655.0,
+    "eps": 3.89
+  },
+  {
+    "ticker": "MARICO",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 560.0,
+    "eps": 3.24
+  }
+]

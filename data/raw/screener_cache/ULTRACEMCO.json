@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1865.0,
+    "eps": 26.18
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 2336.0,
+    "eps": 36.66
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 3322.0,
+    "eps": 57.71
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 3049.0,
+    "eps": 58.49
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 2551.0,
+    "eps": 44.39
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 3255.0,
+    "eps": 61.55
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 4114.0,
+    "eps": 78.22
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 3017.0,
+    "eps": 51.78
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 2026.0,
+    "eps": 24.34
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 2893.0,
+    "eps": 47.09
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 4608.0,
+    "eps": 84.23
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 4406.0,
+    "eps": 75.54
+  },
+  {
+    "ticker": "ULTRACEMCO",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 3089.0,
+    "eps": 41.79
+  }
+]

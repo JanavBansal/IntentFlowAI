@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "LTIM",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1636.0,
+    "eps": 40.18
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 1375.0,
+    "eps": 33.82
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1604.0,
+    "eps": 37.65
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1636.0,
+    "eps": 38.92
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1631.0,
+    "eps": 39.26
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1585.0,
+    "eps": 39.49
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1536.0,
+    "eps": 37.14
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1606.0,
+    "eps": 38.28
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1699.0,
+    "eps": 42.24
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1593.0,
+    "eps": 36.63
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1596.0,
+    "eps": 38.09
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1649.0,
+    "eps": 42.32
+  },
+  {
+    "ticker": "LTIM",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1930.0,
+    "eps": 47.27
+  }
+]

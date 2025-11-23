@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "HAL",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1622.0,
+    "eps": 18.26
+  },
+  {
+    "ticker": "HAL",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 985.0,
+    "eps": 17.27
+  },
+  {
+    "ticker": "HAL",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 3232.0,
+    "eps": 42.33
+  },
+  {
+    "ticker": "HAL",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 877.0,
+    "eps": 12.17
+  },
+  {
+    "ticker": "HAL",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 1528.0,
+    "eps": 18.49
+  },
+  {
+    "ticker": "HAL",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1435.0,
+    "eps": 18.86
+  },
+  {
+    "ticker": "HAL",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 5901.0,
+    "eps": 64.43
+  },
+  {
+    "ticker": "HAL",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 991.0,
+    "eps": 21.49
+  },
+  {
+    "ticker": "HAL",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1640.0,
+    "eps": 22.59
+  },
+  {
+    "ticker": "HAL",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1683.0,
+    "eps": 21.53
+  },
+  {
+    "ticker": "HAL",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 5295.0,
+    "eps": 59.46
+  },
+  {
+    "ticker": "HAL",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1282.0,
+    "eps": 20.69
+  },
+  {
+    "ticker": "HAL",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 1558.0,
+    "eps": 24.96
+  }
+]

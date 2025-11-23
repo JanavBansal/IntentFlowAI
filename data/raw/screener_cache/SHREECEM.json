@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "SHREECEM",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 543.0,
+    "eps": 50.82
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 727.0,
+    "eps": 78.18
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 889.0,
+    "eps": 145.72
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 945.0,
+    "eps": 158.62
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 886.0,
+    "eps": 123.79
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1264.0,
+    "eps": 194.53
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1422.0,
+    "eps": 187.05
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 927.0,
+    "eps": 77.22
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 613.0,
+    "eps": 21.19
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 965.0,
+    "eps": 53.6
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1429.0,
+    "eps": 159.18
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1333.0,
+    "eps": 178.12
+  },
+  {
+    "ticker": "SHREECEM",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 974.0,
+    "eps": 85.51
+  }
+]

@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "BIOCON",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 442.0,
+    "eps": 0.39
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 589.0,
+    "eps": -0.35
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 957.0,
+    "eps": 2.61
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 681.0,
+    "eps": 0.84
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 717.0,
+    "eps": 1.05
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 903.0,
+    "eps": 5.5
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 913.0,
+    "eps": 1.13
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 620.0,
+    "eps": 5.49
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 685.0,
+    "eps": -0.13
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 752.0,
+    "eps": 0.21
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1078.0,
+    "eps": 2.87
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 749.0,
+    "eps": 0.23
+  },
+  {
+    "ticker": "BIOCON",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 835.0,
+    "eps": 0.63
+  }
+]

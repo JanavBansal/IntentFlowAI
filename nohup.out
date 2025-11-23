@@ -1,0 +1,465 @@
+
+1 Failed download:
+['MCDOWELL-N.NS']: YFTzMissingError('possibly delisted; no timezone found')
+============================================================
+NIFTY 500 Price Data Ingestion
+============================================================
+
+[1/3] Fetching ticker list...
+❌ Failed to fetch NIFTY 500 list: list indices must be integers or slices, not str
+Falling back to local NIFTY 100 list...
+✅ Loaded 106 NIFTY 100 tickers from local file
+
+[2/3] Fetching price data for 106 tickers...
+Date range: 2010-01-01 to 2025-11-22
+This will take ~10-15 minutes (rate-limited to avoid bans)...
+
+[1/106] ADANIENT
+  ✅ ADANIENT: 3923 days
+[2/106] ADANIGREEN
+  ✅ ADANIGREEN: 1836 days
+[3/106] ADANIENSOL
+  ✅ ADANIENSOL: 556 days
+[4/106] ADANIPORTS
+  ✅ ADANIPORTS: 3923 days
+[5/106] APOLLOHOSP
+  ✅ APOLLOHOSP: 3923 days
+[6/106] ASIANPAINT
+  ✅ ASIANPAINT: 3923 days
+[7/106] AXISBANK
+  ✅ AXISBANK: 3923 days
+[8/106] BAJAJ-AUTO
+  ✅ BAJAJ-AUTO: 3923 days
+[9/106] BAJAJFINSV
+  ✅ BAJAJFINSV: 3923 days
+[10/106] BAJFINANCE
+  ✅ BAJFINANCE: 3923 days
+[11/106] BANDHANBNK
+  ✅ BANDHANBNK: 1892 days
+[12/106] BANKBARODA
+  ✅ BANKBARODA: 3923 days
+[13/106] BERGEPAINT
+  ✅ BERGEPAINT: 3923 days
+[14/106] BHARTIARTL
+  ✅ BHARTIARTL: 3923 days
+[15/106] BIOCON
+  ✅ BIOCON: 3923 days
+[16/106] BOSCHLTD
+  ✅ BOSCHLTD: 3922 days
+[17/106] BPCL
+  ✅ BPCL: 3923 days
+[18/106] BRITANNIA
+  ✅ BRITANNIA: 3923 days
+[19/106] CIPLA
+  ✅ CIPLA: 3923 days
+[20/106] CHOLAFIN
+  ✅ CHOLAFIN: 3923 days
+[21/106] COALINDIA
+  ✅ COALINDIA: 3712 days
+[22/106] COLPAL
+  ✅ COLPAL: 3923 days
+[23/106] DABUR
+  ✅ DABUR: 3923 days
+[24/106] DMART
+  ✅ DMART: 2145 days
+[25/106] DLF
+  ✅ DLF: 3923 days
+[26/106] DIVISLAB
+  ✅ DIVISLAB: 3923 days
+[27/106] DRREDDY
+  ✅ DRREDDY: 3923 days
+[28/106] EICHERMOT
+  ✅ EICHERMOT: 3923 days
+[29/106] GAIL
+  ✅ GAIL: 3923 days
+[30/106] GLAND
+  ✅ GLAND: 1238 days
+[31/106] GODREJCP
+  ✅ GODREJCP: 3923 days
+[32/106] GRASIM
+  ✅ GRASIM: 3923 days
+[33/106] HAVELLS
+  ✅ HAVELLS: 3923 days
+[34/106] HCLTECH
+  ✅ HCLTECH: 3924 days
+[35/106] HDFCBANK
+  ✅ HDFCBANK: 3923 days
+[36/106] HDFCLIFE
+  ✅ HDFCLIFE: 1980 days
+[37/106] HEROMOTOCO
+  ✅ HEROMOTOCO: 3923 days
+[38/106] HINDALCO
+  ✅ HINDALCO: 3923 days
+[39/106] HINDUNILVR
+  ✅ HINDUNILVR: 3923 days
+[40/106] ICICIBANK
+  ✅ ICICIBANK: 3923 days
+[41/106] ICICIGI
+  ✅ ICICIGI: 2015 days
+[42/106] ICICIPRULI
+  ✅ ICICIPRULI: 2261 days
+[43/106] IGL
+  ✅ IGL: 3923 days
+[44/106] INDIGO
+  ✅ INDIGO: 2478 days
+[45/106] INDUSINDBK
+  ✅ INDUSINDBK: 3923 days
+[46/106] INFY
+  ✅ INFY: 3923 days
+[47/106] ITC
+  ✅ ITC: 3923 days
+[48/106] JSWSTEEL
+  ✅ JSWSTEEL: 3923 days
+[49/106] KOTAKBANK
+  ✅ KOTAKBANK: 3923 days
+[50/106] LT
+  ✅ LT: 3923 days
+[51/106] LTIM
+  ✅ LTIM: 2308 days
+[52/106] LUPIN
+  ✅ LUPIN: 3923 days
+[53/106] M&M
+  ✅ M&M: 3923 days
+[54/106] MARICO
+  ✅ MARICO: 3923 days
+[55/106] MARUTI
+  ✅ MARUTI: 3923 days
+[56/106] MCDOWELL-N
+  ⚠️  No data for MCDOWELL-N
+[57/106] MOTHERSON
+  ✅ MOTHERSON: 3923 days
+[58/106] MUTHOOTFIN
+  ✅ MUTHOOTFIN: 3589 days
+[59/106] NAUKRI
+  ✅ NAUKRI: 3923 days
+[60/106] NESTLEIND
+  ✅ NESTLEIND: 3923 days
+[61/106] NTPC
+  ✅ NTPC: 3923 days
+[62/106] ONGC
+  ✅ ONGC: 3923 days
+[63/106] PFC
+  ✅ PFC: 3923 days
+[64/106] PIDILITIND
+  ✅ PIDILITIND: 3923 days
+[65/106] PIIND
+  ✅ PIIND: 3561 days
+[66/106] POWERGRID
+  ✅ POWERGRID: 3923 days
+[67/106] SBICARD
+  ✅ SBICARD: 1410 days
+[68/106] SBILIFE
+  ✅ SBILIFE: 2012 days
+[69/106] SBIN
+  ✅ SBIN: 3923 days
+[70/106] SHREECEM
+  ✅ SHREECEM: 3922 days
+[71/106] SHRIRAMFIN
+  ✅ SHRIRAMFIN: 3923 days
+[72/106] SIEMENS
+  ✅ SIEMENS: 3923 days
+[73/106] SRF
+  ✅ SRF: 3922 days
+[74/106] SUNPHARMA
+  ✅ SUNPHARMA: 3923 days
+[75/106] TATACOMM
+  ✅ TATACOMM: 3922 days
+[76/106] TATACONSUM
+  ✅ TATACONSUM: 3923 days
+[77/106] TATAMOTORS
+  ✅ TATAMOTORS: 3923 days
+[78/106] TATAPOWER
+  ✅ TATAPOWER: 3923 days
+[79/106] TATASTEEL
+  ✅ TATASTEEL: 3923 days
+[80/106] TCS
+  ✅ TCS: 3923 days
+[81/106] TECHM
+  ✅ TECHM: 3923 days
+[82/106] TITAN
+  ✅ TITAN: 3923 days
+[83/106] TORNTPHARM
+  ✅ TORNTPHARM: 3923 days
+[84/106] TORNTPOWER
+  ✅ TORNTPOWER: 3923 days
+[85/106] TVSMOTOR
+  ✅ TVSMOTOR: 3923 days
+[86/106] ULTRACEMCO
+  ✅ ULTRACEMCO: 3923 days
+[87/106] UPL
+  ✅ UPL: 3923 days
+[88/106] VEDL
+  ✅ VEDL: 3923 days
+[89/106] VOLTAS
+  ✅ VOLTAS: 3923 days
+[90/106] WIPRO
+  ✅ WIPRO: 3923 days
+[91/106] ZYDUSLIFE
+  ✅ ZYDUSLIFE: 3923 days
+[92/106] ABBOTINDIA
+  ✅ ABBOTINDIA: 3923 days
+[93/106] AMBUJACEM
+  ✅ AMBUJACEM: 3923 days
+[94/106] CANBK
+  ✅ CANBK: 3923 days
+[95/106] HAL
+  ✅ HAL: 1890 days
+[96/106] LICI
+  ✅ LICI: 872 days
+[97/106] CUMMINSIND
+  ✅ CUMMINSIND: 3923 days
+[98/106] HINDPETRO
+  ✅ HINDPETRO: 3923 days
+[99/106] BEL
+  ✅ BEL: 3923 days
+[100/106] PAGEIND
+  ✅ PAGEIND: 3922 days
+[101/106] POLYCAB
+  ✅ POLYCAB: 1633 days
+[102/106] IDFCFIRSTB
+  ✅ IDFCFIRSTB: 2480 days
+[103/106] OBEROIRLTY
+  ✅ OBEROIRLTY: 3723 days
+[104/106] INDHOTEL
+  ✅ INDHOTEL: 3923 days
+[105/106] UBL
+  ✅ UBL: 3923 days
+[106/106] AUBANK
+  ✅ AUBANK: 2069 days
+
+[3/3] Saving to data/processed/prices.parquet...
+
+✅ SUCCESS!
+Total rows: 375,188
+Tickers with data: 105
+Date range: 2010-01-04 00:00:00 to 2025-11-21 00:00:00
+Saved to: data/processed/prices.parquet
+============================================================
+Screener.in Fundamental Data Scraper (POC)
+============================================================
+
+[1/3] Scraping fundamentals for 106 tickers...
+Rate limited to 1 request every 3 seconds to avoid bans.
+Estimated time: ~5.3 minutes
+
+[1/106] ADANIENT
+  📦 ADANIENT: Using cached data
+[2/106] ADANIGREEN
+  📦 ADANIGREEN: Using cached data
+[3/106] ADANIENSOL
+  📦 ADANIENSOL: Using cached data
+[4/106] ADANIPORTS
+  📦 ADANIPORTS: Using cached data
+[5/106] APOLLOHOSP
+  📦 APOLLOHOSP: Using cached data
+[6/106] ASIANPAINT
+  📦 ASIANPAINT: Using cached data
+[7/106] AXISBANK
+  📦 AXISBANK: Using cached data
+[8/106] BAJAJ-AUTO
+  📦 BAJAJ-AUTO: Using cached data
+[9/106] BAJAJFINSV
+  📦 BAJAJFINSV: Using cached data
+[10/106] BAJFINANCE
+  📦 BAJFINANCE: Using cached data
+[11/106] BANDHANBNK
+  ✅ BANDHANBNK: Fetched 0 quarters
+[12/106] BANKBARODA
+  ✅ BANKBARODA: Fetched 13 quarters
+[13/106] BERGEPAINT
+  ✅ BERGEPAINT: Fetched 13 quarters
+[14/106] BHARTIARTL
+  ✅ BHARTIARTL: Fetched 13 quarters
+[15/106] BIOCON
+  ✅ BIOCON: Fetched 13 quarters
+[16/106] BOSCHLTD
+  ✅ BOSCHLTD: Fetched 13 quarters
+[17/106] BPCL
+  ✅ BPCL: Fetched 13 quarters
+[18/106] BRITANNIA
+  ✅ BRITANNIA: Fetched 13 quarters
+[19/106] CIPLA
+  ✅ CIPLA: Fetched 13 quarters
+[20/106] CHOLAFIN
+  ✅ CHOLAFIN: Fetched 13 quarters
+[21/106] COALINDIA
+  ✅ COALINDIA: Fetched 13 quarters
+[22/106] COLPAL
+  ✅ COLPAL: Fetched 0 quarters
+[23/106] DABUR
+  ✅ DABUR: Fetched 13 quarters
+[24/106] DMART
+  ✅ DMART: Fetched 13 quarters
+[25/106] DLF
+  ✅ DLF: Fetched 13 quarters
+[26/106] DIVISLAB
+  ✅ DIVISLAB: Fetched 13 quarters
+[27/106] DRREDDY
+  ✅ DRREDDY: Fetched 13 quarters
+[28/106] EICHERMOT
+  ✅ EICHERMOT: Fetched 13 quarters
+[29/106] GAIL
+  ✅ GAIL: Fetched 13 quarters
+[30/106] GLAND
+  ✅ GLAND: Fetched 13 quarters
+[31/106] GODREJCP
+  ✅ GODREJCP: Fetched 13 quarters
+[32/106] GRASIM
+  ✅ GRASIM: Fetched 13 quarters
+[33/106] HAVELLS
+  ✅ HAVELLS: Fetched 13 quarters
+[34/106] HCLTECH
+  ✅ HCLTECH: Fetched 13 quarters
+[35/106] HDFCBANK
+  ✅ HDFCBANK: Fetched 13 quarters
+[36/106] HDFCLIFE
+  ✅ HDFCLIFE: Fetched 13 quarters
+[37/106] HEROMOTOCO
+  ✅ HEROMOTOCO: Fetched 13 quarters
+[38/106] HINDALCO
+  ✅ HINDALCO: Fetched 13 quarters
+[39/106] HINDUNILVR
+  ✅ HINDUNILVR: Fetched 13 quarters
+[40/106] ICICIBANK
+  ✅ ICICIBANK: Fetched 13 quarters
+[41/106] ICICIGI
+  ✅ ICICIGI: Fetched 0 quarters
+[42/106] ICICIPRULI
+  ✅ ICICIPRULI: Fetched 13 quarters
+[43/106] IGL
+  ✅ IGL: Fetched 13 quarters
+[44/106] INDIGO
+  ✅ INDIGO: Fetched 13 quarters
+[45/106] INDUSINDBK
+  ✅ INDUSINDBK: Fetched 13 quarters
+[46/106] INFY
+  ✅ INFY: Fetched 13 quarters
+[47/106] ITC
+  ✅ ITC: Fetched 13 quarters
+[48/106] JSWSTEEL
+  ✅ JSWSTEEL: Fetched 13 quarters
+[49/106] KOTAKBANK
+  ✅ KOTAKBANK: Fetched 13 quarters
+[50/106] LT
+  ✅ LT: Fetched 13 quarters
+[51/106] LTIM
+  ✅ LTIM: Fetched 13 quarters
+[52/106] LUPIN
+  ✅ LUPIN: Fetched 13 quarters
+[53/106] M&M
+  ✅ M&M: Fetched 13 quarters
+[54/106] MARICO
+  ✅ MARICO: Fetched 13 quarters
+[55/106] MARUTI
+  ✅ MARUTI: Fetched 13 quarters
+[56/106] MCDOWELL-N
+  ❌ MCDOWELL-N: 404 Client Error: Not Found for url: https://www.screener.in/company/MCDOWELL-N/consolidated/
+[57/106] MOTHERSON
+  ✅ MOTHERSON: Fetched 13 quarters
+[58/106] MUTHOOTFIN
+  ✅ MUTHOOTFIN: Fetched 13 quarters
+[59/106] NAUKRI
+  ✅ NAUKRI: Fetched 13 quarters
+[60/106] NESTLEIND
+  ✅ NESTLEIND: Fetched 7 quarters
+[61/106] NTPC
+  ✅ NTPC: Fetched 13 quarters
+[62/106] ONGC
+  ✅ ONGC: Fetched 13 quarters
+[63/106] PFC
+  ✅ PFC: Fetched 13 quarters
+[64/106] PIDILITIND
+  ✅ PIDILITIND: Fetched 13 quarters
+[65/106] PIIND
+  ✅ PIIND: Fetched 13 quarters
+[66/106] POWERGRID
+  ✅ POWERGRID: Fetched 13 quarters
+[67/106] SBICARD
+  ✅ SBICARD: Fetched 0 quarters
+[68/106] SBILIFE
+  ✅ SBILIFE: Fetched 0 quarters
+[69/106] SBIN
+  ✅ SBIN: Fetched 13 quarters
+[70/106] SHREECEM
+  ✅ SHREECEM: Fetched 13 quarters
+[71/106] SHRIRAMFIN
+  ✅ SHRIRAMFIN: Fetched 13 quarters
+[72/106] SIEMENS
+  ✅ SIEMENS: Fetched 13 quarters
+[73/106] SRF
+  ✅ SRF: Fetched 13 quarters
+[74/106] SUNPHARMA
+  ✅ SUNPHARMA: Fetched 13 quarters
+[75/106] TATACOMM
+  ✅ TATACOMM: Fetched 13 quarters
+[76/106] TATACONSUM
+  ✅ TATACONSUM: Fetched 13 quarters
+[77/106] TATAMOTORS
+  ❌ TATAMOTORS: 404 Client Error: Not Found for url: https://www.screener.in/company/TATAMOTORS/consolidated/
+[78/106] TATAPOWER
+  ✅ TATAPOWER: Fetched 13 quarters
+[79/106] TATASTEEL
+  ✅ TATASTEEL: Fetched 13 quarters
+[80/106] TCS
+  ✅ TCS: Fetched 13 quarters
+[81/106] TECHM
+  ✅ TECHM: Fetched 13 quarters
+[82/106] TITAN
+  ✅ TITAN: Fetched 13 quarters
+[83/106] TORNTPHARM
+  ✅ TORNTPHARM: Fetched 13 quarters
+[84/106] TORNTPOWER
+  ✅ TORNTPOWER: Fetched 13 quarters
+[85/106] TVSMOTOR
+  ✅ TVSMOTOR: Fetched 13 quarters
+[86/106] ULTRACEMCO
+  ✅ ULTRACEMCO: Fetched 13 quarters
+[87/106] UPL
+  ✅ UPL: Fetched 13 quarters
+[88/106] VEDL
+  ✅ VEDL: Fetched 13 quarters
+[89/106] VOLTAS
+  ✅ VOLTAS: Fetched 13 quarters
+[90/106] WIPRO
+  ✅ WIPRO: Fetched 13 quarters
+[91/106] ZYDUSLIFE
+  ✅ ZYDUSLIFE: Fetched 13 quarters
+[92/106] ABBOTINDIA
+  ✅ ABBOTINDIA: Fetched 0 quarters
+[93/106] AMBUJACEM
+  ✅ AMBUJACEM: Fetched 13 quarters
+[94/106] CANBK
+  ✅ CANBK: Fetched 13 quarters
+[95/106] HAL
+  ✅ HAL: Fetched 13 quarters
+[96/106] LICI
+  ✅ LICI: Fetched 13 quarters
+[97/106] CUMMINSIND
+  ✅ CUMMINSIND: Fetched 13 quarters
+[98/106] HINDPETRO
+  ✅ HINDPETRO: Fetched 13 quarters
+[99/106] BEL
+  ✅ BEL: Fetched 13 quarters
+[100/106] PAGEIND
+  ✅ PAGEIND: Fetched 0 quarters
+[101/106] POLYCAB
+  ✅ POLYCAB: Fetched 13 quarters
+[102/106] IDFCFIRSTB
+  ✅ IDFCFIRSTB: Fetched 13 quarters
+[103/106] OBEROIRLTY
+  ✅ OBEROIRLTY: Fetched 13 quarters
+[104/106] INDHOTEL
+  ✅ INDHOTEL: Fetched 13 quarters
+[105/106] UBL
+  ✅ UBL: Fetched 13 quarters
+[106/106] AUBANK
+  ✅ AUBANK: Fetched 0 quarters
+
+[2/3] Processing 1242 records...
+
+[3/3] Saved to data/processed/fundamentals_poc.parquet
+
+✅ SUCCESS!
+Total records: 1,242
+Tickers: 96
+Date range: 2022-09-30 00:00:00 to 2025-09-30 00:00:00

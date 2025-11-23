@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "LT",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 6362.0,
+    "eps": 15.86
+  },
+  {
+    "ticker": "LT",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 6653.0,
+    "eps": 18.17
+  },
+  {
+    "ticker": "LT",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 8354.0,
+    "eps": 28.37
+  },
+  {
+    "ticker": "LT",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 6316.0,
+    "eps": 17.74
+  },
+  {
+    "ticker": "LT",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 7040.0,
+    "eps": 23.45
+  },
+  {
+    "ticker": "LT",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 7199.0,
+    "eps": 21.44
+  },
+  {
+    "ticker": "LT",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 8653.0,
+    "eps": 31.98
+  },
+  {
+    "ticker": "LT",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 7046.0,
+    "eps": 20.26
+  },
+  {
+    "ticker": "LT",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 7917.0,
+    "eps": 24.69
+  },
+  {
+    "ticker": "LT",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 7898.0,
+    "eps": 24.43
+  },
+  {
+    "ticker": "LT",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 9876.0,
+    "eps": 39.97
+  },
+  {
+    "ticker": "LT",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 8024.0,
+    "eps": 26.3
+  },
+  {
+    "ticker": "LT",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 8513.0,
+    "eps": 28.54
+  }
+]

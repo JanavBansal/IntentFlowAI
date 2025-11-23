@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "LUPIN",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 453.0,
+    "eps": 2.85
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 533.0,
+    "eps": 3.37
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 578.0,
+    "eps": 5.19
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 856.0,
+    "eps": 9.94
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 918.0,
+    "eps": 10.76
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1038.0,
+    "eps": 13.47
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 997.0,
+    "eps": 7.89
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1241.0,
+    "eps": 17.58
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1340.0,
+    "eps": 18.69
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1356.0,
+    "eps": 18.74
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1321.0,
+    "eps": 16.92
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1727.0,
+    "eps": 26.69
+  },
+  {
+    "ticker": "LUPIN",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 2341.0,
+    "eps": 32.36
+  }
+]

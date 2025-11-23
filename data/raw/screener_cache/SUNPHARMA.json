@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 2957.0,
+    "eps": 9.43
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 3004.0,
+    "eps": 9.03
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 2802.0,
+    "eps": 8.27
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 3332.0,
+    "eps": 8.43
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 3179.0,
+    "eps": 9.9
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 3477.0,
+    "eps": 10.52
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 3035.0,
+    "eps": 11.06
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 3608.0,
+    "eps": 11.82
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 3939.0,
+    "eps": 12.67
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 4009.0,
+    "eps": 12.1
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 3716.0,
+    "eps": 8.96
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 4302.0,
+    "eps": 9.5
+  },
+  {
+    "ticker": "SUNPHARMA",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 4527.0,
+    "eps": 13.0
+  }
+]

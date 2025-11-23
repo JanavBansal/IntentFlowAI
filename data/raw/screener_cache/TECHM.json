@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "TECHM",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 1944.0,
+    "eps": 13.21
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 2135.0,
+    "eps": 13.32
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 1803.0,
+    "eps": 11.47
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 1338.0,
+    "eps": 7.1
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 914.0,
+    "eps": 5.06
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 1146.0,
+    "eps": 5.23
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 1099.0,
+    "eps": 6.77
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 1564.0,
+    "eps": 8.71
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 1750.0,
+    "eps": 12.78
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 1809.0,
+    "eps": 10.05
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 1839.0,
+    "eps": 11.92
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 1935.0,
+    "eps": 11.65
+  },
+  {
+    "ticker": "TECHM",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 2165.0,
+    "eps": 12.19
+  }
+]

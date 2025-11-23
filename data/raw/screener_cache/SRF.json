@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "SRF",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 769.0,
+    "eps": 16.23
+  },
+  {
+    "ticker": "SRF",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 834.0,
+    "eps": 17.24
+  },
+  {
+    "ticker": "SRF",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 932.0,
+    "eps": 18.97
+  },
+  {
+    "ticker": "SRF",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 696.0,
+    "eps": 12.12
+  },
+  {
+    "ticker": "SRF",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 626.0,
+    "eps": 10.15
+  },
+  {
+    "ticker": "SRF",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 566.0,
+    "eps": 8.55
+  },
+  {
+    "ticker": "SRF",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 696.0,
+    "eps": 14.24
+  },
+  {
+    "ticker": "SRF",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 603.0,
+    "eps": 8.51
+  },
+  {
+    "ticker": "SRF",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 538.0,
+    "eps": 6.79
+  },
+  {
+    "ticker": "SRF",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 620.0,
+    "eps": 9.14
+  },
+  {
+    "ticker": "SRF",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 957.0,
+    "eps": 17.75
+  },
+  {
+    "ticker": "SRF",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 830.0,
+    "eps": 14.58
+  },
+  {
+    "ticker": "SRF",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 774.0,
+    "eps": 13.1
+  }
+]

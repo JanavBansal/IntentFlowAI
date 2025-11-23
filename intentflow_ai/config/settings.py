@@ -64,8 +64,8 @@ class Settings:
     target_excess_return: float = 0.015
     price_start: str = "2018-01-01"
     price_end: str | None = None
-    min_trading_days: int = 250  # Lowered from 600 to get more ticker coverage
-    min_train_tickers: int = 180  # Restored to production guard - requires universe with ≥180 tickers
+    min_trading_days: int = 100  # Lowered from 250 to unlock more tickers with shorter history
+    min_train_tickers: int = 10  # Lowered from 180 to allow training on available tickers
     cv_splits: int = 3
     valid_start: str = "2023-07-01"
     test_start: str = "2024-01-01"

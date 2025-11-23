@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 18.17
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 20.12
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 22.99
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 20.88
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 22.45
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 21.46
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 26.85
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 37.47
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 25.37
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 23.64
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 24.81
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 22.49
+  },
+  {
+    "ticker": "KOTAKBANK",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 22.47
+  }
+]

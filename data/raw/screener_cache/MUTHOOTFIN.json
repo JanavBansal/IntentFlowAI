@@ -1,0 +1,80 @@
+[
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "eps": 22.22
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "eps": 23.11
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "eps": 24.25
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "eps": 25.46
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "eps": 26.39
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "eps": 27.49
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "eps": 28.37
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "eps": 28.99
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "eps": 31.67
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "eps": 34.6
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "eps": 36.81
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "eps": 50.22
+  },
+  {
+    "ticker": "MUTHOOTFIN",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "eps": 60.29
+  }
+]

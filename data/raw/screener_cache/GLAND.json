@@ -1,0 +1,93 @@
+[
+  {
+    "ticker": "GLAND",
+    "date": "2022-09-30",
+    "report_date": "2022-09-30",
+    "operating_profit": 297.0,
+    "eps": 14.65
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2022-12-31",
+    "report_date": "2022-12-31",
+    "operating_profit": 290.0,
+    "eps": 14.08
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2023-03-31",
+    "report_date": "2023-03-31",
+    "operating_profit": 168.0,
+    "eps": 4.78
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2023-06-30",
+    "report_date": "2023-06-30",
+    "operating_profit": 294.0,
+    "eps": 11.79
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2023-09-30",
+    "report_date": "2023-09-30",
+    "operating_profit": 324.0,
+    "eps": 11.78
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2023-12-31",
+    "report_date": "2023-12-31",
+    "operating_profit": 356.0,
+    "eps": 11.65
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2024-03-31",
+    "report_date": "2024-03-31",
+    "operating_profit": 359.0,
+    "eps": 11.68
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2024-06-30",
+    "report_date": "2024-06-30",
+    "operating_profit": 264.0,
+    "eps": 8.73
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2024-09-30",
+    "report_date": "2024-09-30",
+    "operating_profit": 297.0,
+    "eps": 9.93
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2024-12-31",
+    "report_date": "2024-12-31",
+    "operating_profit": 360.0,
+    "eps": 12.42
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2025-03-31",
+    "report_date": "2025-03-31",
+    "operating_profit": 348.0,
+    "eps": 11.32
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2025-06-30",
+    "report_date": "2025-06-30",
+    "operating_profit": 368.0,
+    "eps": 13.08
+  },
+  {
+    "ticker": "GLAND",
+    "date": "2025-09-30",
+    "report_date": "2025-09-30",
+    "operating_profit": 314.0,
+    "eps": 11.15
+  }
+]
