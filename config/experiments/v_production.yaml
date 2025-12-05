@@ -1,0 +1,113 @@
+# Production Configuration
+# Full strategic upgrade implementation
+
+name: v_production
+description: >
+  Production-ready configuration with all Phase 0-9 features:
+  - 15-day semi-monthly rebalancing
+  - Multi-algorithm ensemble (LightGBM + XGBoost + CatBoost + Ridge)
+  - Macro, seasonality, and options features
+  - Liquidity filtering (min 50L ADV)
+  - Sector concentration limits (max 30%)
+  - Quality scores (Piotroski F-Score, Altman Z-Score)
+  - Full monitoring and alerting
+
+# Universe
+universe:
+  file: static/sector_map.csv
+  min_trading_days: 100
+  liquidity_filter:
+    enabled: true
+    min_avg_volume: 100000
+    min_avg_turnover: 5000000  # 50 lakh INR
+    lookback_days: 20
+
+# Training configuration
+training:
+  price_start: "2015-01-01"
+  signal_horizon_days: 15
+  min_train_tickers: 50
+  cv_splits: 5
+  use_wfo: true
+  wfo_splits: 5
+  wfo_min_train_months: 12
+
+# Model configuration
+model:
+  type: ensemble
+  ensemble:
+    algorithms:
+      - lightgbm
+      - xgboost
+      - catboost
+      - ridge
+    weights:
+      lightgbm: 0.4
+      xgboost: 0.3
+      catboost: 0.2
+      ridge: 0.1
+    use_fixed_weights: true  # Don't optimize weights to avoid overfitting
+
+# LightGBM hyperparameters
+lightgbm:
+  objective: binary
+  metric: auc
+  n_estimators: 1000
+  learning_rate: 0.01
+  num_leaves: 32
+  max_depth: 5
+  min_child_samples: 100
+  subsample: 0.8
+  colsample_bytree: 0.6
+  reg_alpha: 0.1
+  reg_lambda: 1.0
+
+# Features
+features:
+  blocks:
+    # Base features
+    - technical
+    - momentum
+    - volatility
+    - mean_reversion
+    - turnover
+    - sector_relative
+    - ranking
+    # Advanced features (Phase 4-7)
+    - advanced_quality      # Piotroski, Altman Z
+    - advanced_options      # PCR, sentiment
+    - advanced_macro        # VIX, FX, commodities
+    - advanced_seasonality  # Budget, Diwali, earnings
+    - advanced_market_cap   # Size tier features
+
+# Backtest configuration
+backtest:
+  top_k: 20
+  hold_days: 15  # Semi-monthly
+  slippage_bps: 12.0
+  use_realistic_costs: true
+  
+# Risk management
+risk:
+  max_sector_exposure: 0.30
+  max_single_stock: 0.10
+  max_drawdown_warning: 0.10
+  max_drawdown_critical: 0.15
+  use_trailing_stops: true
+  trailing_stop_pct: 0.15
+  
+# Monitoring
+monitoring:
+  enabled: true
+  data_quality_check: true
+  model_decay_detection: true
+  ic_warning_threshold: 0.02
+  ic_critical_threshold: 0.0
+  alert_cooldown_minutes: 60
+
+# Output
+output:
+  generate_ranking_report: true
+  top_stocks_in_report: 20
+  include_explanations: true
+  save_feature_importance: true

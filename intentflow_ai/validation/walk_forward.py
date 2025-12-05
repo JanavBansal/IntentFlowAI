@@ -27,6 +27,7 @@ class WalkForwardConfig:
     min_train_days: int = 252  # Minimum training period (1 year)
     min_valid_days: int = 60  # Minimum validation period
     min_test_days: int = 60  # Minimum test period
+    rolling_window_days: Optional[int] = None  # If set, use rolling window of this size
 
 
 @dataclass
@@ -51,15 +52,12 @@ def generate_walk_forward_folds(
     *,
     date_col: str = "date",
 ) -> List[WalkForwardFold]:
-    """Generate walk-forward validation folds with anchored origin.
+    """Generate walk-forward validation folds.
 
-    The training window always starts from train_start (anchored origin) and
-    expands with each fold. Validation and test windows move forward in time.
-
-    Example:
-        Fold 1: Train[2018-06:2020-06] | Valid[2020-07:2020-12] | Test[2021-01:2021-06]
-        Fold 2: Train[2018-06:2020-12] | Valid[2021-01:2021-06] | Test[2021-07:2021-12]
-        Fold 3: Train[2018-06:2021-06] | Valid[2021-07:2021-12] | Test[2022-01:2022-06]
+    Supports both expanding window (default) and rolling window.
+    
+    Expanding: Train start is fixed at cfg.train_start
+    Rolling: Train start moves forward to keep window size constant (cfg.rolling_window_days)
 
     Args:
         df: DataFrame with date column
@@ -101,6 +99,12 @@ def generate_walk_forward_folds(
         # Set current_train_end to the date that gives us exactly min_train_days of training data
         # (or as close as possible)
         current_train_end = dates_from_start[cfg.min_train_days - 1]
+        
+        # If rolling window is specified, ensure we have enough initial data
+        if cfg.rolling_window_days:
+             # For the first fold, we might want a full window or just min_train_days
+             # Let's start with min_train_days and grow until we hit rolling_window_days
+             pass
     else:
         current_train_end = train_end_dt
     folds = []
@@ -120,8 +124,16 @@ def generate_walk_forward_folds(
         test_start = valid_end + pd.Timedelta(days=cfg.embargo_days + cfg.horizon_days)
         test_end = test_start + pd.Timedelta(days=cfg.test_duration_days)
 
+        # Calculate training start date
+        current_train_start = train_start_dt
+        if cfg.rolling_window_days:
+            # If rolling, start date is end date minus window size
+            rolling_start = current_train_end - pd.Timedelta(days=cfg.rolling_window_days)
+            # But don't go before the global train_start
+            current_train_start = max(train_start_dt, rolling_start)
+
         # Check if we have enough data
-        train_dates = unique_dates[(unique_dates >= train_start_dt) & (unique_dates <= current_train_end)]
+        train_dates = unique_dates[(unique_dates >= current_train_start) & (unique_dates <= current_train_end)]
         valid_dates = unique_dates[(unique_dates >= valid_start) & (unique_dates < valid_end)]
         test_dates = unique_dates[(unique_dates >= test_start) & (unique_dates < test_end)]
 
@@ -158,7 +170,7 @@ def generate_walk_forward_folds(
                 break
 
         # Create masks
-        train_mask = (dates >= train_start_dt) & (dates <= current_train_end)
+        train_mask = (dates >= current_train_start) & (dates <= current_train_end)
         valid_mask = (dates >= valid_start) & (dates < valid_end)
         test_mask = (dates >= test_start) & (dates < test_end)
 
@@ -169,7 +181,7 @@ def generate_walk_forward_folds(
 
         fold = WalkForwardFold(
             fold_idx=fold_idx,
-            train_start=train_start_dt,
+            train_start=current_train_start,
             train_end=current_train_end,
             valid_start=valid_start,
             valid_end=valid_end,
@@ -182,7 +194,7 @@ def generate_walk_forward_folds(
 
         folds.append(fold)
         logger.info(
-            f"Fold {fold_idx}: Train[{train_start_dt.date()} to {current_train_end.date()}] "
+            f"Fold {fold_idx}: Train[{current_train_start.date()} to {current_train_end.date()}] "
             f"({train_days} days) | Valid[{valid_start.date()} to {valid_end.date()}] "
             f"({valid_days} days) | Test[{test_start.date()} to {test_end.date()}] ({test_days} days)"
         )

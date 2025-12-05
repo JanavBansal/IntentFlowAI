@@ -1,8 +1,8 @@
 random_state: 42
 
-# NIFTY 200 Full universe expansion
+# Full 464-ticker universe with proper sector mappings
 universe:
-  universe_file: external/universe/nifty200_clean.csv
+  universe_file: static/sector_map.csv
   membership_file: null
   use_membership: false
 

@@ -332,7 +332,49 @@ class TrainingPipeline:
         
         logger.info("WFO complete", extra={"metrics": metrics})
         
+        # Train a final production model on ALL data for scoring
+        # WFO was for validation metrics - now we train the best model using all available data
+        logger.info("Training final production model on all data...")
+        features = train_df[feature_cols]
+        target = train_df["label"]
+        
+        trainer = LightGBMTrainer(self.cfg.lgbm)
+        final_model = trainer.train(features, target)
+        
+        # Also train regime-specific models if regime filter is enabled
+        models = {"overall": final_model}
+        regime_classifier = None
+        
+        if self.regime_filter:
+            regime_classifier = RegimeClassifier()
+            # Get price panel for regime classification
+            regime_price_panel = load_price_parquet(
+                start_date=self.cfg.price_start,
+                end_date=self.cfg.price_end,
+                cfg=self.cfg,
+            )
+            market_df = regime_price_panel[["date", "ticker", "close"]].copy()
+            regime_map = regime_classifier.infer(market_df)
+            
+            if not regime_map.empty and "composite_regime" in regime_map.columns:
+                regime_series = regime_map["composite_regime"].rename("regime")
+                train_df = train_df.merge(regime_series, left_on="date", right_index=True, how="left")
+                
+                for regime, subset in train_df.dropna(subset=["regime"]).groupby("regime"):
+                    if len(subset) < 100:  # Skip tiny regimes
+                        continue
+                    subset_features = subset[feature_cols]
+                    subset_target = subset["label"]
+                    regime_model = trainer.train(subset_features, subset_target)
+                    models[regime] = regime_model
+                    logger.info(f"Trained regime model: {regime}", extra={"samples": len(subset)})
+        
+        logger.info("Final production model trained", extra={"total_models": len(models)})
+        
         return {
+            "model": final_model,
+            "models": models,
+            "regime_classifier": regime_classifier,
             "probabilities": train_df["proba"],
             "metrics": metrics,
             "training_frame": train_df,

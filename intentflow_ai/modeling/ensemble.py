@@ -4,14 +4,15 @@ This module implements diverse ensemble strategies:
 1. Parameter diversity (different regularization strengths)
 2. Feature diversity (different feature subsets)
 3. Temporal diversity (different training windows)
-4. Algorithmic diversity (different base models if needed)
+4. Algorithmic diversity (LightGBM, XGBoost, CatBoost, Ridge)
 5. Bagging with purged bootstrap
 """
 
 from __future__ import annotations
 
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Type
 
 import numpy as np
 import pandas as pd
@@ -22,6 +23,359 @@ from intentflow_ai.modeling.evaluation import ModelEvaluator
 from intentflow_ai.utils.logging import get_logger
 
 logger = get_logger(__name__)
+
+
+# ============================================================================
+# Multi-Algorithm Ensemble (NEW)
+# ============================================================================
+
+class BaseModelTrainer(ABC):
+    """Abstract base class for model trainers."""
+    
+    @abstractmethod
+    def train(self, X: pd.DataFrame, y: pd.Series) -> Any:
+        """Train the model."""
+        pass
+    
+    @abstractmethod
+    def predict_proba(self, model: Any, X: pd.DataFrame) -> np.ndarray:
+        """Get probability predictions."""
+        pass
+    
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Model name."""
+        pass
+
+
+class LGBMModelTrainer(BaseModelTrainer):
+    """LightGBM trainer wrapper."""
+    
+    def __init__(self, config: Optional[LightGBMConfig] = None):
+        self.config = config or LightGBMConfig()
+        self._trainer = LightGBMTrainer(self.config)
+    
+    @property
+    def name(self) -> str:
+        return "lightgbm"
+    
+    def train(self, X: pd.DataFrame, y: pd.Series) -> Any:
+        return self._trainer.train(X, y)
+    
+    def predict_proba(self, model: Any, X: pd.DataFrame) -> np.ndarray:
+        proba, _ = self._trainer.predict_with_meta_label(model, X)
+        return proba.values
+
+
+class XGBModelTrainer(BaseModelTrainer):
+    """XGBoost trainer."""
+    
+    def __init__(self, **kwargs):
+        self.params = {
+            "objective": "binary:logistic",
+            "eval_metric": "auc",
+            "max_depth": 5,
+            "learning_rate": 0.02,
+            "n_estimators": 500,
+            "subsample": 0.8,
+            "colsample_bytree": 0.6,
+            "reg_alpha": 0.1,
+            "reg_lambda": 1.0,
+            "random_state": 42,
+            "n_jobs": -1,
+            "verbosity": 0,
+        }
+        self.params.update(kwargs)
+    
+    @property
+    def name(self) -> str:
+        return "xgboost"
+    
+    def train(self, X: pd.DataFrame, y: pd.Series) -> Any:
+        try:
+            import xgboost as xgb
+        except ImportError:
+            raise ImportError("XGBoost not installed. Run: pip install xgboost")
+        
+        model = xgb.XGBClassifier(**self.params)
+        model.fit(X, y, verbose=False)
+        return model
+    
+    def predict_proba(self, model: Any, X: pd.DataFrame) -> np.ndarray:
+        return model.predict_proba(X)[:, 1]
+
+
+class CatBoostModelTrainer(BaseModelTrainer):
+    """CatBoost trainer."""
+    
+    def __init__(self, **kwargs):
+        self.params = {
+            "iterations": 500,
+            "learning_rate": 0.02,
+            "depth": 5,
+            "l2_leaf_reg": 3.0,
+            "random_seed": 42,
+            "verbose": False,
+            "allow_writing_files": False,
+        }
+        self.params.update(kwargs)
+    
+    @property
+    def name(self) -> str:
+        return "catboost"
+    
+    def train(self, X: pd.DataFrame, y: pd.Series) -> Any:
+        try:
+            from catboost import CatBoostClassifier
+        except ImportError:
+            raise ImportError("CatBoost not installed. Run: pip install catboost")
+        
+        model = CatBoostClassifier(**self.params)
+        model.fit(X, y)
+        return model
+    
+    def predict_proba(self, model: Any, X: pd.DataFrame) -> np.ndarray:
+        return model.predict_proba(X)[:, 1]
+
+
+class RidgeModelTrainer(BaseModelTrainer):
+    """Ridge logistic regression trainer (linear baseline)."""
+    
+    def __init__(self, **kwargs):
+        self.params = {
+            "C": 1.0,  # Inverse regularization
+            "max_iter": 1000,
+            "solver": "lbfgs",
+            "random_state": 42,
+        }
+        self.params.update(kwargs)
+    
+    @property
+    def name(self) -> str:
+        return "ridge"
+    
+    def train(self, X: pd.DataFrame, y: pd.Series) -> Any:
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.pipeline import Pipeline
+        
+        # Ridge needs scaling
+        pipeline = Pipeline([
+            ("scaler", StandardScaler()),
+            ("classifier", LogisticRegression(**self.params)),
+        ])
+        pipeline.fit(X, y)
+        return pipeline
+    
+    def predict_proba(self, model: Any, X: pd.DataFrame) -> np.ndarray:
+        return model.predict_proba(X)[:, 1]
+
+
+@dataclass
+class MultiAlgoEnsembleConfig:
+    """Configuration for multi-algorithm ensemble."""
+    
+    # Model weights (must sum to 1.0)
+    # These are FIXED weights, not optimized (to prevent overfitting)
+    model_weights: Dict[str, float] = field(default_factory=lambda: {
+        "lightgbm": 0.35,
+        "xgboost": 0.30,
+        "catboost": 0.20,
+        "ridge": 0.15,
+    })
+    
+    # Which models to include
+    include_lightgbm: bool = True
+    include_xgboost: bool = True
+    include_catboost: bool = True
+    include_ridge: bool = True
+    
+    # Aggregation method
+    aggregation: str = "weighted"  # "weighted", "mean", "median"
+
+
+class MultiAlgoEnsemble:
+    """
+    Multi-algorithm ensemble combining different model types.
+    
+    Uses FIXED weights (not optimized) to prevent overfitting.
+    
+    Usage:
+        ensemble = MultiAlgoEnsemble()
+        ensemble.train(X_train, y_train)
+        proba = ensemble.predict(X_test)
+    """
+    
+    def __init__(self, config: Optional[MultiAlgoEnsembleConfig] = None):
+        self.config = config or MultiAlgoEnsembleConfig()
+        self.trainers: Dict[str, BaseModelTrainer] = {}
+        self.models: Dict[str, Any] = {}
+        self._setup_trainers()
+    
+    def _setup_trainers(self):
+        """Initialize model trainers based on config."""
+        if self.config.include_lightgbm:
+            self.trainers["lightgbm"] = LGBMModelTrainer()
+        
+        if self.config.include_xgboost:
+            try:
+                self.trainers["xgboost"] = XGBModelTrainer()
+            except Exception as e:
+                logger.warning(f"XGBoost not available: {e}")
+        
+        if self.config.include_catboost:
+            try:
+                self.trainers["catboost"] = CatBoostModelTrainer()
+            except Exception as e:
+                logger.warning(f"CatBoost not available: {e}")
+        
+        if self.config.include_ridge:
+            self.trainers["ridge"] = RidgeModelTrainer()
+    
+    def train(self, X: pd.DataFrame, y: pd.Series) -> "MultiAlgoEnsemble":
+        """
+        Train all models in the ensemble.
+        
+        Args:
+            X: Feature matrix
+            y: Target labels
+            
+        Returns:
+            Self (for chaining)
+        """
+        logger.info(
+            "Training multi-algo ensemble",
+            extra={"models": list(self.trainers.keys()), "n_samples": len(X)}
+        )
+        
+        for name, trainer in self.trainers.items():
+            try:
+                logger.info(f"Training {name}...")
+                model = trainer.train(X, y)
+                self.models[name] = model
+                logger.info(f"  {name} trained successfully")
+            except Exception as e:
+                logger.warning(f"Failed to train {name}: {e}")
+        
+        if not self.models:
+            raise ValueError("All models failed to train!")
+        
+        logger.info(
+            "Multi-algo ensemble training complete",
+            extra={"models_trained": list(self.models.keys())}
+        )
+        
+        return self
+    
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        """
+        Generate ensemble predictions.
+        
+        Args:
+            X: Feature matrix
+            
+        Returns:
+            Probability predictions
+        """
+        if not self.models:
+            raise ValueError("No trained models. Call train() first.")
+        
+        predictions = {}
+        weights = {}
+        
+        for name, model in self.models.items():
+            trainer = self.trainers[name]
+            proba = trainer.predict_proba(model, X)
+            predictions[name] = proba
+            weights[name] = self.config.model_weights.get(name, 1.0 / len(self.models))
+        
+        # Normalize weights for available models
+        total_weight = sum(weights.values())
+        weights = {k: v / total_weight for k, v in weights.items()}
+        
+        # Aggregate
+        if self.config.aggregation == "weighted":
+            ensemble_proba = np.zeros(len(X))
+            for name, proba in predictions.items():
+                ensemble_proba += proba * weights[name]
+        elif self.config.aggregation == "median":
+            probas_array = np.column_stack(list(predictions.values()))
+            ensemble_proba = np.median(probas_array, axis=1)
+        else:  # mean
+            probas_array = np.column_stack(list(predictions.values()))
+            ensemble_proba = np.mean(probas_array, axis=1)
+        
+        return ensemble_proba
+    
+    def predict_with_details(self, X: pd.DataFrame) -> Tuple[np.ndarray, Dict]:
+        """
+        Generate predictions with individual model outputs.
+        
+        Returns:
+            Tuple of (ensemble_proba, details_dict)
+        """
+        if not self.models:
+            raise ValueError("No trained models. Call train() first.")
+        
+        predictions = {}
+        
+        for name, model in self.models.items():
+            trainer = self.trainers[name]
+            predictions[name] = trainer.predict_proba(model, X)
+        
+        ensemble_proba = self.predict(X)
+        
+        # Compute uncertainty (std across models)
+        probas_array = np.column_stack(list(predictions.values()))
+        uncertainty = np.std(probas_array, axis=1)
+        
+        details = {
+            "individual_predictions": predictions,
+            "uncertainty": uncertainty,
+            "models_used": list(self.models.keys()),
+            "weights": {k: self.config.model_weights.get(k, 0) for k in self.models.keys()},
+        }
+        
+        return ensemble_proba, details
+    
+    def get_feature_importance(self) -> pd.DataFrame:
+        """
+        Get aggregated feature importance across models.
+        
+        Returns:
+            DataFrame with feature importances per model and average
+        """
+        importances = {}
+        
+        for name, model in self.models.items():
+            if name == "lightgbm":
+                imp = model.feature_importance(importance_type="gain")
+                importances[name] = imp
+            elif name == "xgboost":
+                imp = model.feature_importances_
+                importances[name] = imp
+            elif name == "catboost":
+                imp = model.feature_importances_
+                importances[name] = imp
+            # Ridge doesn't have feature importances in the same way
+        
+        if not importances:
+            return pd.DataFrame()
+        
+        # Normalize and average
+        df = pd.DataFrame(importances)
+        
+        # Normalize each column to sum to 1
+        for col in df.columns:
+            total = df[col].sum()
+            if total > 0:
+                df[col] = df[col] / total
+        
+        df["average"] = df.mean(axis=1)
+        df = df.sort_values("average", ascending=False)
+        
+        return df
 
 
 @dataclass

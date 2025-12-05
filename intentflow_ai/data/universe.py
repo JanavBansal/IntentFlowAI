@@ -24,22 +24,37 @@ def _normalize_ticker(value: str | int | float) -> str:
 
 
 def _shim_universe_columns(df: pd.DataFrame) -> pd.DataFrame:
-    """Accept simplified CSVs and expand required columns."""
-
+    """Accept simplified CSVs and expand required columns.
+    
+    Handles multiple input formats:
+    - ticker_nse, ticker_yf, sector (standard)
+    - ticker_nse, sector (simplified - copies ticker_nse to ticker_yf)
+    - ticker, sector (simplified - copies ticker to both)
+    """
+    df = df.copy()
     lower_cols = {c.lower(): c for c in df.columns}
-    required = {"ticker_nse", "ticker_yf"}
-    if required.issubset(lower_cols.keys()):
+    
+    # Check if we already have both required ticker columns
+    if "ticker_nse" in lower_cols and "ticker_yf" in lower_cols:
         return df
-
-    ticker_col = lower_cols.get("ticker")
+    
+    # Find the primary ticker column
+    ticker_col = None
+    if "ticker_nse" in lower_cols:
+        ticker_col = lower_cols["ticker_nse"]
+    elif "ticker" in lower_cols:
+        ticker_col = lower_cols["ticker"]
+    
     if ticker_col:
         ticker_series = df[ticker_col].astype(str).str.upper().str.strip()
         df["ticker_nse"] = ticker_series
-        df["ticker_yf"] = ticker_series
+        df["ticker_yf"] = ticker_series  # For NSE stocks, ticker_yf = ticker_nse
 
+    # Ensure sector column is lowercase
     sector_col = lower_cols.get("sector")
-    if sector_col and "sector" not in df.columns:
+    if sector_col and sector_col != "sector":
         df["sector"] = df[sector_col]
+    
     return df
 
 

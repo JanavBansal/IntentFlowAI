@@ -81,3 +81,47 @@ if _explanations_available:
         "explain_signals",
         "SHAPExplainer",
     ])
+
+# Ensemble models
+try:
+    from intentflow_ai.modeling.ensemble import (
+        MultiAlgoEnsemble,
+        MultiAlgoEnsembleConfig,
+        LGBMModelTrainer,
+        XGBModelTrainer,
+        CatBoostModelTrainer,
+        RidgeModelTrainer,
+    )
+    __all__.extend([
+        "MultiAlgoEnsemble",
+        "MultiAlgoEnsembleConfig",
+        "LGBMModelTrainer",
+        "XGBModelTrainer",
+        "CatBoostModelTrainer",
+        "RidgeModelTrainer",
+    ])
+except ImportError:
+    pass
+
+# Tiered models (market cap based)
+try:
+    from intentflow_ai.modeling.tiered_models import (
+        TieredModelTrainer,
+        TieredModelConfig,
+        MarketCapClassifier,
+        MarketCapTier,
+        TierConfig,
+        get_market_cap_tier,
+        add_market_cap_features,
+    )
+    __all__.extend([
+        "TieredModelTrainer",
+        "TieredModelConfig",
+        "MarketCapClassifier",
+        "MarketCapTier",
+        "TierConfig",
+        "get_market_cap_tier",
+        "add_market_cap_features",
+    ])
+except ImportError:
+    pass

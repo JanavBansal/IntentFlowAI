@@ -18,15 +18,39 @@ from intentflow_ai.utils.logging import get_logger
 logger = get_logger(__name__)
 
 def _load_universe_df() -> pd.DataFrame:
+    """Load the full 464-ticker universe with proper sector mappings.
+    
+    Uses static/sector_map.csv as the authoritative source.
+    """
     path = settings.data_dir / Path(settings.universe_file)
     try:
-        return load_universe(path)
-    except Exception as exc:  # pragma: no cover - config issues surfaced at runtime
-        print(f"DEBUG: Failed to load universe: {exc}")
-        import traceback
-        traceback.print_exc()
+        universe = load_universe(path)
+        
+        # Validate we have the full universe
+        ticker_count = universe["ticker_nse"].nunique()
+        if ticker_count < 400:
+            logger.warning(
+                f"Universe only has {ticker_count} tickers. Expected 400+. "
+                "Check that sector_map.csv is the correct file."
+            )
+        
+        # Validate sectors are properly assigned
+        unknown_count = (universe["sector"] == "Unknown").sum()
+        if unknown_count > 10:
+            logger.warning(
+                f"Universe has {unknown_count} tickers with Unknown sector. "
+                "Sector mappings may be incomplete."
+            )
+        
+        logger.info(f"Loaded universe with {ticker_count} tickers")
+        return universe
+        
+    except Exception as exc:
         logger.error("Failed to load universe file", extra={"error": str(exc), "path": str(path)})
-        return pd.DataFrame(columns=["ticker_nse", "ticker_yf", "sector"])
+        raise RuntimeError(
+            f"Cannot load universe from {path}. "
+            "Ensure static/sector_map.csv exists with proper ticker/sector mappings."
+        ) from exc
 
 
 UNIVERSE_DF = _load_universe_df()

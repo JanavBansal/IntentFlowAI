@@ -37,9 +37,11 @@ class LightGBMConfig:
 @dataclass
 class BacktestDefaults:
     top_k: int = 10
-    hold_days: int = 10
+    hold_days: int = 15  # Semi-monthly rebalancing
     slippage_bps: float = 10.0
     fee_bps: float = 1.0
+    max_sector_exposure: float = 0.30  # Max 30% per sector
+    max_single_stock: float = 0.10  # Max 10% per stock
 
 
 @dataclass(slots=True)
@@ -57,12 +59,12 @@ class Settings:
             "newswire": "s3://intentflow/raw/news/",
         }
     )
-    trading_universe: str = "nifty_200"
-    universe_file: str = "external/universe/nifty100_universe.csv"
+    trading_universe: str = "nifty_500"
+    universe_file: str = "static/sector_map.csv"  # Full 464-ticker universe with proper sectors
     universe_membership_file: str = "external/universe/nifty200_history.csv"
-    signal_horizon_days: int = 10
+    signal_horizon_days: int = 15  # Semi-monthly horizon for lower turnover
     target_excess_return: float = 0.015
-    price_start: str = "2018-01-01"
+    price_start: str = "2010-01-01"  # Use full available history (2010-2025 = 15 years)
     price_end: str | None = None
     min_trading_days: int = 100  # Lowered from 250 to unlock more tickers with shorter history
     min_train_tickers: int = 10  # Lowered from 180 to allow training on available tickers

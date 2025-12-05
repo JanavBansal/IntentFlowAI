@@ -100,8 +100,16 @@ class ScoringPipeline:
         ):
             return {self.default_model_key: dataset.index}
 
-        market_series = dataset.groupby("date")["close"].mean().sort_index()
-        regime_map = self.regime_classifier.infer(market_series).to_dict()
+        # Pass DataFrame with required columns to regime classifier
+        # The infer() method expects a DataFrame with 'date', 'ticker', 'close' columns
+        regime_input = dataset[["date", "ticker", "close"]].copy()
+        regime_df = self.regime_classifier.infer(regime_input)
+        
+        if regime_df.empty or "composite_regime" not in regime_df.columns:
+            return {self.default_model_key: dataset.index}
+        
+        # Build regime map: date -> composite_regime
+        regime_map = regime_df["composite_regime"].to_dict()
 
         dates = pd.to_datetime(dataset["date"])
         regimes = pd.Series(

@@ -1,0 +1,42 @@
+# Bull Market Model Configuration (Model B)
+# Focus: Fundamentals, Macro, and Weekly Signals
+
+experiment_name: v_bull_market_funda
+universe_file: static/sector_map.csv  # Full 464-ticker universe with proper sectors
+signal_horizon_days: 5  # Weekly signals
+
+# Feature Engineering
+features:
+  technical: true
+  momentum: true
+  volatility: true
+  turnover: true
+  fundamental: true  # Enables the fundamental block we modified
+  sector_relative: true
+  
+  # New "Bull" features (mapped to our implementation)
+  # Note: 'bull_valuation', 'bull_growth' etc are likely part of 'fundamental' block now
+  # or we can enable advanced blocks if they exist.
+  # Based on engineering.py, we have:
+  # earnings_metrics, quality_scores, financial_ratios, sector_normalized
+  earnings_metrics: true
+  quality_scores: true
+  financial_ratios: true
+  sector_normalized: true
+
+# Model Parameters (LightGBM)
+lgbm:
+  objective: binary
+  metric: auc
+  boosting_type: gbdt
+  n_estimators: 1000
+  learning_rate: 0.01
+  num_leaves: 31
+  max_depth: -1
+  min_child_samples: 20
+  subsample: 0.8
+  colsample_bytree: 0.8
+  reg_alpha: 0.1
+  reg_lambda: 0.1
+  random_state: 42
+  n_jobs: -1

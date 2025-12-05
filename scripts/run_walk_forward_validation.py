@@ -43,8 +43,8 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--train-start",
-        default="2018-06-01",
-        help="Anchored origin date for training (default: 2018-06-01)",
+        default="2010-01-01",
+        help="Anchored origin date for training (default: 2010-01-01)",
     )
     parser.add_argument(
         "--valid-duration",
@@ -69,6 +69,12 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=10,
         help="Embargo period between splits in days (default: 10)",
+    )
+    parser.add_argument(
+        "--rolling-window-days",
+        type=int,
+        default=None,
+        help="Rolling window size in days (e.g., 2520 for 7 years). If not set, uses expanding window.",
     )
     return parser.parse_args()
 
@@ -125,6 +131,7 @@ def main() -> None:
         step_days=args.step_days,
         embargo_days=args.embargo_days,
         horizon_days=cfg.signal_horizon_days,
+        rolling_window_days=args.rolling_window_days,
     )
 
     # Generate folds
@@ -179,6 +186,30 @@ def main() -> None:
     stability_path = exp_dir / "walk_forward_stability.json"
     stability_path.write_text(json.dumps(stability_metrics, indent=2))
     logger.info(f"Saved stability metrics to {stability_path}")
+
+    # Save detailed per-fold metrics (User Request: Granularity)
+    metrics_path = exp_dir / "metrics.json"
+    current_metrics = {}
+    if metrics_path.exists():
+        try:
+            current_metrics = json.loads(metrics_path.read_text())
+        except Exception:
+            pass
+
+    # Extract AUC for each fold
+    test_auc_by_fold = {}
+    for res in fold_results:
+        fold_idx = res["fold_idx"]
+        test_start = res["test_start"]
+        auc = res.get("test_metrics", {}).get("roc_auc")
+        if auc is not None:
+            # Format: fold_{idx}_{date} to be unique and readable
+            key = f"fold_{fold_idx}_{test_start.split('T')[0]}"
+            test_auc_by_fold[key] = auc
+
+    current_metrics["test_auc_by_fold"] = test_auc_by_fold
+    metrics_path.write_text(json.dumps(current_metrics, indent=2))
+    logger.info(f"Saved detailed metrics to {metrics_path}")
 
     # Print results
     print("\n" + "=" * 80)
