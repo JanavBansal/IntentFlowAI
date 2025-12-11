@@ -1,0 +1,109 @@
+# V3 Configuration: Improved model with 3-year rolling window and feature ablation
+# Changes from V2:
+# - 3-year rolling window instead of expanding (more adaptive to recent market)
+# - Seasonality block disabled (was causing overfitting)  
+# - FII/DII flow features added
+# - HMM regime detection enabled
+# - IC monitoring with auto-retraining
+
+random_state: 42
+signal_horizon_days: 15
+
+# Full 464-ticker universe with proper sector mappings
+universe:
+  universe_file: external/universe/nifty464_universe.csv
+  membership_file: null
+  use_membership: false
+
+splits:
+  train_start: "2015-01-01"  # Reduced from 2010 for more relevant data
+  valid_start: "2023-01-01"
+  test_start: "2024-07-01"
+
+# Walk-forward optimization settings  
+wfo:
+  rolling_window_years: 3  # 3-year rolling training window (not expanding)
+  step_months: 3  # Quarterly rebalancing
+  min_train_samples: 10000
+  min_test_samples: 5000
+  enabled: true
+
+trainer:
+  model: lightgbm
+  params:
+    random_state: 42
+    n_estimators: 800  # Reduced for faster iteration
+    learning_rate: 0.02  # Slightly higher for faster adaptation
+    max_depth: 3  # Reduced to prevent overfitting
+    num_leaves: 8  # Reduced to prevent overfitting
+    min_data_in_leaf: 800  # Increased for regularization
+    subsample: 0.6
+    feature_fraction: 0.5  # More aggressive feature selection
+    reg_lambda: 20.0  # Increased L2 regularization
+    reg_alpha: 5.0  # Increased L1 regularization
+
+runtime:
+  min_tickers: 50
+
+backtest:
+  top_k: 15
+  hold_days: 10
+  fee_bps: 1.0
+  slippage_bps: 10.0
+  cost_model: realistic
+
+risk_filters:
+  trend_fast: 50
+  trend_slow: 200
+  vol_lookback: 20
+  vol_high: 0.04
+  allow_high_vol: false
+  allow_downtrend: false
+  max_positions: 12
+  cooldown_days: 2
+
+# Regime detection configuration
+regime:
+  enabled: true
+  model: hmm  # Hidden Markov Model
+  n_regimes: 4  # bull, bear, high_vol, low_vol
+  lookback_days: 252
+  adapt_weights: true  # Adjust model weights based on regime
+
+# IC monitoring configuration  
+monitoring:
+  enabled: true
+  ic_threshold: 0.02  # Trigger retraining if IC drops below
+  rolling_window_days: 30
+  alert_threshold: 0.03  # Alert if IC drops below
+
+# Feature ablation settings
+features:
+  disabled_blocks:
+    - seasonality  # Disabled due to IC degradation
+    - modern_market  # Disabled in previous ablation
+    - fundamental  # Disabled in previous ablation
+  enabled_blocks:
+    - technical
+    - momentum
+    - momentum_enhanced
+    - volatility
+    - atr
+    - turnover
+    - sector_relative
+    - mean_reversion
+    - mean_reversion_enhanced
+    - volume_enhanced
+    - ranking
+    - orthogonal
+    - sector_momentum
+    - macro
+    - fii_dii_flow  # NEW: Institutional flow features
+
+meta_labeling:
+  enabled: false
+  horizon_days: 15
+  success_threshold: 0.015
+  min_signal_proba: 0.55
+  proba_col: proba
+  output_col: meta_proba

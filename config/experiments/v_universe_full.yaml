@@ -1,13 +1,14 @@
 random_state: 42
+signal_horizon_days: 15
 
 # Full 464-ticker universe with proper sector mappings
 universe:
-  universe_file: static/sector_map.csv
+  universe_file: external/universe/nifty464_universe.csv
   membership_file: null
   use_membership: false
 
 splits:
-  train_start: "2018-01-01"
+  train_start: "2010-01-01"
   valid_start: "2023-01-01"
   test_start: "2024-07-01"
 
@@ -47,7 +48,7 @@ risk_filters:
 
 meta_labeling:
   enabled: false
-  horizon_days: 10
+  horizon_days: 15
   success_threshold: 0.015
   min_signal_proba: 0.55
   proba_col: proba

@@ -190,9 +190,14 @@ def days_to_monthly_expiry(dt: pd.Timestamp) -> int:
     
     # If we've passed this month's expiry, calculate for next month
     if dt > last_thursday:
-        if month == 12:
+        if month == 11:
+            # Special case for Nov expiry: next expiry is Jan (month 13 -> 1)
+            next_month = pd.Timestamp(year + 1, 1, 1)
+        elif month == 12:
+            # Dec expiry: next expiry is Feb
             next_month = pd.Timestamp(year + 1, 2, 1)
         else:
+            # Normal case
             next_month = pd.Timestamp(year, month + 2, 1)
         
         last_day = next_month - pd.Timedelta(days=1)
@@ -286,10 +291,18 @@ def add_seasonality_to_df(
         DataFrame with added seasonality features
     """
     df = df.copy()
-    df[date_col] = pd.to_datetime(df[date_col])
+    df[date_col] = pd.to_datetime(df[date_col], errors="coerce")
+    
+    # Filter out invalid dates
+    valid_mask = df[date_col].notna()
+    if not valid_mask.any():
+        return df
     
     # Compute features for each unique date
-    unique_dates = df[date_col].unique()
+    unique_dates = df.loc[valid_mask, date_col].unique()
+    if len(unique_dates) == 0:
+        return df
+    
     seasonal_df = compute_seasonal_df(pd.DatetimeIndex(unique_dates))
     seasonal_df = seasonal_df.reset_index()
     
@@ -298,9 +311,15 @@ def add_seasonality_to_df(
     
     # Add sector-specific seasonality if sector column exists
     if sector_col and sector_col in df.columns:
-        df["sector_seasonality"] = df.apply(
-            lambda row: get_sector_seasonality(row[sector_col], row[date_col].month),
-            axis=1
-        )
+        # Only compute for valid dates
+        def safe_sector_seasonality(row):
+            try:
+                if pd.isna(row[date_col]):
+                    return 0.0
+                return get_sector_seasonality(row[sector_col], row[date_col].month)
+            except (ValueError, AttributeError):
+                return 0.0
+        
+        df["sector_seasonality"] = df.apply(safe_sector_seasonality, axis=1)
     
     return df

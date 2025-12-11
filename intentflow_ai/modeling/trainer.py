@@ -53,7 +53,12 @@ class LightGBMTrainer:
         logger.debug("Computed feature importances", extra={"count": len(importances)})
         return importances
 
-    def predict_with_meta_label(self, model, features: pd.DataFrame) -> Tuple[pd.Series, pd.Series]:
-        proba = pd.Series(model.predict_proba(features)[:, 1], index=features.index)
+    def predict_with_meta_label(self, model, features) -> Tuple[pd.Series, pd.Series]:
+        proba_arr = model.predict_proba(features)[:, 1]
+        # Handle both DataFrame and numpy array inputs
+        if hasattr(features, 'index'):
+            proba = pd.Series(proba_arr, index=features.index)
+        else:
+            proba = pd.Series(proba_arr)
         meta = (proba > 0.6).astype(int)
         return proba, meta

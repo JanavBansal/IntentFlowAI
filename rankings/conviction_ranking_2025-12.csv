@@ -1,0 +1,10 @@
+rank,ticker,sector,P(Beat30d),conviction,regime,top_drivers,raw_score,ranking_date
+1,TATASTEEL,Materials,0.512,medium,risk_on,"Volume Rank(-), Ema 20(+), Price Vs Ma Ratio 200(+)",0.4891,2025-12-06
+2,TECHM,IT,0.512,medium,risk_on,N/A,0.4782,2025-12-06
+3,TITAN,Consumer Discretionary,0.512,medium,risk_on,N/A,0.4984,2025-12-06
+4,UPL,Materials,0.512,medium,risk_on,N/A,0.507,2025-12-06
+5,VOLTAS,Industrials,0.512,medium,risk_on,N/A,0.4903,2025-12-06
+6,WIPRO,IT,0.512,medium,risk_on,N/A,0.4917,2025-12-06
+7,SUNPHARMA,Healthcare,0.4026,low,risk_on,"Sector Dispersion 5D(+), Week Of Year(+), Sector Rel Close(+)",0.427,2025-12-06
+8,TCS,IT,0.4026,low,risk_on,N/A,0.4319,2025-12-06
+9,ULTRACEMCO,Materials,0.4026,low,risk_on,N/A,0.428,2025-12-06

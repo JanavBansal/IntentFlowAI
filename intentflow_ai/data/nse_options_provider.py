@@ -168,30 +168,65 @@ class NSEOptionsProvider:
     
     def _fetch_option_chain(self, symbol: str) -> Optional[Dict]:
         """
-        Fetch option chain from NSE API.
+        Fetch option chain from NSE API (Unofficial/Scraping).
         
-        Note: This requires proper headers and session management.
-        For production use, consider:
-        1. Using official NSE API with credentials
-        2. Using a third-party data provider
-        3. Caching data locally
+        Uses direct HTTP requests with browser-like headers to bypass
+        basic bot detection. This is "free" but fragile.
         """
-        # Check if we have cached data
+        # Check cache first
         cache_file = self._get_cache_file(symbol)
         if cache_file.exists():
             try:
-                with open(cache_file) as f:
-                    return json.load(f)
+                # Check cache age (15 mins for live data)
+                mtime = datetime.fromtimestamp(cache_file.stat().st_mtime)
+                if datetime.now() - mtime < timedelta(minutes=15):
+                    with open(cache_file) as f:
+                        return json.load(f)
             except Exception:
                 pass
-        
-        # For production, implement actual NSE API call here
-        # The NSE API requires specific headers and session cookies
-        # Example endpoint:
-        # GET https://www.nseindia.com/api/option-chain-indices?symbol=NIFTY
-        # GET https://www.nseindia.com/api/option-chain-equities?symbol=RELIANCE
-        
-        logger.debug(f"Option chain fetch not implemented for {symbol}")
+
+        try:
+            import requests
+            
+            # NSE requires User-Agent and specific headers
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                "Accept": "*/*",
+                "Accept-Language": "en-US,en;q=0.9",
+                "Accept-Encoding": "gzip, deflate, br",
+                "Referer": "https://www.nseindia.com/option-chain",
+            }
+            
+            # Create session to handle cookies
+            session = requests.Session()
+            session.headers.update(headers)
+            
+            # 1. Visit homepage to get cookies
+            session.get("https://www.nseindia.com", timeout=10)
+            
+            # 2. Call API
+            # Indices and Equities have different endpoints
+            if symbol.upper() in ["NIFTY", "BANKNIFTY", "FINNIFTY"]:
+                url = f"https://www.nseindia.com/api/option-chain-indices?symbol={symbol.upper()}"
+            else:
+                # For stocks, symbol needs to be URL encoded if it contains special chars
+                url = f"https://www.nseindia.com/api/option-chain-equities?symbol={symbol.upper()}"
+                
+            response = session.get(url, timeout=10)
+            
+            if response.status_code == 200:
+                data = response.json()
+                # Save to cache
+                self._save_to_cache(symbol, data)
+                return data
+            elif response.status_code == 401:
+                logger.warning(f"NSE API Access Denied (401) for {symbol}. Cookies might have expired.")
+            else:
+                logger.warning(f"NSE API Failed: {response.status_code} for {symbol}")
+                
+        except Exception as e:
+            logger.warning(f"Error fetching live options data for {symbol}: {e}")
+            
         return None
     
     def _parse_option_chain(self, symbol: str, data: Dict) -> Dict[str, Any]:
@@ -218,7 +253,18 @@ class NSEOptionsProvider:
             total_ce_volume = 0
             total_pe_volume = 0
             
+            # Filter for near-month expiry (most liquid)
+            # NSE data includes all expiries. We want the nearest one.
+            expiries = sorted(list(set(item["expiryDate"] for item in chain_data)))
+            if not expiries:
+                return result
+                
+            near_expiry = expiries[0]
+            
             for strike_data in chain_data:
+                if strike_data.get("expiryDate") != near_expiry:
+                    continue
+                    
                 # Call option
                 ce = strike_data.get("CE", {})
                 if ce:
@@ -231,10 +277,11 @@ class NSEOptionsProvider:
                     total_pe_oi += pe.get("openInterest", 0)
                     total_pe_volume += pe.get("totalTradedVolume", 0)
             
-            # Calculate PCR
+            # Calculate PCR (OI based)
             if total_ce_oi > 0:
                 result["pcr"] = total_pe_oi / total_ce_oi
             
+            # Calculate PCR (Volume based)
             if total_ce_volume > 0:
                 result["pcr_volume"] = total_pe_volume / total_ce_volume
             
@@ -242,18 +289,16 @@ class NSEOptionsProvider:
             result["total_pe_oi"] = total_pe_oi
             
             # Calculate max pain
-            result["max_pain"] = self._calculate_max_pain(chain_data)
+            result["max_pain"] = self._calculate_max_pain(chain_data, near_expiry)
             
         except Exception as e:
             logger.warning(f"Error parsing option chain for {symbol}: {e}")
         
         return result
     
-    def _calculate_max_pain(self, chain_data: List[Dict]) -> Optional[float]:
+    def _calculate_max_pain(self, chain_data: List[Dict], expiry_date: str = None) -> Optional[float]:
         """
-        Calculate max pain strike price.
-        
-        Max pain is the strike at which option writers have minimum loss.
+        Calculate max pain strike price for a specific expiry.
         """
         if not chain_data:
             return None
@@ -261,6 +306,10 @@ class NSEOptionsProvider:
         strikes = []
         
         for strike_data in chain_data:
+            # Filter by expiry if provided
+            if expiry_date and strike_data.get("expiryDate") != expiry_date:
+                continue
+                
             strike = strike_data.get("strikePrice")
             if strike is None:
                 continue
@@ -280,7 +329,10 @@ class NSEOptionsProvider:
         if not strikes:
             return None
         
-        # Calculate pain at each strike
+        # Optimization: Only calculate pain for strikes with significant OI
+        # to speed up calculation (O(N^2))
+        strikes.sort(key=lambda x: x["strike"])
+        
         min_pain = float("inf")
         max_pain_strike = None
         
@@ -291,12 +343,14 @@ class NSEOptionsProvider:
             for other in strikes:
                 other_strike = other["strike"]
                 
-                # CE holders lose if spot > strike
-                if other_strike < strike:
+                # CE holders lose if spot > strike (Writer loses)
+                # Pain = (Spot - Strike) * OI
+                if strike > other_strike:
                     pain += other["ce_oi"] * (strike - other_strike)
                 
-                # PE holders lose if spot < strike
-                if other_strike > strike:
+                # PE holders lose if spot < strike (Writer loses)
+                # Pain = (Strike - Spot) * OI
+                if strike < other_strike:
                     pain += other["pe_oi"] * (other_strike - strike)
             
             if pain < min_pain:

@@ -1,0 +1,135 @@
+[
+  {
+    "block":"macro",
+    "n_features":14,
+    "ic_without":0.0414616092,
+    "delta":-0.035393968,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"sector_relative",
+    "n_features":6,
+    "ic_without":0.0534070581,
+    "delta":-0.0234485191,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"volume_enhanced",
+    "n_features":4,
+    "ic_without":0.0584644719,
+    "delta":-0.0183911053,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"momentum",
+    "n_features":10,
+    "ic_without":0.0624321176,
+    "delta":-0.0144234596,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"mean_reversion",
+    "n_features":11,
+    "ic_without":0.063644532,
+    "delta":-0.0132110452,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"momentum_enhanced",
+    "n_features":5,
+    "ic_without":0.0650753304,
+    "delta":-0.0117802468,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"options",
+    "n_features":7,
+    "ic_without":0.0652958065,
+    "delta":-0.0115597706,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"seasonality",
+    "n_features":22,
+    "ic_without":0.0655998758,
+    "delta":-0.0112557014,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"atr",
+    "n_features":2,
+    "ic_without":0.0684099881,
+    "delta":-0.008445589,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"volatility",
+    "n_features":5,
+    "ic_without":0.0707695683,
+    "delta":-0.0060860089,
+    "impact":"HELPS \u2705"
+  },
+  {
+    "block":"ranking",
+    "n_features":3,
+    "ic_without":0.073114114,
+    "delta":-0.0037414631,
+    "impact":"NEUTRAL \u26aa"
+  },
+  {
+    "block":"technical",
+    "n_features":6,
+    "ic_without":0.0735318589,
+    "delta":-0.0033237182,
+    "impact":"NEUTRAL \u26aa"
+  },
+  {
+    "block":"orthogonal",
+    "n_features":2,
+    "ic_without":0.0744751318,
+    "delta":-0.0023804453,
+    "impact":"NEUTRAL \u26aa"
+  },
+  {
+    "block":"sector_momentum",
+    "n_features":7,
+    "ic_without":0.0760635521,
+    "delta":-0.0007920251,
+    "impact":"NEUTRAL \u26aa"
+  },
+  {
+    "block":"interaction",
+    "n_features":3,
+    "ic_without":0.0768555772,
+    "delta":0.0,
+    "impact":"NEUTRAL \u26aa"
+  },
+  {
+    "block":"fundamental",
+    "n_features":41,
+    "ic_without":0.0793135328,
+    "delta":0.0024579556,
+    "impact":"NEUTRAL \u26aa"
+  },
+  {
+    "block":"turnover",
+    "n_features":5,
+    "ic_without":0.0793567952,
+    "delta":0.002501218,
+    "impact":"NEUTRAL \u26aa"
+  },
+  {
+    "block":"mean_reversion_enhanced",
+    "n_features":4,
+    "ic_without":0.0799999025,
+    "delta":0.0031443253,
+    "impact":"NEUTRAL \u26aa"
+  },
+  {
+    "block":"modern_market",
+    "n_features":25,
+    "ic_without":0.084646304,
+    "delta":0.0077907269,
+    "impact":"HURTS \u26d4"
+  }
+]

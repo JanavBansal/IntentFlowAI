@@ -14,6 +14,7 @@ from intentflow_ai.config.settings import settings
 from intentflow_ai.data.universe import load_universe
 from intentflow_ai.modeling.regimes import RegimeClassifier
 from intentflow_ai.utils.logging import get_logger
+from intentflow_ai.features.modern_features import build_modern_features
 from sklearn.linear_model import LinearRegression
 
 logger = get_logger(__name__)
@@ -51,7 +52,7 @@ class FeatureEngineer:
                 "turnover": self._turnover_block,
                 "ownership": self._ownership_block,
                 "delivery": self._delivery_block,
-                "fundamental": self._fundamental_block,
+                # "fundamental": self._fundamental_block,  # DISABLED: +0.0025 IC without it (ablation study Dec 2024)
                 "narrative": self._narrative_block,
                 "sector_relative": self._sector_relative_block,
                 # "regime": self._regime_block,  # DISABLED: Causing negative IC (volatility bias)
@@ -66,6 +67,11 @@ class FeatureEngineer:
                 "quality_scores": self._quality_scores_block,  # NEW: ROE, margins, cash conversion
                 "financial_ratios": self._financial_ratios_block,  # NEW: Professional ratios via FinanceToolkit
                 "sector_normalized": self._sector_normalized_block,  # NEW: Sector-relative features
+                # "seasonality": self._seasonality_block,  # DISABLED: IC drop 2024, likely overfitting to calendar effects (ablation Dec 2024)
+                "macro": self._macro_block,  # NEW: Macro features (VIX, USD/INR, Crude, FII/DII)
+                "options": self._options_block,  # NEW: Options sentiment (PCR, Max Pain)
+                # "modern_market": self._modern_market_block,  # DISABLED: +0.0078 IC without it (ablation study Dec 2024)
+                "fii_dii_flow": self._fii_dii_flow_block,  # NEW: FII/DII institutional flow features (V3 improvement)
             }
 
     @staticmethod
@@ -112,8 +118,38 @@ class FeatureEngineer:
             combined = combined.replace([np.inf, -np.inf], np.nan)
             logger.info(f"[FeatureEngineer.build] STEP 5: After replacing inf with NaN, {len(combined)} rows")
             
+            # === PRIORITY 2: WINSORIZATION (1%-99%) ===
+            # Clip extreme values to reduce outlier impact on z-scores
+            for col in combined.columns:
+                lower = combined[col].quantile(0.01)
+                upper = combined[col].quantile(0.99)
+                combined[col] = combined[col].clip(lower=lower, upper=upper)
+            logger.info(f"[FeatureEngineer.build] STEP 6: After winsorization (1%-99%), {len(combined)} rows")
+            
+            # NOTE: Removed universe-wide z-score per date (caused double normalization)
+            # Sector z-scores are already applied in individual feature blocks (_sector_relative)
+            
+            # === PRIORITY 3: FACTOR INTERACTION FEATURES ===
+            # Add interaction terms between key factors
+            mom_cols = [c for c in combined.columns if "momentum" in c.lower() or "mom_" in c.lower() or "ret_" in c.lower()]
+            val_cols = [c for c in combined.columns if "pe_" in c.lower() or "pb_" in c.lower() or "value" in c.lower()]
+            qual_cols = [c for c in combined.columns if "roe" in c.lower() or "quality" in c.lower() or "margin" in c.lower()]
+            
+            # Pick representative features for interaction
+            mom_rep = next((c for c in mom_cols if "10" in c), mom_cols[0] if mom_cols else None)
+            val_rep = next((c for c in val_cols if "sector_z" in c), val_cols[0] if val_cols else None)
+            qual_rep = next((c for c in qual_cols if "sector_z" in c), qual_cols[0] if qual_cols else None)
+            
+            if mom_rep and val_rep:
+                combined["interaction__value_momentum"] = combined[val_rep] * combined[mom_rep]
+            if mom_rep and qual_rep:
+                combined["interaction__quality_momentum"] = combined[qual_rep] * combined[mom_rep]
+            if val_rep and qual_rep:
+                combined["interaction__value_quality"] = combined[val_rep] * combined[qual_rep]
+            logger.info(f"[FeatureEngineer.build] STEP 7: After factor interactions, {len(combined.columns)} total features")
+            
             result = combined.fillna(0.0)
-            logger.info(f"[FeatureEngineer.build] STEP 6: After fillna(0.0), {len(result)} rows (FINAL)")
+            logger.info(f"[FeatureEngineer.build] STEP 8: After fillna(0.0), {len(result)} rows (FINAL)")
             return result
         
         logger.warning(f"[FeatureEngineer.build] No feature blocks succeeded, using baseline features")
@@ -1134,3 +1170,323 @@ class FeatureEngineer:
         except Exception as e:
             logger.warning(f"Sector normalization failed: {e}")
             return pd.DataFrame(index=dataset.index)
+    
+    def _seasonality_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Add Indian market seasonality features.
+        
+        Features include:
+        - Diwali period (October-November)
+        - Budget season (January-February)
+        - Earnings seasons (quarterly)
+        - F&O expiry effects (monthly)
+        - Sector-specific seasonality
+        """
+        try:
+            from intentflow_ai.features.seasonality import add_seasonality_to_df
+            
+            # Ensure date column exists
+            if "date" not in dataset.columns:
+                logger.warning("Seasonality block: 'date' column missing, skipping")
+                return pd.DataFrame(index=dataset.index)
+            
+            # Filter out invalid dates before processing
+            dataset_clean = dataset.copy()
+            dataset_clean["date"] = pd.to_datetime(dataset_clean["date"], errors="coerce")
+            valid_dates = dataset_clean["date"].notna()
+            
+            if not valid_dates.any():
+                logger.warning("Seasonality block: No valid dates found, skipping")
+                return pd.DataFrame(index=dataset.index)
+            
+            # Get sector column (may not exist)
+            sector_col = "sector" if "sector" in dataset_clean.columns else None
+            
+            # Add seasonality features only on valid dates
+            try:
+                result_df = add_seasonality_to_df(
+                    dataset_clean[valid_dates],
+                    date_col="date",
+                    sector_col=sector_col,
+                )
+            except Exception as inner_e:
+                logger.warning(f"Seasonality computation error: {inner_e}, skipping")
+                return pd.DataFrame(index=dataset.index)
+            
+            # Extract only the seasonality feature columns (exclude date/sector)
+            seasonal_cols = [
+                col for col in result_df.columns
+                if col not in ["date", "sector"] and col.startswith((
+                    "is_", "days_", "month", "quarter", "day_of", "week_of",
+                    "sector_seasonality"
+                ))
+            ]
+            
+            if seasonal_cols:
+                # Reindex to match original dataset index
+                result = pd.DataFrame(index=dataset.index)
+                for col in seasonal_cols:
+                    result.loc[valid_dates, col] = result_df[col].values
+                result = result.fillna(0.0)  # Fill invalid dates with 0
+                return result
+            else:
+                logger.warning("Seasonality block: No seasonality features generated")
+                return pd.DataFrame(index=dataset.index)
+                
+        except Exception as e:
+            logger.warning(f"Seasonality feature computation failed: {e}", exc_info=True)
+            return pd.DataFrame(index=dataset.index)
+    
+    def _macro_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Add macro-economic features.
+        
+        Features include:
+        - India VIX (fear gauge)
+        - USD/INR exchange rate
+        - Crude oil prices
+        - US 10Y Treasury yield
+        - FII/DII flows
+        - NIFTY regime indicators
+        """
+        try:
+            from intentflow_ai.data.macro_provider import MacroDataProvider
+            
+            # Ensure date column exists
+            if "date" not in dataset.columns:
+                logger.warning("Macro block: 'date' column missing, skipping")
+                return pd.DataFrame(index=dataset.index)
+            
+            # Get unique dates from dataset
+            dates = pd.to_datetime(dataset["date"].unique())
+            if len(dates) == 0:
+                logger.warning("Macro block: No valid dates found, skipping")
+                return pd.DataFrame(index=dataset.index)
+            
+            # Initialize macro provider
+            provider = MacroDataProvider()
+            
+            # Get macro data for date range
+            start_date = dates.min()
+            end_date = dates.max()
+            macro_df = provider.get_macro_df(start_date, end_date)
+            
+            if macro_df.empty:
+                logger.warning("Macro block: No macro data retrieved, returning empty features")
+                return pd.DataFrame(index=dataset.index)
+            
+            # Merge macro features back to dataset by date
+            dataset_dates = pd.to_datetime(dataset["date"])
+            result = pd.DataFrame(index=dataset.index)
+            
+            # For each macro feature column, map to dataset dates
+            for col in macro_df.columns:
+                # Create a series mapping dates to macro values
+                macro_series = macro_df[col].reindex(dataset_dates, method="ffill")
+                result[col] = macro_series.values
+            
+            # Fill NaN values with 0 (for dates before macro data availability)
+            result = result.fillna(0.0)
+            
+            logger.info(f"Macro block: Added {len(result.columns)} macro features")
+            return result
+            
+        except Exception as e:
+            logger.warning(f"Macro feature computation failed: {e}", exc_info=True)
+            return pd.DataFrame(index=dataset.index)
+
+    def _options_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Add options-based sentiment features.
+        
+        Features:
+        - NIFTY PCR (Put-Call Ratio)
+        - PCR Z-Score (Sentiment extreme)
+        - F&O Stock Flag
+        - Options Sentiment Composite
+        """
+        try:
+            from intentflow_ai.features.options_features import add_options_features_to_df
+            from intentflow_ai.data.nse_options_provider import get_nse_options_provider
+            
+            # Ensure required columns exist
+            if "ticker" not in dataset.columns:
+                return pd.DataFrame(index=dataset.index)
+                
+            # Get options provider
+            provider = get_nse_options_provider()
+            
+            # Fetch market-wide PCR (NIFTY)
+            # Note: Currently fetches latest/stubbed data. 
+            # For strict backtesting, this needs historical point-in-time data.
+            # The provider handles caching and graceful failure (returns NaNs).
+            nifty_data = provider.get_pcr("NIFTY")
+            nifty_pcr = nifty_data.get("pcr", np.nan)
+            
+            # Apply features
+            # This adds: nifty_pcr, nifty_pcr_zscore, nifty_pcr_sentiment, is_fno_stock
+            result_df = add_options_features_to_df(
+                dataset,
+                ticker_col="ticker",
+                close_col="close" if "close" in dataset.columns else None,
+                nifty_pcr=nifty_pcr
+            )
+            
+            # Extract only the new options columns
+            # We identify them by checking what wasn't in the original dataset
+            new_cols = [c for c in result_df.columns if c not in dataset.columns]
+            
+            if not new_cols:
+                return pd.DataFrame(index=dataset.index)
+                
+            return result_df[new_cols].fillna(0.0)
+            
+        except Exception as e:
+            logger.warning(f"Options feature computation failed: {e}", exc_info=True)
+            return pd.DataFrame(index=dataset.index)
+
+    def _modern_market_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Modern market structure features for post-2020 adaptation.
+        
+        These features capture:
+        - Index concentration (passive flow effects)
+        - Breadth divergence (narrow vs broad rallies)
+        - Momentum crowding (reversal risk)
+        - Passive flow patterns (month-end, SIP effects)
+        - Volatility regime awareness
+        
+        Designed to help model adapt to changed market structure.
+        """
+        try:
+            required = {"date", "close"}
+            if not required.issubset(set(dataset.columns)):
+                logger.warning(f"Modern market block: Missing columns. Have: {dataset.columns.tolist()[:5]}...")
+                return pd.DataFrame(index=dataset.index)
+            
+            # Build modern features from price data
+            modern_df = build_modern_features(
+                dataset,
+                date_col="date",
+                ticker_col="ticker" if "ticker" in dataset.columns else None,
+                close_col="close",
+                volume_col="volume" if "volume" in dataset.columns else None,
+            )
+            
+            if modern_df.empty:
+                return pd.DataFrame(index=dataset.index)
+            
+            # Merge back to dataset on date
+            if "date" in modern_df.columns:
+                modern_df["date"] = pd.to_datetime(modern_df["date"])
+                dataset_dates = pd.to_datetime(dataset["date"])
+                
+                # Create mapping from date to feature values
+                modern_df = modern_df.set_index("date")
+                
+                # Reindex to match dataset
+                out = pd.DataFrame(index=dataset.index)
+                for col in modern_df.columns:
+                    out[col] = dataset_dates.map(modern_df[col].to_dict())
+                
+                # Fill NaNs with 0 (or could ffill)
+                out = out.fillna(0.0)
+                
+                logger.info(f"Modern market block: Added {len(out.columns)} features")
+                return out
+            else:
+                return modern_df.reindex(dataset.index).fillna(0.0)
+                
+        except Exception as e:
+            logger.warning(f"Modern market feature computation failed: {e}", exc_info=True)
+            return pd.DataFrame(index=dataset.index)
+
+    def _fii_dii_flow_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """FII/DII institutional flow features.
+        
+        Captures institutional buying/selling patterns from NSE data.
+        FII/DII flows are strong predictors of short-term stock movements in India.
+        
+        Features:
+        - fii_net_5d: 5-day rolling FII net buying (Rs Cr)
+        - dii_net_5d: 5-day rolling DII net buying (Rs Cr)
+        - fii_dii_ratio: FII net / DII net (institutional sentiment)
+        - fii_momentum_10d: Change in FII net buying trend
+        - fii_vs_market: FII flow direction vs market return correlation
+        """
+        if "date" not in dataset.columns:
+            return pd.DataFrame(index=dataset.index)
+        
+        try:
+            from pathlib import Path
+            
+            # Try to load cached FII/DII data
+            cache_path = Path(settings.data_dir) / "raw" / "fii_dii" / "fii_dii_cache.parquet"
+            
+            if cache_path.exists():
+                fii_data = pd.read_parquet(cache_path)
+                fii_data['date'] = pd.to_datetime(fii_data['date'])
+            else:
+                # Try to fetch from NSE
+                try:
+                    from intentflow_ai.data.providers.fii_dii_provider import get_fii_dii_provider
+                    
+                    provider = get_fii_dii_provider()
+                    start = dataset['date'].min()
+                    end = dataset['date'].max()
+                    fii_data = provider.fetch_fii_dii_data(start, end)
+                    
+                    if fii_data.empty:
+                        logger.warning("FII/DII data not available, returning empty features")
+                        return pd.DataFrame(index=dataset.index)
+                except Exception as e:
+                    logger.warning(f"FII/DII provider not available: {e}")
+                    return pd.DataFrame(index=dataset.index)
+            
+            # Compute rolling features on FII/DII data
+            fii_data = fii_data.sort_values('date')
+            
+            # Rolling net buying
+            fii_data['fii_net_5d'] = fii_data['fii_cash_net'].rolling(5).sum()
+            fii_data['dii_net_5d'] = fii_data['dii_cash_net'].rolling(5).sum()
+            fii_data['fii_net_10d'] = fii_data['fii_cash_net'].rolling(10).sum()
+            fii_data['dii_net_10d'] = fii_data['dii_cash_net'].rolling(10).sum()
+            
+            # Institutional sentiment ratio
+            fii_data['fii_dii_ratio'] = fii_data['fii_cash_net'] / (fii_data['dii_cash_net'].replace(0, 1e-9))
+            
+            # FII momentum (change in trend)
+            fii_data['fii_momentum_10d'] = fii_data['fii_net_5d'].pct_change(5)
+            
+            # Z-scores of flows
+            fii_data['fii_net_z'] = (fii_data['fii_cash_net'] - fii_data['fii_cash_net'].rolling(20).mean()) / (fii_data['fii_cash_net'].rolling(20).std() + 1e-9)
+            fii_data['dii_net_z'] = (fii_data['dii_cash_net'] - fii_data['dii_cash_net'].rolling(20).mean()) / (fii_data['dii_cash_net'].rolling(20).std() + 1e-9)
+            
+            # Binary signals
+            fii_data['fii_buying'] = (fii_data['fii_cash_net'] > 0).astype(float)
+            fii_data['dii_buying'] = (fii_data['dii_cash_net'] > 0).astype(float)
+            fii_data['both_buying'] = ((fii_data['fii_cash_net'] > 0) & (fii_data['dii_cash_net'] > 0)).astype(float)
+            
+            # Create output DataFrame
+            out = pd.DataFrame(index=dataset.index)
+            
+            # Map features to dataset dates
+            feature_cols = [
+                'fii_net_5d', 'dii_net_5d', 'fii_net_10d', 'dii_net_10d',
+                'fii_dii_ratio', 'fii_momentum_10d', 'fii_net_z', 'dii_net_z',
+                'fii_buying', 'dii_buying', 'both_buying'
+            ]
+            
+            fii_lookup = fii_data.set_index('date')
+            dataset_dates = pd.to_datetime(dataset['date'])
+            
+            for col in feature_cols:
+                if col in fii_lookup.columns:
+                    out[col] = dataset_dates.map(fii_lookup[col].to_dict())
+            
+            # Fill NaN with 0
+            out = out.fillna(0.0)
+            
+            logger.info(f"FII/DII flow block: Added {len(out.columns)} features")
+            return out
+            
+        except Exception as e:
+            logger.warning(f"FII/DII flow feature computation failed: {e}")
+            return pd.DataFrame(index=dataset.index)
+

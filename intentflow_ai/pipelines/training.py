@@ -19,6 +19,7 @@ from intentflow_ai.modeling import (
     hit_rate,
     precision_at_k,
 )
+from intentflow_ai.modeling.ensemble import MultiAlgoEnsemble, MultiAlgoEnsembleConfig
 from intentflow_ai.modeling.wfo import WalkForwardTrainer
 from intentflow_ai.utils.io import load_enhanced_panel, load_price_parquet
 from intentflow_ai.utils.logging import get_logger
@@ -117,10 +118,17 @@ class TrainingPipeline:
         if not train_valid_mask.any():
             raise ValueError("Need at least one row in train/valid set.")
 
-        trainer = LightGBMTrainer(self.cfg.lgbm)
-        overall_model = trainer.train(features.loc[train_valid_mask], target.loc[train_valid_mask])
-        overall_proba, _ = trainer.predict_with_meta_label(overall_model, features)
+        # Use Multi-Algorithm Ensemble instead of single LightGBM
+        ensemble_config = MultiAlgoEnsembleConfig()
+        ensemble = MultiAlgoEnsemble(ensemble_config)
+        ensemble.train(features.loc[train_valid_mask], target.loc[train_valid_mask])
+        overall_model = ensemble  # Store ensemble as overall_model
+        overall_proba_array = ensemble.predict(features)
+        overall_proba = pd.Series(overall_proba_array, index=features.index)
         train_df["proba"] = overall_proba
+        
+        # Keep LightGBM trainer for feature importance (use first model in ensemble)
+        trainer = LightGBMTrainer(self.cfg.lgbm)  # For compatibility with feature_importance calls
         train_df["date"] = pd.to_datetime(train_df["date"])
 
         meta_result: Dict[str, object] = {}
@@ -139,7 +147,28 @@ class TrainingPipeline:
             "valid": self._compute_metrics(train_df, overall_proba, valid_mask),
             "test": self._compute_metrics(train_df, overall_proba, test_mask),
         }
-        feature_importances = trainer.feature_importance(overall_model)
+        # Get feature importance from ensemble (aggregated across models)
+        try:
+            feature_importances_df = overall_model.get_feature_importance()
+            if not feature_importances_df.empty and "average" in feature_importances_df.columns:
+                feature_importances = feature_importances_df["average"].to_dict()
+            else:
+                # Fallback: use LightGBM model importance if available
+                if hasattr(overall_model, "models") and "lightgbm" in overall_model.models:
+                    lgbm_model = overall_model.models["lightgbm"]
+                    if hasattr(lgbm_model, "feature_importance"):
+                        feature_importances = trainer.feature_importance(lgbm_model)
+                    else:
+                        feature_importances = {}
+                else:
+                    feature_importances = {}
+        except Exception as e:
+            logger.warning(f"Failed to get ensemble feature importance: {e}, using LightGBM fallback")
+            # Fallback to LightGBM if ensemble doesn't have feature importance
+            if hasattr(overall_model, "models") and "lightgbm" in overall_model.models:
+                feature_importances = trainer.feature_importance(overall_model.models["lightgbm"])
+            else:
+                feature_importances = {}
 
         regime_classifier = None
         models = {"overall": overall_model}
@@ -164,9 +193,12 @@ class TrainingPipeline:
                     continue
                 subset_features = subset[feature_cols]
                 subset_target = subset["label"]
-                regime_model = trainer.train(subset_features, subset_target)
-                models[regime] = regime_model
-                regime_proba, _ = trainer.predict_with_meta_label(regime_model, subset_features)
+                # Use ensemble for regime-specific models too
+                regime_ensemble = MultiAlgoEnsemble(ensemble_config)
+                regime_ensemble.train(subset_features, subset_target)
+                models[regime] = regime_ensemble
+                regime_proba_array = regime_ensemble.predict(subset_features)
+                regime_proba = pd.Series(regime_proba_array, index=subset_features.index)
                 regime_scores[regime] = regime_proba
 
             by_regime: Dict[str, Dict[str, Dict[str, float]]] = {}
@@ -338,8 +370,10 @@ class TrainingPipeline:
         features = train_df[feature_cols]
         target = train_df["label"]
         
-        trainer = LightGBMTrainer(self.cfg.lgbm)
-        final_model = trainer.train(features, target)
+        # Use ensemble for final production model
+        ensemble_config = MultiAlgoEnsembleConfig()
+        final_model = MultiAlgoEnsemble(ensemble_config)
+        final_model.train(features, target)
         
         # Also train regime-specific models if regime filter is enabled
         models = {"overall": final_model}
@@ -365,8 +399,10 @@ class TrainingPipeline:
                         continue
                     subset_features = subset[feature_cols]
                     subset_target = subset["label"]
-                    regime_model = trainer.train(subset_features, subset_target)
-                    models[regime] = regime_model
+                    # Use ensemble for regime-specific models
+                    regime_ensemble = MultiAlgoEnsemble(ensemble_config)
+                    regime_ensemble.train(subset_features, subset_target)
+                    models[regime] = regime_ensemble
                     logger.info(f"Trained regime model: {regime}", extra={"samples": len(subset)})
         
         logger.info("Final production model trained", extra={"total_models": len(models)})

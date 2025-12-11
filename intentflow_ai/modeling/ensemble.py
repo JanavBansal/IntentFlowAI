@@ -158,10 +158,12 @@ class RidgeModelTrainer(BaseModelTrainer):
     def train(self, X: pd.DataFrame, y: pd.Series) -> Any:
         from sklearn.linear_model import LogisticRegression
         from sklearn.preprocessing import StandardScaler
+        from sklearn.impute import SimpleImputer
         from sklearn.pipeline import Pipeline
         
-        # Ridge needs scaling
+        # Ridge needs imputation (for NaN) and scaling
         pipeline = Pipeline([
+            ("imputer", SimpleImputer(strategy="median")),
             ("scaler", StandardScaler()),
             ("classifier", LogisticRegression(**self.params)),
         ])
@@ -307,6 +309,16 @@ class MultiAlgoEnsemble:
             ensemble_proba = np.mean(probas_array, axis=1)
         
         return ensemble_proba
+
+    def predict_proba(self, X: pd.DataFrame) -> np.ndarray:
+        """
+        Sklearn-compatible probability prediction.
+        
+        Returns:
+            2D array of shape (n_samples, 2) where col 1 is positive class probability
+        """
+        proba = self.predict(X)
+        return np.column_stack([1 - proba, proba])
     
     def predict_with_details(self, X: pd.DataFrame) -> Tuple[np.ndarray, Dict]:
         """
@@ -350,7 +362,8 @@ class MultiAlgoEnsemble:
         
         for name, model in self.models.items():
             if name == "lightgbm":
-                imp = model.feature_importance(importance_type="gain")
+                # Use sklearn API property
+                imp = model.feature_importances_
                 importances[name] = imp
             elif name == "xgboost":
                 imp = model.feature_importances_

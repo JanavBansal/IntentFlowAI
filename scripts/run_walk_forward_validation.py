@@ -16,7 +16,9 @@ if str(ROOT) not in sys.path:
 from intentflow_ai.config.experiments import apply_experiment_overrides, load_experiment_config
 from intentflow_ai.config.settings import Settings, settings
 from intentflow_ai.features import FeatureEngineer
+from intentflow_ai.features import FeatureEngineer
 from intentflow_ai.modeling import LightGBMTrainer, ModelEvaluator
+from intentflow_ai.modeling.ensemble import MultiAlgoEnsemble, MultiAlgoEnsembleConfig
 from intentflow_ai.validation import (
     WalkForwardConfig,
     compute_walk_forward_stability,
@@ -109,10 +111,18 @@ def main() -> None:
     train_df = pd.read_parquet(train_path)
     logger.info(f"Loaded training data: {len(train_df)} rows")
 
-    # Build features
-    feature_engineer = FeatureEngineer()
-    features = feature_engineer.build(train_df)
-    logger.info(f"Built {len(features.columns)} features")
+    # Build features OR use pre-built features from train.parquet
+    # Check if features are already present (no 'close' column means pre-engineered)
+    feature_cols = [c for c in train_df.columns if '__' in c]  # Feature columns have '__' separator
+    if len(feature_cols) > 50 and 'close' not in train_df.columns:
+        # Features already built - use them directly
+        logger.info(f"Using {len(feature_cols)} pre-built features from train.parquet")
+        features = train_df[feature_cols]
+    else:
+        # Build features from raw price data
+        feature_engineer = FeatureEngineer()
+        features = feature_engineer.build(train_df)
+        logger.info(f"Built {len(features.columns)} features")
 
     # Get labels and dates
     if "label" not in train_df.columns:
@@ -142,7 +152,9 @@ def main() -> None:
         raise ValueError("No valid folds generated. Check configuration.")
 
     # Create trainer and evaluator
-    trainer = LightGBMTrainer(cfg.lgbm)
+    # Use Ensemble by default as per new standard
+    logger.info("Initializing Multi-Algorithm Ensemble...")
+    trainer = MultiAlgoEnsemble(MultiAlgoEnsembleConfig())
     evaluator = ModelEvaluator(horizon_days=cfg.signal_horizon_days)
 
     # Evaluate each fold

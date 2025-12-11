@@ -213,26 +213,27 @@ def train_model(
     logger.info("TRAINING MODEL")
     logger.info("=" * 60)
     
-    from intentflow_ai.features.labels import LabelGenerator
-    from intentflow_ai.pipelines.training import run_wfo
+    from intentflow_ai.features.labels import make_excess_label
+    from intentflow_ai.pipelines.training import TrainingPipeline
     
     # Generate labels
-    label_gen = LabelGenerator(horizon_days=settings.signal_horizon_days)
-    labels = label_gen.generate(price_df)
+    # Generate labels using make_excess_label
+    labeled_df = make_excess_label(price_df, horizon_days=settings.signal_horizon_days, thresh=settings.target_excess_return)
     
-    logger.info(f"Generated labels for {len(labels)} samples")
+    logger.info(f"Generated labels for {len(labeled_df)} samples")
     
     # Prepare training data
-    train_df = price_df.copy()
+    train_df = labeled_df.copy()
     train_df = train_df.join(features, how="left")
-    train_df["target"] = labels
+    train_df["target"] = train_df["label"]
     train_df = train_df.dropna(subset=["target"])
     
     feature_cols = [c for c in features.columns if c in train_df.columns]
     
     if use_wfo:
         logger.info("Running Walk-Forward Optimization...")
-        result = run_wfo(
+        pipeline = TrainingPipeline()
+        result = pipeline.run_wfo(
             train_df,
             feature_cols=feature_cols,
             n_splits=5,

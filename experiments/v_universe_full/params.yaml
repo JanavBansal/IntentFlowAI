@@ -7,14 +7,14 @@ settings:
     nse_bhavcopy: s3://intentflow/raw/nse/bhavcopy/
     fiidii: s3://intentflow/raw/ownership/
     newswire: s3://intentflow/raw/news/
-  trading_universe: nifty_200
-  universe_file: external/universe/nifty200_clean.csv
+  trading_universe: nifty_500
+  universe_file: external/universe/nifty464_universe.csv
   universe_membership_file: ''
-  signal_horizon_days: 10
+  signal_horizon_days: 15
   target_excess_return: 0.015
-  price_start: '2018-01-01'
+  price_start: '2010-01-01'
   price_end: null
-  min_trading_days: 250
+  min_trading_days: 100
   min_train_tickers: 50
   cv_splits: 3
   valid_start: '2023-01-01'
@@ -25,6 +25,8 @@ settings:
     hold_days: 10
     slippage_bps: 10.0
     fee_bps: 1.0
+    max_sector_exposure: 0.3
+    max_single_stock: 0.1
   lgbm:
     objective: binary
     metric: auc
@@ -43,7 +45,7 @@ settings:
     verbose: -1
 meta_labeling:
   enabled: false
-  horizon_days: 10
+  horizon_days: 15
   success_threshold: 0.015
   min_signal_proba: 0.55
   random_state: 42
@@ -51,25 +53,28 @@ meta_labeling:
   output_col: meta_proba
 experiment_config:
   random_state: 42
+  signal_horizon_days: 15
   universe:
-    universe_file: external/universe/nifty200_clean.csv
+    universe_file: external/universe/nifty464_universe.csv
     membership_file: null
     use_membership: false
   splits:
-    train_start: '2018-01-01'
+    train_start: '2010-01-01'
     valid_start: '2023-01-01'
     test_start: '2024-07-01'
   trainer:
     model: lightgbm
     params:
       random_state: 42
-      n_estimators: 600
-      learning_rate: 0.03
-      max_depth: -1
-      subsample: 0.9
-      feature_fraction: 0.7
-      reg_lambda: 1.0
-      reg_alpha: 0.0
+      n_estimators: 1000
+      learning_rate: 0.01
+      max_depth: 4
+      num_leaves: 16
+      min_data_in_leaf: 500
+      subsample: 0.7
+      feature_fraction: 0.6
+      reg_lambda: 10.0
+      reg_alpha: 1.0
   runtime:
     min_tickers: 50
   backtest:
@@ -89,7 +94,7 @@ experiment_config:
     cooldown_days: 2
   meta_labeling:
     enabled: false
-    horizon_days: 10
+    horizon_days: 15
     success_threshold: 0.015
     min_signal_proba: 0.55
     proba_col: proba

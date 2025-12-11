@@ -10,6 +10,7 @@ import pandas as pd
 from intentflow_ai.features import FeatureEngineer
 from intentflow_ai.meta_labeling import MetaLabelConfig, MetaLabeler
 from intentflow_ai.modeling import ExplanationConfig, RegimeClassifier, explain_signals
+from intentflow_ai.modeling.ensemble import MultiAlgoEnsemble
 from intentflow_ai.utils.logging import get_logger
 
 logger = get_logger(__name__)
@@ -46,7 +47,12 @@ class ScoringPipeline:
             subset = features.loc[idx]
             if subset.empty:
                 continue
-            preds = model.predict_proba(subset)[:, 1]
+            # Handle both ensemble and single models
+            if isinstance(model, MultiAlgoEnsemble):
+                preds = model.predict(subset)
+            else:
+                # Single model (e.g., LightGBM)
+                preds = model.predict_proba(subset)[:, 1]
             proba.loc[idx] = preds
 
         signals = dataset[["date", "ticker"]].copy()
@@ -69,18 +75,30 @@ class ScoringPipeline:
         if self.explanation_config and self.explanation_config.enabled and self.background_data is not None:
             try:
                 # Use the default model for explanations
+                # For ensemble, use the LightGBM model for SHAP (if available)
                 model = self.models.get(self.default_model_key)
                 if model is not None and not self.background_data.empty:
-                    # Generate explanations with aligned indices
-                    signals_with_explanations = explain_signals(
-                        model=model,
-                        features=features,
-                        signals=signals,
-                        background_data=self.background_data,
-                        config=self.explanation_config,
-                    )
-                    signals = signals_with_explanations
-                    logger.info("Added SHAP explanations to signals", extra={"count": len(signals)})
+                    # If ensemble, extract LightGBM model for SHAP explanations
+                    if isinstance(model, MultiAlgoEnsemble):
+                        if hasattr(model, "models") and "lightgbm" in model.models:
+                            shap_model = model.models["lightgbm"]
+                        else:
+                            shap_model = None
+                            logger.warning("Ensemble doesn't have LightGBM model for SHAP, skipping explanations")
+                    else:
+                        shap_model = model
+                    
+                    if shap_model is not None:
+                        # Generate explanations with aligned indices
+                        signals_with_explanations = explain_signals(
+                            model=shap_model,
+                            features=features,
+                            signals=signals,
+                            background_data=self.background_data,
+                            config=self.explanation_config,
+                        )
+                        signals = signals_with_explanations
+                        logger.info("Added SHAP explanations to signals", extra={"count": len(signals)})
                 else:
                     logger.warning("Model or background data unavailable for SHAP")
             except Exception as exc:
