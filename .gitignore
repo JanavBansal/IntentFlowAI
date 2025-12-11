@@ -18,3 +18,4 @@ experiments/**/preds.csv
 experiments/**/models/
 experiments/**/outputs/
 *.log
+.env

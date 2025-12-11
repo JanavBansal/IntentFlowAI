@@ -53,6 +53,14 @@ class AgentOutput:
             "agent_name": self.agent_name,
             "timestamp": self.timestamp,
         }
+    
+    @classmethod
+    def from_dict(cls, d: Dict[str, Any]) -> "AgentOutput":
+        """Create AgentOutput from dictionary, filtering out computed properties."""
+        # Filter to only constructor args
+        valid_keys = {'signal', 'confidence', 'reasoning', 'feature_attribution', 'agent_name', 'timestamp'}
+        filtered = {k: v for k, v in d.items() if k in valid_keys}
+        return cls(**filtered)
 
 
 class BaseAgent(ABC):
