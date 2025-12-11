@@ -1,0 +1,141 @@
+# V4.5 Configuration: Council of Experts Multi-Agent Architecture
+# Major change from V3: Replaces single LightGBM with 5-agent council + LLM debate
+
+random_state: 42
+signal_horizon_days: 15
+
+# Model version
+model_version: "v45"
+
+# Full 464-ticker universe
+universe:
+  universe_file: external/universe/nifty464_universe.csv
+  membership_file: null
+  use_membership: false
+
+# Data splits (same as V3 for comparison)
+splits:
+  train_start: "2015-01-01"
+  valid_start: "2023-01-01"
+  test_start: "2024-07-01"
+
+# Walk-forward optimization
+wfo:
+  rolling_window_years: 3
+  step_months: 3
+  min_train_samples: 10000
+  min_test_samples: 5000
+  enabled: true
+
+# =============================================================================
+# COUNCIL OF EXPERTS CONFIGURATION
+# =============================================================================
+
+council:
+  enabled: true
+  use_llm: true  # Enable LLM debate synthesis
+  llm_model: "gpt-4o-mini"  # Cost-effective model
+  
+  # Agent-specific configurations
+  agents:
+    technical:
+      n_estimators: 800
+      max_depth: 3
+      learning_rate: 0.02
+      reg_lambda: 20.0
+      reg_alpha: 5.0
+    
+    flow:
+      max_depth: 4
+      learning_rate: 0.05
+      n_estimators: 300
+    
+    regime:
+      n_regimes: 4  # Bull, Bear, High-Vol, Low-Vol
+      lookback_days: 252
+    
+    risk:
+      veto_threshold: 0.70
+      anomaly_contamination: 0.10
+    
+    earnings:
+      max_signal: 0.15  # Weak signal by design
+      C: 1.0
+
+# Feature blocks (same as V3 for baseline comparison)  
+features:
+  disabled_blocks:
+    - seasonality
+    - modern_market
+    - fundamental
+  enabled_blocks:
+    - technical
+    - momentum
+    - momentum_enhanced
+    - volatility
+    - atr
+    - turnover
+    - sector_relative
+    - mean_reversion
+    - mean_reversion_enhanced
+    - volume_enhanced
+    - ranking
+    - orthogonal
+    - sector_momentum
+    - macro
+    - fii_dii_flow
+    - delivery  # NEW for Flow Detective
+
+# Legacy V3 trainer config (kept for fallback)
+trainer:
+  model: council  # Changed from "lightgbm"
+  fallback: lightgbm  # Use V3 model if council fails
+  params:
+    random_state: 42
+    n_estimators: 800
+    learning_rate: 0.02
+    max_depth: 3
+    num_leaves: 8
+    min_data_in_leaf: 800
+    subsample: 0.6
+    feature_fraction: 0.5
+    reg_lambda: 20.0
+    reg_alpha: 5.0
+
+runtime:
+  min_tickers: 50
+
+backtest:
+  top_k: 15
+  hold_days: 10
+  fee_bps: 1.0
+  slippage_bps: 10.0
+  cost_model: realistic
+
+risk_filters:
+  trend_fast: 50
+  trend_slow: 200
+  vol_lookback: 20
+  vol_high: 0.04
+  allow_high_vol: false
+  allow_downtrend: false
+  max_positions: 12
+  cooldown_days: 2
+
+# Regime detection (used by Regime Sentinel)
+regime:
+  enabled: true
+  model: hmm
+  n_regimes: 4
+  lookback_days: 252
+  adapt_weights: true
+
+# IC monitoring
+monitoring:
+  enabled: true
+  ic_threshold: 0.02
+  rolling_window_days: 30
+  alert_threshold: 0.03
+
+meta_labeling:
+  enabled: false

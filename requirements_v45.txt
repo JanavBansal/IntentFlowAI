@@ -1,0 +1,26 @@
+# IntentFlow V4.5 - Council of Experts Dependencies
+# Extension to existing requirements.txt
+
+# Multi-agent orchestration
+langgraph>=0.2.0
+langchain>=0.3.0
+langchain-openai>=0.2.0
+langchain-community>=0.3.0
+
+# HMM for regime detection
+hmmlearn>=0.3.0
+
+# SHAP for explainability (already in base, ensure version)
+shap>=0.45.0
+
+# Indian market data (NSE delivery volumes)
+jugaad-data>=0.25
+
+# Isolation Forest / anomaly detection (sklearn already installed)
+# scikit-learn>=1.3.0
+
+# Optional: Redis for working memory (can skip for MVP)
+# redis>=5.0.0
+
+# Optional: ChromaDB for RAG memory (can skip for MVP)
+# chromadb>=0.4.0
