@@ -1,25 +1,30 @@
 # IntentFlow AI
 
-A **production-ready systematic trading signal platform** for **NIFTY 500** (464 tickers) using multi-algorithm ensemble modeling with regime-aware predictions.
+A **production-ready systematic trading signal platform** for **NIFTY 500** (464 tickers) using a **multi-agent Council of Experts** architecture with LLM-powered debate synthesis.
 
 ---
 
 ## 📊 Current Status (Dec 2025)
 
-### Model Performance
+### V4.5 Council of Experts (NEW)
 
-| Version | Test Period | Test IC | Test ROC-AUC | Status |
-|---------|-------------|---------|--------------|--------|
-| **V3** (latest) | Jul 2024+ | -0.001 | 0.51 | ⚠️ Under revision |
-| V2 | 2020-2024 | 0.062 | 0.54 | Previous stable |
-| V1 | 2011-2019 | 0.075 | 0.54 | Historical best |
+| Agent | Model | Status |
+|-------|-------|--------|
+| **Technical Analyst** | LightGBM | ✅ Active |
+| **Flow Detective** | XGBoost | ⏳ Needs delivery data |
+| **Regime Sentinel** | 4-state HMM | ✅ Active |
+| **Risk Contrarian** | Isolation Forest | ✅ Active |
+| **Earnings Oracle** | Logistic Reg + EODHD | ✅ Active |
 
-> **Note:** The model is experiencing **alpha decay** in 2024+. Recent market regime shifts have degraded predictive power. Active research underway to restore IC.
+### Performance History
 
-### Key Findings
-- ✅ **80% Precision@10** in historical testing
-- ⚠️ **IC collapsed in 2024** from 0.075 to ~0.01
-- 🔬 **Root cause**: Technical features are crowded; need alternative data
+| Version | Architecture | Test IC | Status |
+|---------|--------------|---------|--------|
+| **V4.5** | Council of Experts | TBD | 🚧 New |
+| V3 | Monolithic LightGBM | -0.001 | ⚠️ Alpha decay |
+| V2 | Ensemble | 0.062 | Previous |
+
+> **V4.5 Goal**: Address V3's alpha decay by combining specialized agents with debate-based synthesis and risk veto.
 
 ---
 
@@ -27,97 +32,98 @@ A **production-ready systematic trading signal platform** for **NIFTY 500** (464
 
 ### Run Dashboard
 ```bash
-cd /Users/janavbansal/Documents/IntentFlowAI
 streamlit run dashboard/app.py
-# Open http://localhost:8501
 ```
 
-### Generate Predictions
-```bash
-python scripts/run_scoring.py --experiment v3_improved
+### Train V4.5 Council
+```python
+from intentflow_ai.agents import CouncilOfExperts
+
+council = CouncilOfExperts()
+council.train_all_agents(X_train, y_train)
+result = council.get_signal("RELIANCE", features)
 ```
 
-### Train Model
+### Test V4.5
 ```bash
-python scripts/run_training.py --experiment v3_improved
-```
-
-### Walk-Forward Validation
-```bash
-python scripts/run_walk_forward_validation.py \
-    --experiment v3_improved \
-    --rolling-window-days 1095  # 3-year rolling
+python scripts/test_council.py --sample-size 5000
 ```
 
 ---
 
 ## 🏗️ Architecture
 
+### V4.5 Council of Experts
+```
+                    ┌─────────────────┐
+                    │  Input Features │
+                    └────────┬────────┘
+                             │
+         ┌───────────────────┼───────────────────┐
+         ▼                   ▼                   ▼
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│ Technical       │ │ Flow Detective  │ │ Earnings Oracle │
+│ Analyst (LGBM)  │ │ (XGBoost)       │ │ (LogReg+EODHD)  │
+└────────┬────────┘ └────────┬────────┘ └────────┬────────┘
+         │                   │                   │
+         └───────────────────┼───────────────────┘
+                             ▼
+                    ┌─────────────────┐
+                    │ Regime Sentinel │ (4-state HMM)
+                    │  → Agent Weights│
+                    └────────┬────────┘
+                             ▼
+                    ┌─────────────────┐
+                    │ Debate Protocol │ (LLM Synthesis)
+                    └────────┬────────┘
+                             ▼
+                    ┌─────────────────┐
+                    │ Risk Contrarian │ (Veto Power)
+                    └────────┬────────┘
+                             ▼
+                    ┌─────────────────┐
+                    │  Final Signal   │
+                    └─────────────────┘
+```
+
+### Directory Structure
 ```
 IntentFlowAI/
-├── dashboard/app.py              # Streamlit trader dashboard
-├── config/experiments/
-│   ├── v_universe_full.yaml      # V2 configuration
-│   └── v3_improved.yaml          # V3 configuration (latest)
 ├── intentflow_ai/
+│   ├── agents/                    # V4.5 Council (NEW)
+│   │   ├── technical_analyst.py   # LightGBM wrapper
+│   │   ├── flow_detective.py      # XGBoost delivery
+│   │   ├── regime_sentinel.py     # 4-state HMM
+│   │   ├── risk_contrarian.py     # Isolation Forest + veto
+│   │   ├── earnings_oracle.py     # EODHD fundamentals
+│   │   ├── debate_protocol.py     # LLM synthesis
+│   │   └── council_workflow.py    # Main orchestration
 │   ├── features/
-│   │   └── engineering.py        # 92 features (17 blocks)
-│   ├── modeling/
-│   │   ├── ensemble.py           # MultiAlgoEnsemble
-│   │   ├── regimes.py            # 16-regime classifier
-│   │   └── hmm_regime.py         # HMM regime detection (NEW)
-│   └── monitoring/
-│       └── ic_monitor.py         # IC monitoring & auto-retrain (NEW)
-├── experiments/
-│   ├── v_universe_full/          # V2 model artifacts
-│   └── v3_improved/              # V3 model artifacts (latest)
+│   │   ├── engineering.py         # 92 technical features
+│   │   ├── delivery_features.py   # NEW: 15 delivery features
+│   │   └── fundamental_features.py # NEW: EODHD merge
+│   └── modeling/
+│       ├── ensemble.py            # V3 legacy ensemble
+│       └── hmm_regime.py          # HMM regime detection
+├── config/experiments/
+│   ├── v45_council.yaml           # V4.5 config (NEW)
+│   └── v3_improved.yaml           # V3 config
 └── scripts/
-    ├── run_training.py           # Model training
-    ├── run_scoring.py            # Generate predictions
-    └── run_walk_forward_validation.py  # WFO testing
+    ├── test_council.py            # V4.5 tests (NEW)
+    └── fetch_historical_delivery_data.py  # Delivery fetch (NEW)
 ```
-
----
-
-## 📈 Model Details
-
-### MultiAlgoEnsemble
-Combines 4 algorithms with regime-specific weighting:
-- **LightGBM** (35%) - Fast gradient boosting
-- **XGBoost** (30%) - Robust tree ensemble
-- **CatBoost** (20%) - Categorical features
-- **Ridge** (15%) - Linear regularization
-
-### Feature Blocks (92 features)
-| Block | Features | Status |
-|-------|----------|--------|
-| Technical | 6 | ✅ Active |
-| Momentum | 10 | ✅ Active |
-| Volatility | 5 | ✅ Active |
-| Sector Relative | 6 | ✅ Active |
-| Mean Reversion | 11 | ✅ Active |
-| Macro | 14 | ✅ Active |
-| Seasonality | 22 | ❌ Disabled (overfitting) |
-| FII/DII Flow | 11 | ⏳ Pending data |
-
-### Regime Classification
-16 market regimes based on:
-- Trend: bull/bear/sideways
-- Volatility: high/medium/low
-- Momentum: strong/weak
 
 ---
 
 ## 📦 Data Sources
 
-| Data | Source | Status |
-|------|--------|--------|
-| **Price OHLCV** | Yahoo Finance | ✅ 15 years, 464 tickers |
-| **Fundamentals** | EODHD | ✅ Quarterly reports |
-| **Sectors** | yfinance | ✅ 462 tickers mapped |
-| **VIX/Macro** | Yahoo Finance | ✅ Active |
-| **FII/DII** | NSE | ❌ API limited |
-| **Delivery %** | NSE | ❌ Slow fetching |
+| Data | Source | Records | Status |
+|------|--------|---------|--------|
+| **Price OHLCV** | Yahoo Finance | 15 years | ✅ Ready |
+| **Fundamentals** | EODHD | 33K records, 468 tickers | ✅ Ready |
+| **Sectors** | yfinance | 462 tickers | ✅ Ready |
+| **Delivery %** | NSE/jugaad-data | — | ⏳ Script ready |
+| **FII/DII** | NSE | — | ⏳ Pending |
 
 ---
 
