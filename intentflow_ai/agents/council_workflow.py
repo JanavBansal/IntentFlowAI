@@ -227,10 +227,16 @@ class CouncilOfExperts:
         }
     
     def _node_run_debate(self, state: CouncilState) -> Dict:
-        """Node 3: Debate synthesis - collects outputs from parallel agents."""
+        """Node 3: Debate synthesis - collects outputs from parallel agents.
+
+        Regime Sentinel is intentionally excluded from the voting list here
+        (IC=-0.040 in backtest, actively hurts signal). It still runs in
+        detect_regime and provides the regime name used for threshold adjustment
+        in _node_finalize.
+        """
         outputs_list = []
-        
-        for key in ['regime_output', 'technical_output', 'flow_output', 'earnings_output']:
+
+        for key in ['technical_output', 'flow_output', 'earnings_output']:
             if state.get(key):
                 outputs_list.append(AgentOutput.from_dict(state[key]))
         
@@ -278,23 +284,43 @@ class CouncilOfExperts:
             'audit_trail': [f"4. Risk: {output.signal:+.2f}, veto={vetoed}"]
         }
     
+    # Flat BUY/SELL thresholds — Regime Sentinel has IC=-0.040, so regime-dependent
+    # thresholds were hurting signal quality. Regime is now informational only
+    # (displayed in dashboard for context, not gating signals).
+    # 0.12 chosen because horizon sweep shows IC peaks at 15d (IC=0.096) and
+    # a 0.15 threshold was filtering profitable signals in the 0.12-0.15 range.
+    _REGIME_THRESHOLDS: Dict[str, float] = {
+        "Bull":              0.12,
+        "Low-Vol Sideways":  0.12,
+        "Bear":              0.12,
+        "High-Vol Sideways": 0.12,
+    }
+
     def _node_finalize(self, state: CouncilState) -> Dict:
-        """Node 5: Finalize the result."""
+        """Node 5: Finalize the result.
+
+        Uses regime to adjust the BUY/SELL threshold rather than casting a vote.
+        This preserves the predictive value of regime classification without
+        letting its IC=-0.040 signal pollute the weighted vote.
+        """
         final_signal = state.get('final_signal', 0.0)
         vetoed = state.get('vetoed', False)
-        
+        regime = state.get('regime', 'Low-Vol Sideways')
+
+        threshold = self._REGIME_THRESHOLDS.get(regime, 0.15)
+
         if vetoed:
             direction = "HOLD"
-        elif final_signal > 0.15:
+        elif final_signal > threshold:
             direction = "BUY"
-        elif final_signal < -0.15:
+        elif final_signal < -threshold:
             direction = "SELL"
         else:
             direction = "HOLD"
-        
+
         return {
             'direction': direction,
-            'audit_trail': [f"5. Final: {direction} ({final_signal:+.2f})"]
+            'audit_trail': [f"5. Final: {direction} ({final_signal:+.2f}) threshold={threshold:.2f} regime={regime}"]
         }
     
     # =========================================================================

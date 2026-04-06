@@ -28,110 +28,53 @@ logger = get_logger(__name__)
 
 class FIIDIIProvider:
     """Provider for FII/DII institutional flow data from NSE.
-    
-    Fetches:
-    - Daily FII/DII cash segment net buying
-    - F&O segment activity
-    - Sector-wise FII flows
+
+    Reads from the consolidated parquet cache built by
+    scripts/fetch_fii_dii_data.py (uses requests directly — no nsepython).
+
+    Cache location: data/raw/fii_dii/fii_dii_cache.parquet
+    Columns:  date, fii_cash_buy, fii_cash_sell, fii_cash_net,
+              dii_cash_buy, dii_cash_sell, dii_cash_net
     """
-    
+
     def __init__(self, cache_dir: Optional[Path] = None):
         self.cache_dir = cache_dir or Path(settings.data_dir) / "raw" / "fii_dii"
         self.cache_dir.mkdir(parents=True, exist_ok=True)
-        self._nse_available = self._check_nse_libs()
-    
-    def _check_nse_libs(self) -> bool:
-        """Check if NSE libraries are available."""
-        try:
-            import nsepython
-            return True
-        except ImportError:
-            try:
-                from nsepy import get_history
-                return True
-            except ImportError:
-                logger.warning("NSE libraries not available. Install with: pip install nsepython nsepy")
-                return False
-    
+        self._consolidated_cache = self.cache_dir / "fii_dii_cache.parquet"
+
     def fetch_fii_dii_data(
-        self, 
-        start_date: datetime, 
+        self,
+        start_date: datetime,
         end_date: datetime,
-        use_cache: bool = True
+        use_cache: bool = True,
     ) -> pd.DataFrame:
-        """Fetch FII/DII daily trading data.
-        
-        Returns DataFrame with columns:
-        - date: Trading date
-        - fii_cash_buy: FII buy value (Rs Cr)
-        - fii_cash_sell: FII sell value (Rs Cr)
-        - fii_cash_net: FII net buy/sell (Rs Cr)
-        - dii_cash_buy: DII buy value (Rs Cr)
-        - dii_cash_sell: DII sell value (Rs Cr)
-        - dii_cash_net: DII net buy/sell (Rs Cr)
-        - fii_index_futures_long: FII long positions in index futures
-        - fii_index_futures_short: FII short positions in index futures
+        """Return FII/DII daily data for the requested date range.
+
+        Reads the consolidated cache built by fetch_fii_dii_data.py.
+        Returns empty DataFrame if cache doesn't exist (run the script first).
         """
-        cache_path = self.cache_dir / f"fii_dii_{start_date.strftime('%Y%m%d')}_{end_date.strftime('%Y%m%d')}.parquet"
-        
-        if use_cache and cache_path.exists():
-            logger.info(f"Loading FII/DII data from cache: {cache_path}")
-            return pd.read_parquet(cache_path)
-        
-        if not self._nse_available:
-            logger.warning("NSE libraries not available, returning empty DataFrame")
+        if not self._consolidated_cache.exists():
+            logger.warning(
+                "FII/DII cache not found. Run: python scripts/fetch_fii_dii_data.py"
+            )
             return pd.DataFrame()
-        
-        try:
-            import nsepython as nse
-            
-            # Fetch FII/DII data using nsepython
-            data_list = []
-            current_date = start_date
-            
-            while current_date <= end_date:
-                try:
-                    date_str = current_date.strftime("%d-%b-%Y")
-                    
-                    # Get FII/DII data for the date
-                    fii_data = nse.fii_dii(date_str)
-                    
-                    if fii_data and isinstance(fii_data, (list, dict)):
-                        if isinstance(fii_data, dict):
-                            fii_data = [fii_data]
-                        
-                        for record in fii_data:
-                            data_list.append({
-                                'date': current_date,
-                                'fii_cash_buy': self._parse_value(record.get('FII/FPIs_buyValue', 0)),
-                                'fii_cash_sell': self._parse_value(record.get('FII/FPIs_sellValue', 0)),
-                                'fii_cash_net': self._parse_value(record.get('FII/FPIs_netValue', 0)),
-                                'dii_cash_buy': self._parse_value(record.get('DII_buyValue', 0)),
-                                'dii_cash_sell': self._parse_value(record.get('DII_sellValue', 0)),
-                                'dii_cash_net': self._parse_value(record.get('DII_netValue', 0)),
-                            })
-                
-                except Exception as e:
-                    logger.debug(f"No FII/DII data for {current_date}: {e}")
-                
-                current_date += timedelta(days=1)
-            
-            if data_list:
-                df = pd.DataFrame(data_list)
-                df['date'] = pd.to_datetime(df['date'])
-                df = df.sort_values('date').drop_duplicates(subset=['date'])
-                
-                # Save to cache
-                df.to_parquet(cache_path, index=False)
-                logger.info(f"Saved FII/DII data to cache: {cache_path}")
-                
-                return df
-            
-            return pd.DataFrame()
-            
-        except Exception as e:
-            logger.error(f"Error fetching FII/DII data: {e}")
-            return pd.DataFrame()
+
+        df = pd.read_parquet(self._consolidated_cache)
+        df["date"] = pd.to_datetime(df["date"])
+
+        # Filter to requested range
+        mask = (df["date"] >= pd.Timestamp(start_date)) & (df["date"] <= pd.Timestamp(end_date))
+        subset = df[mask].copy()
+
+        if subset.empty:
+            logger.warning(
+                f"No FII/DII data in cache for {start_date.date()} – {end_date.date()}. "
+                "Run: python scripts/fetch_fii_dii_data.py"
+            )
+        else:
+            logger.info(f"Loaded {len(subset)} FII/DII rows from cache")
+
+        return subset
     
     def fetch_bulk_block_deals(
         self,

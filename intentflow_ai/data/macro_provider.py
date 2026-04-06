@@ -29,19 +29,31 @@ logger = get_logger(__name__)
 @dataclass
 class MacroConfig:
     """Configuration for macro data provider."""
-    
+
     # Data directories
     cache_dir: Path = Path("data/cache/macro")
-    
+
     # Yahoo Finance tickers for macro data
     vix_ticker: str = "^INDIAVIX"  # India VIX
     usdinr_ticker: str = "USDINR=X"  # USD/INR
     crude_ticker: str = "CL=F"  # Crude oil futures
     us10y_ticker: str = "^TNX"  # US 10Y yield
     nifty_ticker: str = "^NSEI"  # NIFTY 50
-    
-    # FII/DII data file
+
+    # Global market tickers (overnight returns for India open prediction)
+    sp500_ticker: str = "^GSPC"       # S&P 500
+    nasdaq_ticker: str = "^IXIC"      # Nasdaq Composite
+    nikkei_ticker: str = "^N225"      # Nikkei 225
+    hangseng_ticker: str = "^HSI"     # Hang Seng Index
+    gold_ticker: str = "GC=F"        # Gold futures
+    copper_ticker: str = "HG=F"      # Copper futures (growth proxy)
+    niftybank_ticker: str = "^NSEBANK"  # NIFTY Bank
+    niftyit_ticker: str = "^CNXIT"    # NIFTY IT
+
+    # FII/DII data file (CSV legacy path)
     fiidii_file: Optional[str] = None
+    # FII/DII parquet cache (from fetch_fii_dii_data.py)
+    fiidii_parquet: Path = Path("data/raw/fii_dii/fii_dii_cache.parquet")
 
 
 class MacroDataProvider:
@@ -113,7 +125,11 @@ class MacroDataProvider:
         # Market regime from NIFTY
         nifty_regime = self._get_nifty_regime(date)
         features.update(nifty_regime)
-        
+
+        # Global market overnight returns
+        global_feats = self.get_global_features(date)
+        features.update(global_feats)
+
         return features
     
     def get_macro_df(
@@ -219,8 +235,8 @@ class MacroDataProvider:
     
     def _get_fiidii_flows(self, date: pd.Timestamp) -> Dict[str, float]:
         """
-        Get FII/DII flow data.
-        
+        Get FII/DII flow data from parquet cache or CSV fallback.
+
         Returns:
             Dictionary with flow metrics
         """
@@ -229,44 +245,128 @@ class MacroDataProvider:
             "dii_net_flow_5d": np.nan,
             "fii_dii_ratio": np.nan,
         }
-        
-        # Try to load FII/DII data
-        fiidii_file = self.config.fiidii_file
-        if fiidii_file is None:
-            # Try default locations
-            for path in [
-                Path("data/external/fiidii.csv"),
-                Path("data/raw/ownership/fiidii.csv"),
-            ]:
-                if path.exists():
-                    fiidii_file = str(path)
-                    break
-        
-        if fiidii_file is None or not Path(fiidii_file).exists():
+
+        df = self._load_fiidii_data()
+        if df is None or df.empty:
             return result
-        
+
         try:
-            df = pd.read_csv(fiidii_file, parse_dates=["date"])
-            df = df.set_index("date").sort_index()
-            
-            # Get 5-day window
+            # Get 5-day window up to requested date
             window = df[df.index <= date].tail(5)
-            
+
             if not window.empty:
-                if "fii_net" in df.columns:
-                    result["fii_net_flow_5d"] = float(window["fii_net"].sum())
-                if "dii_net" in df.columns:
-                    result["dii_net_flow_5d"] = float(window["dii_net"].sum())
-                
+                fii_col = "fii_cash_net" if "fii_cash_net" in df.columns else "fii_net"
+                dii_col = "dii_cash_net" if "dii_cash_net" in df.columns else "dii_net"
+
+                if fii_col in df.columns:
+                    result["fii_net_flow_5d"] = float(window[fii_col].sum())
+                if dii_col in df.columns:
+                    result["dii_net_flow_5d"] = float(window[dii_col].sum())
+
                 fii = result["fii_net_flow_5d"]
                 dii = result["dii_net_flow_5d"]
                 if not np.isnan(fii) and not np.isnan(dii) and dii != 0:
                     result["fii_dii_ratio"] = fii / abs(dii)
-        
+
         except Exception as e:
-            logger.debug(f"Error loading FII/DII data: {e}")
-        
+            logger.debug(f"Error computing FII/DII flows: {e}")
+
         return result
+
+    def _load_fiidii_data(self) -> Optional[pd.DataFrame]:
+        """Load FII/DII data from parquet cache (preferred) or CSV fallback."""
+        if "_fiidii_df" in self.__dict__:
+            return self.__dict__["_fiidii_df"]
+
+        df = None
+
+        # 1. Try parquet cache (from fetch_fii_dii_data.py)
+        parquet_path = Path(self.config.fiidii_parquet)
+        if parquet_path.exists():
+            try:
+                df = pd.read_parquet(parquet_path)
+                df["date"] = pd.to_datetime(df["date"])
+                df = df.set_index("date").sort_index()
+                logger.debug(f"Loaded FII/DII from parquet: {len(df)} rows")
+            except Exception as e:
+                logger.warning(f"Failed to load FII/DII parquet: {e}")
+                df = None
+
+        # 2. Fallback to CSV
+        if df is None:
+            fiidii_file = self.config.fiidii_file
+            if fiidii_file is None:
+                for path in [
+                    Path("data/external/fiidii.csv"),
+                    Path("data/raw/ownership/fiidii.csv"),
+                ]:
+                    if path.exists():
+                        fiidii_file = str(path)
+                        break
+            if fiidii_file and Path(fiidii_file).exists():
+                try:
+                    df = pd.read_csv(fiidii_file, parse_dates=["date"])
+                    df = df.set_index("date").sort_index()
+                except Exception as e:
+                    logger.debug(f"Error loading FII/DII CSV: {e}")
+
+        self.__dict__["_fiidii_df"] = df
+        return df
+
+    def get_global_features(self, date: pd.Timestamp) -> Dict[str, float]:
+        """
+        Get global market overnight return features.
+
+        US and Asian markets close before India opens, making their returns
+        a reliable short-term predictor of Indian market direction.
+        """
+        features = {}
+
+        # S&P 500 previous day return
+        sp500_ret = self._get_return(self.config.sp500_ticker, date, lookback=1)
+        if sp500_ret is not None:
+            features["sp500_ret_1d"] = sp500_ret
+
+        # Nasdaq previous day return
+        nasdaq_ret = self._get_return(self.config.nasdaq_ticker, date, lookback=1)
+        if nasdaq_ret is not None:
+            features["nasdaq_ret_1d"] = nasdaq_ret
+
+        # Asia (Nikkei + Hang Seng average) previous day
+        nikkei_ret = self._get_return(self.config.nikkei_ticker, date, lookback=1)
+        hs_ret = self._get_return(self.config.hangseng_ticker, date, lookback=1)
+        asia_rets = [r for r in [nikkei_ret, hs_ret] if r is not None]
+        if asia_rets:
+            features["asia_ret_1d"] = float(np.mean(asia_rets))
+
+        # Gold 5-day return (safe haven indicator)
+        gold_ret = self._get_return(self.config.gold_ticker, date, lookback=5)
+        if gold_ret is not None:
+            features["gold_ret_5d"] = gold_ret
+
+        # Copper 5-day return (growth proxy)
+        copper_ret = self._get_return(self.config.copper_ticker, date, lookback=5)
+        if copper_ret is not None:
+            features["copper_ret_5d"] = copper_ret
+
+        # DXY proxy: inverse of USD/INR 5d change
+        usdinr_ret = self._get_return(self.config.usdinr_ticker, date, lookback=5)
+        if usdinr_ret is not None:
+            features["dxy_ret_5d"] = usdinr_ret  # INR weakening = USD strengthening
+
+        return features
+
+    def _get_return(self, ticker: str, date: pd.Timestamp, lookback: int = 1) -> Optional[float]:
+        """Calculate return over lookback trading days."""
+        df = self._load_ticker_data(ticker)
+        if df is None or df.empty:
+            return None
+
+        df = df[df.index <= date].tail(lookback + 1)
+        if len(df) < 2:
+            return None
+
+        return float((df["close"].iloc[-1] / df["close"].iloc[0]) - 1)
     
     def _get_nifty_regime(self, date: pd.Timestamp) -> Dict[str, Any]:
         """
@@ -361,6 +461,15 @@ class MacroDataProvider:
                 self.config.crude_ticker,
                 self.config.us10y_ticker,
                 self.config.nifty_ticker,
+                # Global market tickers
+                self.config.sp500_ticker,
+                self.config.nasdaq_ticker,
+                self.config.nikkei_ticker,
+                self.config.hangseng_ticker,
+                self.config.gold_ticker,
+                self.config.copper_ticker,
+                self.config.niftybank_ticker,
+                self.config.niftyit_ticker,
             ]
         
         for ticker in tickers:

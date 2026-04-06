@@ -166,26 +166,49 @@ class DebateProtocol:
         
         return thesis
     
+    # IC-derived weights from backtest (flow=+0.104, tech=-0.015, earnings=0.0, regime excluded)
+    # Regime Sentinel is context-only (adjusts thresholds in finalize), not a voter.
+    # Negative-IC agents get a small floor weight for diversification.
+    IC_WEIGHTS: Dict[str, float] = {
+        "Flow Detective":    0.65,
+        "Technical Analyst": 0.20,
+        "Earnings Oracle":   0.10,
+        "Risk Contrarian":   0.05,  # Veto only; minimal signal weight
+        "Regime Sentinel":   0.00,  # Excluded from vote — context only
+    }
+
     def _weighted_vote(self, agent_outputs: List[AgentOutput]) -> tuple:
-        """Compute weighted average signal."""
+        """IC-weighted average signal.
+
+        Weights are derived from empirical backtest ICs (Flow IC=+0.104 dominates).
+        Regime Sentinel is excluded from the vote (IC=-0.040) and acts as a
+        threshold modifier in the finalize node instead.
+        """
         if not agent_outputs:
             return 0.0, 0.0
-        
-        # Weight = |signal| * confidence (stronger, more confident votes count more)
-        weights = [abs(a.signal) * a.confidence + 0.01 for a in agent_outputs]
+
+        # Exclude agents with zero IC weight (Regime Sentinel)
+        voting_agents = [a for a in agent_outputs
+                         if self.IC_WEIGHTS.get(a.agent_name, 0.10) > 0]
+        if not voting_agents:
+            voting_agents = agent_outputs  # fallback
+
+        # Weight = IC_weight * confidence  (confidence scales within the IC tier)
+        weights = [
+            self.IC_WEIGHTS.get(a.agent_name, 0.10) * max(a.confidence, 0.01)
+            for a in voting_agents
+        ]
         total_weight = sum(weights)
-        
+
         if total_weight == 0:
             return 0.0, 0.0
-        
-        # Weighted signal
+
         weighted_signal = sum(
-            a.signal * w for a, w in zip(agent_outputs, weights)
+            a.signal * w for a, w in zip(voting_agents, weights)
         ) / total_weight
-        
-        # Average confidence
-        avg_confidence = sum(a.confidence for a in agent_outputs) / len(agent_outputs)
-        
+
+        avg_confidence = sum(a.confidence for a in voting_agents) / len(voting_agents)
+
         return float(weighted_signal), float(avg_confidence)
     
     def _check_veto(self, agent_outputs: List[AgentOutput]) -> tuple:

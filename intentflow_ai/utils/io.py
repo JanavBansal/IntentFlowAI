@@ -15,6 +15,51 @@ from intentflow_ai.utils.logging import get_logger
 logger = get_logger(__name__)
 
 
+def safe_read_parquet(path: Path | str, *, label: str = "") -> pd.DataFrame:
+    """Read a parquet file with multiple fallback strategies.
+
+    Handles corrupted/incompatible parquets gracefully by trying:
+    1. Standard pd.read_parquet
+    2. pyarrow legacy reader
+    3. pandas legacy mode
+
+    Returns empty DataFrame on all failures (never raises).
+
+    Args:
+        path: Parquet file path
+        label: Human-readable label for log messages (e.g. "FII/DII cache")
+
+    Returns:
+        DataFrame (possibly empty if file is missing or corrupt)
+    """
+    path = Path(path)
+    tag = label or path.name
+
+    if not path.exists():
+        logger.debug(f"[safe_read_parquet] {tag}: file not found at {path}")
+        return pd.DataFrame()
+
+    # Attempt 1: standard reader
+    try:
+        return pd.read_parquet(path)
+    except Exception as e1:
+        logger.warning(f"[safe_read_parquet] {tag}: standard reader failed: {e1}")
+
+    # Attempt 2: pyarrow legacy
+    try:
+        table = pq.read_table(path, use_legacy_dataset=True)
+        return table.to_pandas()
+    except Exception as e2:
+        logger.warning(f"[safe_read_parquet] {tag}: pyarrow legacy failed: {e2}")
+
+    # Attempt 3: pandas legacy mode
+    try:
+        return pd.read_parquet(path, use_legacy_dataset=True)
+    except Exception as e3:
+        logger.error(f"[safe_read_parquet] {tag}: all readers failed: {e3}")
+        return pd.DataFrame()
+
+
 def write_parquet_partition(target_dir: Path, records: Iterable[dict]) -> None:
     """Persist iterable of dict rows into a partition directory.
 
@@ -362,6 +407,45 @@ def load_enhanced_panel(
         else:
             logger.debug("No ownership data available; skipping merge.")
     
+    # Merge fundamental data (PIT-safe: use available_date, not report_date)
+    try:
+        fund_path = (cfg or settings).project_root / "data" / "cache" / "fundamentals" / "screener_consolidated.parquet"
+        if fund_path.exists():
+            fund_df = pd.read_parquet(fund_path)
+            if "ticker" in fund_df.columns and "available_date" in fund_df.columns:
+                fund_df["available_date"] = pd.to_datetime(fund_df["available_date"])
+
+                fund_value_cols = ["revenue", "operating_profit", "net_income", "eps",
+                                   "pe_ratio", "roe", "roce", "book_value_per_share",
+                                   "dividend_yield", "market_cap"]
+                fund_value_cols = [c for c in fund_value_cols if c in fund_df.columns]
+
+                # For each ticker, forward-fill the latest fundamental row as of each price date
+                # This is PIT-safe because we use available_date (publication date)
+                results = []
+                for ticker in price_panel["ticker"].unique():
+                    t_prices = price_panel[price_panel["ticker"] == ticker].copy()
+                    t_fund = fund_df[fund_df["ticker"] == ticker].sort_values("available_date")
+                    if t_fund.empty:
+                        results.append(t_prices)
+                        continue
+                    # For each price row, find the latest fundamental where available_date <= price date
+                    t_prices = t_prices.sort_values("date")
+                    t_fund_slim = t_fund[["available_date"] + fund_value_cols].copy()
+                    t_fund_slim = t_fund_slim.rename(columns={"available_date": "date"})
+                    merged = pd.merge_asof(
+                        t_prices, t_fund_slim,
+                        on="date", direction="backward",
+                        suffixes=("", "_fund"),
+                    )
+                    results.append(merged)
+
+                price_panel = pd.concat(results, ignore_index=True)
+                matched = price_panel["eps"].notna().sum() if "eps" in price_panel.columns else 0
+                logger.info(f"Merged fundamental data: {matched} rows matched")
+    except Exception as e:
+        logger.debug(f"Fundamental merge skipped: {e}")
+
     return price_panel.sort_values(["ticker", "date"]).reset_index(drop=True)
 
 

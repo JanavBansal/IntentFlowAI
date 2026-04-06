@@ -61,7 +61,7 @@ class Settings:
     )
     trading_universe: str = "nifty_500"
     universe_file: str = "static/sector_map.csv"  # Full 464-ticker universe with proper sectors
-    universe_membership_file: str = "external/universe/nifty200_history.csv"
+    universe_membership_file: str = ""  # No membership filter — use full 464-ticker universe
     signal_horizon_days: int = 15  # Semi-monthly horizon for lower turnover
     target_excess_return: float = 0.015
     price_start: str = "2010-01-01"  # Use full available history (2010-2025 = 15 years)

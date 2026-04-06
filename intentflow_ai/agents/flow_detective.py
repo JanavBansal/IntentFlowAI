@@ -50,38 +50,34 @@ class FlowDetectiveAgent(BaseAgent):
     
     def get_required_features(self) -> List[str]:
         """
-        Delivery-focused features from delivery_features.py.
-        Also includes FII/DII institutional flow data.
+        Delivery-focused features from FeatureEngineer (delivery__ block).
+        Feature names use the delivery__ prefix from engineering.py blocks.
         """
         return [
-            # Delivery momentum (from delivery_features.py)
-            'deliv_pct_3d_change',
-            'deliv_pct_7d_change',
-            'deliv_pct_14d_change',
-            
-            # Delivery spikes
-            'deliv_qty_zscore',
-            'large_delivery_flag',
-            
-            # Accumulation/Distribution
-            'accum_distrib_5d',
-            'accum_distrib_10d',
-            
-            # Delivery ratios
-            'deliv_ratio_ma_5',
-            'deliv_ratio_ma_20',
-            'deliv_ratio_trend',
-            
-            # Delivery value
-            'deliv_value_spike',
-            
-            # Price-delivery correlation
-            'deliv_price_corr_10',
-            
-            # FII/DII institutional flow (if available)
-            'fii_net_5d',
-            'dii_net_5d',
-            'fii_dii_ratio',
+            # Delivery ratio baseline and trend
+            'delivery__deliv_ratio',
+            'delivery__deliv_ratio_mean_5',
+            'delivery__deliv_ratio_mean_10',
+            'delivery__deliv_ratio_mean_20',
+            'delivery__deliv_ratio_change_10',   # flow acceleration
+
+            # Delivery spikes and anomalies
+            'delivery__delivery_z',              # z-score of delivery ratio
+            'delivery__delivery_spike',          # ratio / rolling mean
+            'delivery__delivery_trend_5d',       # 5-day pct change in ratio
+            'delivery__delivery_ratio_5_20',     # short vs long delivery
+
+            # Delivery value (rupee conviction)
+            'delivery__deliv_value_spike',
+
+            # Price-delivery relationship
+            'delivery__deliv_vs_price_corr_10',
+            'delivery__deliv_vs_price_mom_10',
+
+            # Macro FII/DII flows (from macro block, always available)
+            'macro__fii_net_flow_5d',
+            'macro__dii_net_flow_5d',
+            'macro__fii_dii_ratio',
         ]
     
     def _get_available_features(self, X: pd.DataFrame) -> List[str]:
@@ -145,11 +141,12 @@ class FlowDetectiveAgent(BaseAgent):
             signal_raw = signal_raw[0]
         
         # Normalize to [-1, 1]
-        signal = float(np.tanh(signal_raw * 25))
-        
+        # Scale by 8 (was 25) — softer compression preserves Q5 vs Q4 spread
+        signal = float(np.tanh(signal_raw * 8))
+
         # Confidence boosted by delivery spike detection
         delivery_spike = self._detect_delivery_spike(X)
-        base_confidence = min(abs(signal_raw) / 0.025, 1.0)
+        base_confidence = min(abs(signal_raw) / 0.04, 1.0)
         confidence = min(base_confidence * (1.5 if delivery_spike else 1.0), 1.0)
         
         # Generate reasoning
@@ -168,10 +165,10 @@ class FlowDetectiveAgent(BaseAgent):
     
     def _detect_delivery_spike(self, X: pd.DataFrame) -> bool:
         """Check if there's an unusual delivery spike."""
-        if 'large_delivery_flag' in X.columns:
-            return bool(X['large_delivery_flag'].iloc[0] == 1)
-        if 'deliv_qty_zscore' in X.columns:
-            return bool(X['deliv_qty_zscore'].iloc[0] > 2.0)
+        if 'delivery__delivery_spike' in X.columns:
+            return bool(X['delivery__delivery_spike'].iloc[0] > 2.0)
+        if 'delivery__delivery_z' in X.columns:
+            return bool(X['delivery__delivery_z'].iloc[0] > 2.0)
         return False
     
     def _generate_reasoning(self, X: pd.DataFrame, signal: float, spike: bool) -> str:
@@ -180,27 +177,27 @@ class FlowDetectiveAgent(BaseAgent):
         
         # Spike detection
         if spike:
-            zscore = X.get('deliv_qty_zscore', pd.Series([0])).iloc[0]
+            zscore = X['delivery__delivery_z'].iloc[0] if 'delivery__delivery_z' in X.columns else 0
             parts.append(f"🚨 Large institutional delivery detected ({zscore:.1f}σ above normal)")
-        
+
         # Delivery trend
-        if 'deliv_pct_7d_change' in X.columns:
-            change_7d = X['deliv_pct_7d_change'].iloc[0]
-            if abs(change_7d) > 0.1:
-                direction = "increasing" if change_7d > 0 else "decreasing"
-                parts.append(f"Delivery trend {direction} ({change_7d:+.1%} over 7d)")
-        
-        # Accumulation/Distribution
-        if 'accum_distrib_5d' in X.columns:
-            ad = X['accum_distrib_5d'].iloc[0]
-            if abs(ad) > 1e6:  # Significant flow
-                flow = "accumulation" if ad > 0 else "distribution"
-                parts.append(f"Money flow shows {flow}")
-        
+        if 'delivery__delivery_trend_5d' in X.columns:
+            change_5d = X['delivery__delivery_trend_5d'].iloc[0]
+            if abs(change_5d) > 0.1:
+                direction = "increasing" if change_5d > 0 else "decreasing"
+                parts.append(f"Delivery trend {direction} ({change_5d:+.1%} over 5d)")
+
+        # Flow acceleration
+        if 'delivery__deliv_ratio_change_10' in X.columns:
+            accel = X['delivery__deliv_ratio_change_10'].iloc[0]
+            if abs(accel) > 0.05:
+                flow = "accumulation" if accel > 0 else "distribution"
+                parts.append(f"Flow acceleration shows {flow}")
+
         # FII/DII info if available
-        if 'fii_net_5d' in X.columns and 'dii_net_5d' in X.columns:
-            fii = X['fii_net_5d'].iloc[0]
-            dii = X['dii_net_5d'].iloc[0]
+        if 'macro__fii_net_flow_5d' in X.columns and 'macro__dii_net_flow_5d' in X.columns:
+            fii = X['macro__fii_net_flow_5d'].iloc[0]
+            dii = X['macro__dii_net_flow_5d'].iloc[0]
             if abs(fii) > 100 or abs(dii) > 100:  # In crores
                 parts.append(f"FII: ₹{fii:.0f}Cr, DII: ₹{dii:.0f}Cr (5d net)")
         

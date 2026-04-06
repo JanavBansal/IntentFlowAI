@@ -19,3 +19,13 @@ experiments/**/models/
 experiments/**/outputs/
 *.log
 .env
+
+# Cached data files (regenerated)
+data/cache/
+
+# Claude Code config
+.claude/
+CLAUDE.md
+
+# macOS
+.DS_Store

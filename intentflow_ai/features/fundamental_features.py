@@ -23,26 +23,49 @@ logger = get_logger(__name__)
 
 def load_eodhd_fundamentals(cache_path: str = "data/cache/fundamentals/eodhd_full.parquet") -> pd.DataFrame:
     """
-    Load cached EODHD fundamental data.
-    
-    Returns:
-        DataFrame with fundamental metrics for all tickers and dates.
+    Load cached fundamental data — EODHD preferred, screener.in fallback.
+
+    Falls back to screener_consolidated.parquet when the EODHD cache is missing
+    or stale (>90 days).  Screener.in provides PE, ROE, D/E, current_ratio,
+    growth rates — enough for the Earnings Oracle's ±0.15 signal cap.
     """
     from pathlib import Path
-    
-    path = Path(cache_path)
-    if not path.exists():
-        logger.warning(f"EODHD cache not found at {cache_path}. Run EODHDProvider.parse_all_tickers() first.")
-        return pd.DataFrame()
-    
-    df = pd.read_parquet(path)
-    
-    # Ensure date columns are datetime
-    for col in ['date', 'available_date']:
-        if col in df.columns:
-            df[col] = pd.to_datetime(df[col])
-    
-    return df
+    from datetime import datetime
+
+    SCREENER_PATH = Path("data/cache/fundamentals/screener_consolidated.parquet")
+
+    def _load(path: Path) -> pd.DataFrame:
+        df = pd.read_parquet(path)
+        for col in ["date", "available_date"]:
+            if col in df.columns:
+                df[col] = pd.to_datetime(df[col])
+        return df
+
+    # Try EODHD first (if file exists and is < 90 days old)
+    eodhd_path = Path(cache_path)
+    if eodhd_path.exists():
+        age_days = (datetime.now() - datetime.fromtimestamp(eodhd_path.stat().st_mtime)).days
+        if age_days < 90:
+            return _load(eodhd_path)
+        logger.info(f"EODHD cache is {age_days} days old — trying screener.in fallback")
+
+    # Screener.in fallback
+    if SCREENER_PATH.exists():
+        logger.info(f"Loading fundamentals from screener.in: {SCREENER_PATH}")
+        df = _load(SCREENER_PATH)
+        # Screener.in uses 'symbol'; normalise to match EODHD schema
+        if "ticker" in df.columns and "symbol" not in df.columns:
+            df = df.rename(columns={"ticker": "symbol"})
+        # Add available_date if missing (use date + 45-day reporting delay)
+        if "available_date" not in df.columns and "date" in df.columns:
+            df["available_date"] = df["date"] + pd.Timedelta(days=45)
+        return df
+
+    logger.warning(
+        f"No fundamental data found at {cache_path} or {SCREENER_PATH}. "
+        "Run scripts/refresh_screener_fundamentals.py to restore fundamentals."
+    )
+    return pd.DataFrame()
 
 
 def merge_fundamentals_pit(

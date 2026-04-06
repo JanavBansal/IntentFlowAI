@@ -141,10 +141,11 @@ class TechnicalAnalystAgent(BaseAgent):
             signal_raw = signal_raw[0]
         
         # Normalize to [-1, 1] using tanh
-        signal = float(np.tanh(signal_raw * 20))  # Scale by 20 since returns are small
-        
+        # Scale by 8 (was 20) — softer compression preserves Q5 vs Q4 spread
+        signal = float(np.tanh(signal_raw * 8))
+
         # Compute confidence based on prediction magnitude
-        confidence = min(abs(signal_raw) / 0.03, 1.0)  # 3% return = max confidence
+        confidence = min(abs(signal_raw) / 0.05, 1.0)  # 5% return = max confidence
         
         # Feature attribution via SHAP
         feature_attribution = self._compute_feature_attribution(features)

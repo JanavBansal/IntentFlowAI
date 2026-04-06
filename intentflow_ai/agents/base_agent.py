@@ -159,7 +159,7 @@ class BaseAgent(ABC):
         import joblib
         data = joblib.load(path)
         
-        agent = cls(name=data["name"], config=data["config"])
+        agent = cls(config=data["config"])
         agent.model = data["model"]
         agent.is_trained = data["is_trained"]
         agent._feature_names = data.get("feature_names", [])

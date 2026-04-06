@@ -50,10 +50,10 @@ class FeatureEngineer:
                 "volatility": self._volatility_block,
                 "atr": self._atr_block,
                 "turnover": self._turnover_block,
-                "ownership": self._ownership_block,
+                # "ownership": self._ownership_block,  # DISABLED v5: data corrupt, always returns empty
                 "delivery": self._delivery_block,
                 # "fundamental": self._fundamental_block,  # DISABLED: +0.0025 IC without it (ablation study Dec 2024)
-                "narrative": self._narrative_block,
+                # "narrative": self._narrative_block,  # DISABLED v5: no sentiment data, always returns empty
                 "sector_relative": self._sector_relative_block,
                 # "regime": self._regime_block,  # DISABLED: Causing negative IC (volatility bias)
                 # "regime_adaptive": self._regime_adaptive_block, # DISABLED: Causing negative IC
@@ -65,13 +65,15 @@ class FeatureEngineer:
                 "sector_momentum": self._sector_momentum_block,  # NEW: Sector relative performance
                 "earnings_metrics": self._earnings_metrics_block,  # NEW: Earnings surprise, growth
                 "quality_scores": self._quality_scores_block,  # NEW: ROE, margins, cash conversion
-                "financial_ratios": self._financial_ratios_block,  # NEW: Professional ratios via FinanceToolkit
+                # "financial_ratios": self._financial_ratios_block,  # DISABLED v5: always returns empty, overlaps earnings_metrics
                 "sector_normalized": self._sector_normalized_block,  # NEW: Sector-relative features
                 # "seasonality": self._seasonality_block,  # DISABLED: IC drop 2024, likely overfitting to calendar effects (ablation Dec 2024)
                 "macro": self._macro_block,  # NEW: Macro features (VIX, USD/INR, Crude, FII/DII)
                 "options": self._options_block,  # NEW: Options sentiment (PCR, Max Pain)
                 # "modern_market": self._modern_market_block,  # DISABLED: +0.0078 IC without it (ablation study Dec 2024)
-                "fii_dii_flow": self._fii_dii_flow_block,  # NEW: FII/DII institutional flow features (V3 improvement)
+                "fii_dii_flow": self._fii_dii_flow_block,  # FII/DII institutional flow features
+                "global_overnight": self._global_overnight_block,  # V5: Global market overnight returns
+                "delivery_momentum": self._delivery_momentum_block,  # V5: Delivery × momentum interactions
             }
 
     @staticmethod
@@ -1135,29 +1137,96 @@ class FeatureEngineer:
             return pd.DataFrame(index=dataset.index)
     
     def _earnings_metrics_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Compute earnings features from screener.in quarterly data merged into panel."""
+        out = pd.DataFrame(index=dataset.index)
         try:
-            from intentflow_ai.features.advanced_features import earnings_metrics_features
-            
-            return earnings_metrics_features(dataset)
+            # These columns come from load_enhanced_panel() → screener merge
+            if "eps" not in dataset.columns or dataset["eps"].notna().sum() < 10:
+                return out
+
+            g = dataset.groupby("ticker", group_keys=False)
+
+            if "eps" in dataset.columns:
+                out["earnings__eps"] = dataset["eps"]
+                out["earnings__eps_growth_qoq"] = g["eps"].pct_change(1, fill_method=None)
+
+            if "revenue" in dataset.columns:
+                out["earnings__revenue"] = dataset["revenue"]
+                out["earnings__revenue_growth_qoq"] = g["revenue"].pct_change(1, fill_method=None)
+
+            if "net_income" in dataset.columns and "revenue" in dataset.columns:
+                rev = dataset["revenue"].replace(0, float("nan"))
+                out["earnings__net_margin"] = dataset["net_income"] / rev
+
+            if "operating_profit" in dataset.columns and "revenue" in dataset.columns:
+                rev = dataset["revenue"].replace(0, float("nan"))
+                out["earnings__operating_margin"] = dataset["operating_profit"] / rev
+
+            if "pe_ratio" in dataset.columns:
+                out["earnings__pe_ratio"] = dataset["pe_ratio"]
+
+            if "roe" in dataset.columns:
+                out["earnings__roe"] = dataset["roe"]
+
+            if "roce" in dataset.columns:
+                out["earnings__roce"] = dataset["roce"]
+
+            if "dividend_yield" in dataset.columns:
+                out["earnings__dividend_yield"] = dataset["dividend_yield"]
+
+            if "book_value_per_share" in dataset.columns:
+                out["earnings__book_value"] = dataset["book_value_per_share"]
+
+            # Drop columns that are all NaN
+            out = out.dropna(axis=1, how="all")
+            return out
+
         except Exception as e:
             logger.warning(f"Earnings metrics feature computation failed: {e}")
             return pd.DataFrame(index=dataset.index)
-    
+
     def _quality_scores_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Quality scores derived from fundamentals."""
+        out = pd.DataFrame(index=dataset.index)
         try:
-            from intentflow_ai.features.advanced_features import quality_scores_features
-            
-            return quality_scores_features(dataset)
+            has_margin = "operating_profit" in dataset.columns and "revenue" in dataset.columns
+            has_roe = "roe" in dataset.columns
+
+            if not has_margin and not has_roe:
+                return out
+
+            if has_margin:
+                rev = dataset["revenue"].replace(0, float("nan"))
+                margin = dataset["operating_profit"] / rev
+                out["quality__op_margin"] = margin
+
+            if has_roe:
+                out["quality__roe"] = dataset["roe"]
+
+            out = out.dropna(axis=1, how="all")
+            return out
         except Exception as e:
             logger.warning(f"Quality scores feature computation failed: {e}")
             return pd.DataFrame(index=dataset.index)
 
     def _financial_ratios_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Financial ratios from fundamental data."""
+        out = pd.DataFrame(index=dataset.index)
         try:
-            from intentflow_ai.features.financial_ratios import FinancialRatioEngine
-            
-            engine = FinancialRatioEngine()
-            return engine.calculate_basic_ratios(dataset)
+            if "pe_ratio" in dataset.columns and dataset["pe_ratio"].notna().sum() > 10:
+                out["ratio__pe"] = dataset["pe_ratio"]
+                # Sector-relative PE
+                if "sector" in dataset.columns:
+                    out["ratio__pe_sector_z"] = dataset.groupby("sector", group_keys=False).apply(
+                        lambda g: (g["pe_ratio"] - g["pe_ratio"].mean()) / g["pe_ratio"].std().clip(lower=0.1)
+                    )
+
+            if "book_value_per_share" in dataset.columns and "close" in dataset.columns:
+                bv = dataset["book_value_per_share"].replace(0, float("nan"))
+                out["ratio__pb"] = dataset["close"] / bv
+
+            out = out.dropna(axis=1, how="all")
+            return out
         except Exception as e:
             logger.warning(f"Financial ratios computation failed: {e}")
             return pd.DataFrame(index=dataset.index)
@@ -1422,6 +1491,22 @@ class FeatureEngineer:
             if cache_path.exists():
                 fii_data = pd.read_parquet(cache_path)
                 fii_data['date'] = pd.to_datetime(fii_data['date'])
+                # Convert numeric columns that may be stored as strings
+                for num_col in ['buyValue', 'sellValue', 'netValue', 'fii_cash_net', 'dii_cash_net']:
+                    if num_col in fii_data.columns:
+                        fii_data[num_col] = pd.to_numeric(fii_data[num_col], errors='coerce')
+                # Normalize category-pivot format → wide format with fii_cash_net/dii_cash_net
+                if 'category' in fii_data.columns and 'fii_cash_net' not in fii_data.columns:
+                    fii_pivot = fii_data.copy()
+                    fii_pivot['category'] = fii_data['category'].str.strip().str.upper()
+                    fii_mask = fii_pivot['category'].str.startswith('FII')
+                    dii_mask = fii_pivot['category'].str.startswith('DII')
+                    net_col = 'netValue' if 'netValue' in fii_pivot.columns else 'net_value'
+                    fii_net = fii_pivot.loc[fii_mask, ['date', net_col]].rename(columns={net_col: 'fii_cash_net'})
+                    dii_net = fii_pivot.loc[dii_mask, ['date', net_col]].rename(columns={net_col: 'dii_cash_net'})
+                    fii_data = fii_net.merge(dii_net, on='date', how='outer').sort_values('date')
+                if fii_data.empty or 'fii_cash_net' not in fii_data.columns or len(fii_data) < 5:
+                    return pd.DataFrame(index=dataset.index)
             else:
                 # Try to fetch from NSE
                 try:
@@ -1488,5 +1573,163 @@ class FeatureEngineer:
             
         except Exception as e:
             logger.warning(f"FII/DII flow feature computation failed: {e}")
+            return pd.DataFrame(index=dataset.index)
+
+    def _global_overnight_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Global market overnight return features.
+
+        US and Asian markets close before India opens. Their previous-day returns
+        are among the most reliable short-term predictors of Indian market direction.
+
+        Features:
+        - sp500_ret_1d: S&P 500 previous day return
+        - nasdaq_ret_1d: Nasdaq previous day return
+        - asia_ret_1d: Average Nikkei + Hang Seng previous day return
+        - gold_ret_5d: Gold 5-day return (safe haven indicator)
+        - copper_ret_5d: Copper 5-day return (growth proxy)
+        - dxy_ret_5d: USD strength proxy (USD/INR 5-day return)
+        - us_risk_on: S&P up AND Nasdaq up (risk-on signal)
+        - global_momentum_5d: Average of S&P + Nasdaq 5-day returns
+        """
+        if "date" not in dataset.columns:
+            return pd.DataFrame(index=dataset.index)
+
+        try:
+            from intentflow_ai.data.macro_provider import MacroDataProvider
+
+            provider = MacroDataProvider()
+
+            dates = pd.to_datetime(dataset["date"].unique())
+            if len(dates) == 0:
+                return pd.DataFrame(index=dataset.index)
+
+            # Pre-load all global tickers to cache
+            global_tickers = [
+                provider.config.sp500_ticker,
+                provider.config.nasdaq_ticker,
+                provider.config.nikkei_ticker,
+                provider.config.hangseng_ticker,
+                provider.config.gold_ticker,
+                provider.config.copper_ticker,
+            ]
+            for t in global_tickers:
+                provider._load_ticker_data(t)
+
+            # Compute features for each unique date
+            date_features = {}
+            for dt in sorted(dates):
+                feats = provider.get_global_features(dt)
+                date_features[dt] = feats
+
+            if not date_features:
+                return pd.DataFrame(index=dataset.index)
+
+            # Build lookup DataFrame
+            feat_df = pd.DataFrame.from_dict(date_features, orient="index")
+            feat_df.index = pd.to_datetime(feat_df.index)
+
+            # Add derived features
+            if "sp500_ret_1d" in feat_df.columns and "nasdaq_ret_1d" in feat_df.columns:
+                feat_df["us_risk_on"] = (
+                    (feat_df["sp500_ret_1d"] > 0) & (feat_df["nasdaq_ret_1d"] > 0)
+                ).astype(float)
+                feat_df["global_momentum_5d"] = (
+                    feat_df["sp500_ret_1d"].rolling(5, min_periods=1).mean()
+                    + feat_df["nasdaq_ret_1d"].rolling(5, min_periods=1).mean()
+                ) / 2
+
+            # Map to dataset rows
+            out = pd.DataFrame(index=dataset.index)
+            dataset_dates = pd.to_datetime(dataset["date"])
+
+            for col in feat_df.columns:
+                lookup = feat_df[col].to_dict()
+                out[col] = dataset_dates.map(lookup)
+
+            out = out.fillna(0.0)
+            logger.info(f"Global overnight block: Added {len(out.columns)} features")
+            return out
+
+        except Exception as e:
+            logger.warning(f"Global overnight feature computation failed: {e}")
+            return pd.DataFrame(index=dataset.index)
+
+    def _delivery_momentum_block(self, dataset: pd.DataFrame) -> pd.DataFrame:
+        """Delivery × momentum interaction features.
+
+        These capture the interplay between institutional delivery patterns and
+        price momentum — delivery spikes concurrent with price moves suggest
+        informed institutional activity.
+
+        Features:
+        - delivery_spike_x_momentum: delivery_z × sign(5d return) — confirms direction
+        - accumulation_score: delivery_ratio_change × abs(10d return) — size of conviction
+        - smart_money_divergence: delivery rising + price flat/falling — accumulation before breakout
+        - distribution_signal: delivery falling + price rising — distribution before drop
+        - delivery_breakout_confirm: delivery spike + strong positive momentum
+        """
+        required = {"close", "date"}
+        if not required.issubset(set(dataset.columns)):
+            return pd.DataFrame(index=dataset.index)
+
+        out = pd.DataFrame(index=dataset.index)
+
+        try:
+            close = dataset["close"].astype(float)
+            ret_5d = close.pct_change(5)
+            ret_10d = close.pct_change(10)
+
+            # Check if delivery data is available
+            has_delivery = "delivery_qty" in dataset.columns or "delivery_ratio" in dataset.columns
+
+            if has_delivery:
+                # Compute delivery z-score
+                if "delivery_qty" in dataset.columns:
+                    dq = dataset["delivery_qty"].astype(float)
+                    dq_mean = dq.rolling(20, min_periods=5).mean()
+                    dq_std = dq.rolling(20, min_periods=5).std().replace(0, 1e-9)
+                    delivery_z = (dq - dq_mean) / dq_std
+                else:
+                    delivery_z = pd.Series(0.0, index=dataset.index)
+
+                if "delivery_ratio" in dataset.columns:
+                    dr = dataset["delivery_ratio"].astype(float)
+                    dr_change_10 = dr.pct_change(10)
+                else:
+                    dr_change_10 = pd.Series(0.0, index=dataset.index)
+
+                # delivery_z × sign(5d return) — confirms direction
+                out["delivery_spike_x_momentum"] = delivery_z * np.sign(ret_5d)
+
+                # delivery_ratio_change × abs(10d return)
+                out["accumulation_score"] = dr_change_10 * ret_10d.abs()
+
+                # Smart money divergence: delivery rising but price flat/falling
+                delivery_rising = (delivery_z > 1.0).astype(float)
+                price_flat_down = (ret_5d <= 0.01).astype(float)  # flat or down
+                out["smart_money_divergence"] = delivery_rising * price_flat_down
+
+                # Distribution: delivery falling but price rising
+                delivery_falling = (delivery_z < -1.0).astype(float)
+                price_rising = (ret_5d > 0.01).astype(float)
+                out["distribution_signal"] = delivery_falling * price_rising
+
+                # Delivery breakout confirm: strong delivery + strong momentum
+                out["delivery_breakout_confirm"] = (
+                    (delivery_z > 1.5).astype(float) * (ret_5d > 0.03).astype(float)
+                )
+            else:
+                # No delivery data — still provide pure momentum interactions
+                out["momentum_acceleration"] = ret_5d - ret_10d / 2
+                vol = dataset["volume"].astype(float) if "volume" in dataset.columns else pd.Series(1.0, index=dataset.index)
+                vol_z = (vol - vol.rolling(20, min_periods=5).mean()) / (vol.rolling(20, min_periods=5).std() + 1e-9)
+                out["volume_momentum_confirm"] = vol_z * np.sign(ret_5d)
+
+            out = out.fillna(0.0).replace([np.inf, -np.inf], 0.0)
+            logger.info(f"Delivery-momentum block: Added {len(out.columns)} features")
+            return out
+
+        except Exception as e:
+            logger.warning(f"Delivery-momentum feature computation failed: {e}")
             return pd.DataFrame(index=dataset.index)
 
